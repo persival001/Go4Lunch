@@ -21,14 +21,6 @@
             android:gravity="center"
             android:layout_margin="@dimen/default_large_margin">
 
-            <!-- PROGRESS BAR -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:visibility="invisible"
-                android:layout_margin="@dimen/default_large_margin"/>
-
             <!-- PROFILE IMAGE -->
             <ImageView
                 android:id="@+id/profileImageView"
@@ -71,16 +63,6 @@
                 android:paddingLeft="@dimen/default_margin"/>
 
         </LinearLayout>
-
-        <!-- CHECKBOX IS USER MENTOR -->
-        <CheckBox
-            android:id="@+id/isMentorCheckBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/check_box_is_mentor"/>
-
-
-
     </LinearLayout>
 
     <!-- BUTTONS CONTAINER -->

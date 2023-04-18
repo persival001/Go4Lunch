@@ -3,44 +3,12 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondgo4lunch"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <!-- BUTTONS CONTAINER -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/default_large_margin"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <!-- BUTTON LOGIN -->
-        <Button
-            android:id="@+id/loginButton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_large_margin"
-            android:background="@drawable/button_radius_primary_color"
-            android:padding="@dimen/default_large_margin"
-            android:text="@string/login"
-            android:textColor="#fff"
-            android:textSize="@dimen/default_text_size" />
-
-        <!-- BUTTON CHAT -->
-        <Button
-            android:id="@+id/chatButton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_large_margin"
-            android:background="@drawable/button_radius_accent_color"
-            android:padding="@dimen/default_large_margin"
-            android:text="@string/chat_with_colleague"
-            android:textColor="#fff"
-            android:textSize="@dimen/default_text_size" />
-
-    </LinearLayout>
-
+        android:layout_height="wrap_content"
+        android:text="@string/button_login_text_logged" />
 </LinearLayout>

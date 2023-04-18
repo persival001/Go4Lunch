@@ -1,6 +1,4 @@
 <resources>
-    <string name="facebook_application_id">597067395685611</string>
-    <string name="fb_login_protocol_scheme">fb597067395685611</string>
     <string name="app_name">Go 4 Lunch</string>
 
     <string name="main_activity_description">Chat with your colleagues</string>
@@ -41,4 +39,7 @@
     <string name="text_view_colleague_chat_error">This thread has no messages</string>
     <string name="popup_title_permission_files_access">To attach a photo, Firebase OC requires additional permissions.</string>
     <string name="toast_title_no_image_chosen">No image chosen</string>
+    <string name="map_view">Map View</string>
+    <string name="list_view">List View</string>
+    <string name="workmates">Workmates</string>
 </resources>
