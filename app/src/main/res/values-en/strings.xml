@@ -21,6 +21,7 @@
     <!-- LOGIN ACTIVITY -->
     <string name="toolbar_title_login_activity">Your Profile</string>
     <string name="text_input_username">Username</string>
+    <string name="text_input_firstname">First Name</string>
     <string name="text_view_email">Email address:</string>
     <string name="button_update_account">Change username</string>
     <string name="button_delete_account">Delete my account</string>
@@ -30,7 +31,6 @@
     <string name="popup_message_confirmation_delete_account">Are you sure you want to delete your account?</string>
     <string name="popup_message_choice_yes">Yes</string>
     <string name="popup_message_choice_no">No</string>
-    <string name="check_box_is_mentor">Are you a mentor?</string>
 
     <!-- COLLEAGUE_CHAT ACTIVITY -->
     <string name="toolbar_title_colleague_chat_activity">Chat Rooms</string>
@@ -42,4 +42,5 @@
     <string name="map_view">Map View</string>
     <string name="list_view">List View</string>
     <string name="workmates">Workmates</string>
+    <string name="restaurant_picture">This is the restaurant picture</string>
 </resources>

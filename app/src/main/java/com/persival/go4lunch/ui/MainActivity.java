@@ -35,6 +35,21 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startSignInActivity();
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+
+            switch (item.getItemId()) {
+                case R.id.item_1:
+                    MapsFragment.newInstance();
+                    break;
+                case R.id.item_2:
+                    RestaurantsFragment.newInstance();
+                    break;
+                case R.id.item_3:
+                    UserListFragment.newInstance();
+                    break;
+            }
+            return true;
+        });
     }
 
     private void startSignInActivity() {
@@ -59,7 +74,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     // Show Snack Bar with a message
     private void showSnackBar(String message) {
-        Snackbar.make(binding.mainLayout, message, Snackbar.LENGTH_SHORT).show();
+        //Snackbar.make(binding.mainLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
     // Method that handles response after SignIn Activity close
