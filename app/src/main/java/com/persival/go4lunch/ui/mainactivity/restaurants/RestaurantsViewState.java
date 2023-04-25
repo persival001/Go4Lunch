@@ -26,8 +26,8 @@ public class RestaurantsViewState {
     @NonNull
     private final int stars;
 
-    @DrawableRes
-    private final int pictureUrl;
+    @NonNull
+    private final String pictureUrl;
 
     public RestaurantsViewState(
         @NonNull String name,
@@ -37,7 +37,7 @@ public class RestaurantsViewState {
         @NonNull String distance,
         @NonNull String participants,
         int stars,
-        @DrawableRes int pictureUrl
+        @NonNull String pictureUrl
     ) {
         this.name = name;
         this.typeOfCuisine = typeOfCuisine;

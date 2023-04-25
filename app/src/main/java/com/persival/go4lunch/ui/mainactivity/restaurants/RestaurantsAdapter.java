@@ -29,13 +29,11 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
     }
 
-    // Ask your mentor why this class is static ! This is important.
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView rrr;
+        private final ImageView pictureUrl;
         private final TextView nameTextView;
         private final ImageView deleteImageView;
 
@@ -53,7 +51,6 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
                 .apply(RequestOptions.circleCropTransform())
                 .into(avatarImageView);
             nameTextView.setText(item.getName());
-            deleteImageView.setOnClickListener(v -> listener.onDeleteNeighbourClicked(item.getId()));
         }
     }
 
