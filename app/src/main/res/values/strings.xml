@@ -14,7 +14,7 @@
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="notification_title">"Vous avez reçu une notification"</string>
 
-    <!-- MAIN ACTIVITY -->
+    <!-- CONNECTION ACTIVITY -->
     <string name="error_not_connected">Vous devez vous connecter !</string>
     <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
     <string name="error_no_internet">Aucune connexion internet !</string>
@@ -37,19 +37,20 @@
     <string name="popup_message_choice_yes">Oui !</string>
     <string name="popup_message_choice_no">Non</string>
 
-    <!-- COLLEAGUE_CHAT ACTIVITY -->
-    <string name="toolbar_title_colleague_chat_activity">Chats de discussions</string>
-    <string name="text_input_title_colleague_chat_activity">Composer votre message</string>
-    <string name="button_title_colleague_chat_activity">ENVOYER</string>
-    <string name="text_view_colleague_chat_error">Ce fil de discussion ne contient pour le moment aucun message&#8230;</string>
-    <string name="popup_title_permission_files_access">Cette application a besoin de permission pour fonctionner.</string>
-    <string name="toast_title_no_image_chosen">Aucune image choisie&#8230;</string>
-
-    <!-- WORKMATES_MENU -->
+    <!-- MAIN ACTIVITY -->
     <string name="map_view">Carte</string>
     <string name="list_view">Liste</string>
     <string name="workmates">Collègues</string>
     <string name="restaurant_picture">Image du restaurant : %s</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="call">APPELER</string>
+    <string name="like">J\'AIME</string>
+    <string name="website_button">SITE WEB</string>
+
+    <!-- MAPS FRAGMENT -->
+    <string name="title_activity_maps">Current Place Details</string>
+    <string name="default_info_title">Default Location</string>
+    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
+    <string name="option_get_place">Get place</string>
+    <string name="pick_place">Choose a place</string>
+
 </resources>

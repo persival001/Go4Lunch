@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/restaurant_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/restaurant_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:scaleType="centerCrop"
+                    tools:srcCompat="@drawable/play_store_512" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_margin"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/default_text_big_size"
+                            tools:text="Casa Nostra" />
+
+                        <ImageView
+                            android:id="@+id/first_star"
+                            android:layout_width="@dimen/stars_size"
+                            android:layout_height="@dimen/stars_size"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/baseline_star_rate_24"
+                            android:layout_gravity="center"
+                            tools:ignore="VectorDrawableCompat" />
+                        <ImageView
+                            android:id="@+id/second_star"
+                            android:layout_width="@dimen/stars_size"
+                            android:layout_height="@dimen/stars_size"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/baseline_star_rate_24"
+                            android:layout_gravity="center"
+                            tools:ignore="VectorDrawableCompat" />
+                        <ImageView
+                            android:id="@+id/third_star"
+                            android:layout_width="@dimen/stars_size"
+                            android:layout_height="@dimen/stars_size"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/baseline_star_rate_24"
+                            android:layout_gravity="center"
+                            tools:ignore="VectorDrawableCompat" />
+                        <ImageView
+                            android:id="@+id/four_star"
+                            android:layout_width="@dimen/stars_size"
+                            android:layout_height="@dimen/stars_size"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/baseline_star_rate_24"
+                            android:layout_gravity="center"
+                            tools:ignore="VectorDrawableCompat" />
+                        <ImageView
+                            android:id="@+id/five_star"
+                            android:layout_width="@dimen/stars_size"
+                            android:layout_height="@dimen/stars_size"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/baseline_star_rate_24"
+                            android:layout_gravity="center"
+                            tools:ignore="VectorDrawableCompat" />
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/detail_formatted_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:textColor="#FFFFFF"
+                        tools:text="Italian restaurant - 42 rue de la Mifa 75000 Paris" />
+
+                </LinearLayout>
+
+                <GridLayout
+                    android:id="@+id/grid_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:columnCount="3"
+                    app:rowCount="1">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/call_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="@string/call"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        app:backgroundTint="#FFFFFF"
+                        app:icon="@drawable/baseline_phone_24"
+                        app:iconGravity="top"
+                        app:iconPadding="8dp"
+                        app:iconTint="@color/colorPrimary"
+                        android:layout_row="0"
+                        android:layout_rowWeight="1"
+                        android:layout_column="0"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="center"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/like_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="@string/like"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        app:backgroundTint="#FFFFFF"
+                        app:icon="@drawable/baseline_star_rate_24"
+                        app:iconGravity="top"
+                        app:iconPadding="8dp"
+                        app:iconTint="@color/colorPrimary"
+                        android:layout_row="0"
+                        android:layout_rowWeight="1"
+                        android:layout_column="1"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="center"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/website_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="@string/website_button"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        app:backgroundTint="#FFFFFF"
+                        app:icon="@drawable/baseline_public_24"
+                        app:iconGravity="top"
+                        app:iconPadding="8dp"
+                        app:iconTint="@color/colorPrimary"
+                        android:layout_row="0"
+                        android:layout_rowWeight="1"
+                        android:layout_column="2"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="center"/>
+
+                </GridLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_detail_resto"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/choose_this_restaurant_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="@drawable/baseline_check_circle_24"
+                app:backgroundTint="@color/quantum_white_100"
+                app:layout_anchor="@id/restaurant_picture"
+                app:layout_anchorGravity="bottom|right|end" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

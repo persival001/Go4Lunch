@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.RestaurantsFragment">
+    tools:context=".ui.mainactivity.restaurants.RestaurantsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/restaurants_recycler_view"
+        tools:listitem="@layout/item_restaurant"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

@@ -9,7 +9,7 @@
     <!-- NOTIFICATION SERVICE -->
     <string name="notification_title">You have a new notification</string>
 
-    <!-- MAIN ACTIVITY -->
+    <!-- CONNECTION ACTIVITY -->
     <string name="error_not_connected">Please log in first</string>
     <string name="error_authentication_canceled">Login aborted</string>
     <string name="error_no_internet">Network unavailable</string>
@@ -32,15 +32,20 @@
     <string name="popup_message_choice_yes">Yes</string>
     <string name="popup_message_choice_no">No</string>
 
-    <!-- COLLEAGUE_CHAT ACTIVITY -->
-    <string name="toolbar_title_colleague_chat_activity">Chat Rooms</string>
-    <string name="text_input_title_colleague_chat_activity">Write your message</string>
-    <string name="button_title_colleague_chat_activity">SEND</string>
-    <string name="text_view_colleague_chat_error">This thread has no messages</string>
-    <string name="popup_title_permission_files_access">To attach a photo, Firebase OC requires additional permissions.</string>
-    <string name="toast_title_no_image_chosen">No image chosen</string>
+    <!-- MAIN ACTIVITY -->
     <string name="map_view">Map View</string>
     <string name="list_view">List View</string>
     <string name="workmates">Workmates</string>
     <string name="restaurant_picture">This is the restaurant picture</string>
+    <string name="call">CALL</string>
+    <string name="like">LIKE</string>
+    <string name="website_button">WEBSITE</string>
+
+    <!-- MAPS FRAGMENT -->
+    <string name="title_activity_maps">Current Place Details</string>
+    <string name="default_info_title">Default Location</string>
+    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
+    <string name="option_get_place">Get place</string>
+    <string name="pick_place">Choose a place</string>
+
 </resources>
