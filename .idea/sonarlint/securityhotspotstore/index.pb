@@ -336,20 +336,14 @@ F
 app/proguard-rules.pro,9/e/9e08934d811afe28fbc77aaa3c0d747b94348db9
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-H
-app/google-services.json,f/d/fd8d34b142d02ec743a8efefefd2c097961666e9
 w
 G.idea/sonarlint/issuestore/e/f/efd6aa5cf12bd1415769b7f593cbdd8a7cb39646,9/0/9041310da6e70387cdf0ce4b7722fb13574a500e
-P
- app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 q
 Aapp/src/main/java/com/persival/go4lunch/ui/userinfo/UserInfo.java,3/9/399ed2798b577ba4ad1a56886e933a98b4325f83
 w
 G.idea/sonarlint/issuestore/b/c/bc87e03deeaa23f9e5728fe5f57a0fec04d28bd8,1/e/1e18984b5a3248bc91bde384e5ff7208e6bf1a27
 w
 G.idea/sonarlint/issuestore/6/4/6487ec9939f74380b96f9eae74012a61f74c53dc,d/0/d07040ddbba39b05e03873e7e2b0993e810ec8ed
-
-]app/src/main/java/com/persival/go4lunch/ui/mainactivity/restaurants/RestaurantsViewModel.java,2/d/2d9cc21edc895baeda542dff0c509a038b25730b
 w
 G.idea/sonarlint/issuestore/4/6/46e725fcf16b97c4259ae9720a86a71d1877808d,8/d/8d8c5bbdd89c804f6fc7800b597c67eb7837884b
 w
@@ -374,8 +368,6 @@ w
 G.idea/sonarlint/issuestore/a/a/aabe46f348e88e9328ed08a6e56a995641a48640,1/e/1e20ebd47e683191dffaf0c30db98add46f7e83a
 w
 G.idea/sonarlint/issuestore/d/8/d83eba5ea733cb5c0531ef72186b1c1f282329c8,f/c/fc6c5a94b90c91cddfccfd71601349a15d38c68b
-…
-Uapp/src/main/java/com/persival/go4lunch/ui/authentication/AuthenticationActivity.java,e/9/e9c2a22286fe30706675ac516d2c4b1302f2714a
 w
 G.idea/sonarlint/issuestore/3/a/3a6edaa19b768031af6c9381400d36a19f99cb32,4/2/4283bf338ceab4a9dcd1eb247a21b212085f3ac6
 w
@@ -390,18 +382,10 @@ w
 G.idea/sonarlint/issuestore/e/8/e80c14b69715617f8d7294873564dcb2ae4db8bb,2/8/28fb67301fdca6c8df105c252447e9ef92da80ee
 w
 G.idea/sonarlint/issuestore/9/9/99a990585871293b60929dea6b1e7459fe0bfd72,5/f/5fd5c7b9e370b1b01b6012d0374a124f5d001554
-r
-Bapp/src/main/java/com/persival/go4lunch/repository/Repository.java,2/e/2e3f927396b8b82e79d7bf60c482e378b7b7a00a
-…
-Uapp/src/main/java/com/persival/go4lunch/ui/mainactivity/details/DetailsViewModel.java,0/f/0f9c92f11ff9f342b7afb7195d9aec35e287e4d5
 w
 G.idea/sonarlint/issuestore/2/b/2bd415f97e0d8ab22df0eb42a0faf537d5cceecb,8/e/8e0270835e151652749ebe13fca997a5df67b53a
-m
-=app/src/main/java/com/persival/go4lunch/ViewModelFactory.java,e/9/e95891b73a0139ade738bcc919c8571382716500
 w
 G.idea/sonarlint/issuestore/a/a/aa7af65202125764c0dbf4c190ee32004e36d6b6,5/4/54a8f8d048cafdd6442c7a8f4baaded94bb1e96c
-l
-<app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a
 w
 G.idea/sonarlint/issuestore/5/6/5638eca1288f3c9951eed1818124cbc4e2ba7f42,1/b/1b83a49541a117411d3abacc8c4514540349c829
 w
@@ -436,8 +420,6 @@ w
 G.idea/sonarlint/issuestore/c/e/ce56a64b3fe8d43f997bddc27b23e711ed7492e3,5/9/59482ca7ce7cf3a0876c173da9a19e1fa6d2d7e8
 w
 G.idea/sonarlint/issuestore/4/7/47088ae03671a1d73d507de29e92ae465dbe8281,8/6/8649f35dd16c8e046cf1d8a71c4a39c46c484f72
-‡
-Wapp/src/main/java/com/persival/go4lunch/ui/mainactivity/userlist/UserListViewModel.java,b/1/b14a1ae7963e2d2ae662dcdd072a295d8e0e41c0
 †
 Vapp/src/main/java/com/persival/go4lunch/ui/mainactivity/userlist/UserListFragment.java,6/d/6d4d8dec634960246ad5c4e16c401d7053701709
 w
@@ -446,8 +428,6 @@ w
 G.idea/sonarlint/issuestore/2/9/29ae425d58ca5b9bd0656da8ee9b9ab731a5fe85,a/8/a820ab1c80f97df8b4ddd7c35de4485628d01bf8
 w
 G.idea/sonarlint/issuestore/3/b/3b6432b5745cd00bfec39a63192907404d8155e3,f/6/f631cbe2030bcfeb4db834ee21e4119e8383ced4
-„
-Tapp/src/main/java/com/persival/go4lunch/ui/mainactivity/details/DetailsActivity.java,b/7/b76e5358cfbe8f8c288a4d86320ab1770cc06701
 w
 G.idea/sonarlint/issuestore/0/8/087a2e648186601b5eece00c25f82315b984badd,e/e/ee0d40c67f7d3b5ee7d1e733a7e02627381820ec
 w

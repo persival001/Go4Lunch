@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">@android:color/holo_red_dark</color>
     <color name="colorAccent">@android:color/holo_red_dark</color>
     <color name="colorError">#FF5252</color>
+    <color name="backgroundRecyclerView">#E4E4E4</color>
 
     <color name="colorGreen">#6BB18C</color>
     <color name="colorSandLight">#ECDAAF</color>

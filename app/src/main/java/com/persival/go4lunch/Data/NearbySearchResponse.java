@@ -1,23 +1,27 @@
 package com.persival.go4lunch.Data;
 
 import com.google.gson.annotations.SerializedName;
+import com.persival.go4lunch.model.Restaurant;
 
 import java.util.List;
+import java.util.Objects;
 
 public class NearbySearchResponse {
 
     @SerializedName("results")
-    private List<Restaurant> restaurants;
+    private List<Place> restaurants;
 
-    public List<Restaurant> getRestaurants() {
+    public List<Place> getRestaurants() {
         return restaurants;
     }
 
-    public void setRestaurants(List<Restaurant> restaurants) {
+    public void setRestaurants(List<Place> restaurants) {
         this.restaurants = restaurants;
     }
 
-    public static class Restaurant {
+    public static class Place {
+        @SerializedName("place_id")
+        private long id;
         @SerializedName("name")
         private String name;
 
@@ -38,6 +42,14 @@ public class NearbySearchResponse {
 
         @SerializedName("photos")
         private List<Photo> photos;
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
 
         public String getName() {
             return name;

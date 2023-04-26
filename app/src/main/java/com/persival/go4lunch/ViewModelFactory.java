@@ -45,17 +45,14 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if (modelClass.isAssignableFrom(RestaurantsViewModel.class)) {
             return (T) new RestaurantsViewModel(
-                MainApplication.getInstance().getResources(),
                 repository
             );
         } else if (modelClass.isAssignableFrom(UserListViewModel.class)) {
             return (T) new UserListViewModel(
-                MainApplication.getInstance().getResources(),
                 repository
             );
         } else if (modelClass.isAssignableFrom(DetailsViewModel.class)) {
             return (T) new DetailsViewModel(
-                MainApplication.getInstance().getResources(),
                 repository
             );
         }

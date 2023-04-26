@@ -336,8 +336,6 @@ F
 app/proguard-rules.pro,9/e/9e08934d811afe28fbc77aaa3c0d747b94348db9
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-H
-app/google-services.json,f/d/fd8d34b142d02ec743a8efefefd2c097961666e9
 w
 G.idea/sonarlint/issuestore/e/f/efd6aa5cf12bd1415769b7f593cbdd8a7cb39646,9/0/9041310da6e70387cdf0ce4b7722fb13574a500e
 w
@@ -714,27 +712,9 @@ w
 G.idea/sonarlint/issuestore/f/0/f07866736216be0ee2aba49e392191aeae700a35,b/f/bfb9453d49af9bc40f5f7a5f034be3c7ef8fa6bf
 
 Q.idea/sonarlint/securityhotspotstore/f/0/f07866736216be0ee2aba49e392191aeae700a35,2/5/25f6469773b9f3ebb994178c1114a60412389f58
-P
- app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
-…
-Uapp/src/main/java/com/persival/go4lunch/ui/authentication/AuthenticationActivity.java,e/9/e9c2a22286fe30706675ac516d2c4b1302f2714a
 {
 Kapp/src/main/java/com/persival/go4lunch/ui/authentication/BaseActivity.java,7/b/7b8d84ea9dd80b04bd6c0999f542498c04f1bbfa
-„
-Tapp/src/main/java/com/persival/go4lunch/ui/mainactivity/details/DetailsActivity.java,b/7/b76e5358cfbe8f8c288a4d86320ab1770cc06701
-…
-Uapp/src/main/java/com/persival/go4lunch/ui/mainactivity/details/DetailsViewModel.java,0/f/0f9c92f11ff9f342b7afb7195d9aec35e287e4d5
-l
-<app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a
-r
-Bapp/src/main/java/com/persival/go4lunch/repository/Repository.java,2/e/2e3f927396b8b82e79d7bf60c482e378b7b7a00a
-
-]app/src/main/java/com/persival/go4lunch/ui/mainactivity/restaurants/RestaurantsViewModel.java,2/d/2d9cc21edc895baeda542dff0c509a038b25730b
 q
 Aapp/src/main/java/com/persival/go4lunch/ui/userinfo/UserInfo.java,3/9/399ed2798b577ba4ad1a56886e933a98b4325f83
 †
 Vapp/src/main/java/com/persival/go4lunch/ui/mainactivity/userlist/UserListFragment.java,6/d/6d4d8dec634960246ad5c4e16c401d7053701709
-‡
-Wapp/src/main/java/com/persival/go4lunch/ui/mainactivity/userlist/UserListViewModel.java,b/1/b14a1ae7963e2d2ae662dcdd072a295d8e0e41c0
-m
-=app/src/main/java/com/persival/go4lunch/ViewModelFactory.java,e/9/e95891b73a0139ade738bcc919c8571382716500
