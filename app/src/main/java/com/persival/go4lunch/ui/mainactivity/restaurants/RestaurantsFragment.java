@@ -17,6 +17,9 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.ViewModelFactory;
 import com.persival.go4lunch.ui.mainactivity.details.DetailsActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RestaurantsFragment extends Fragment {
 
     public static RestaurantsFragment newInstance() {
@@ -54,24 +57,6 @@ public class RestaurantsFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        viewModel.getRestaurantsLiveData().observe(getViewLifecycleOwner(), restaurantViewStateItems -> {
-            adapter.submitList(restaurantViewStateItems);
-            Log.d("RECYCLER_VIEW_DATA", "Data submitted to adapter: " + restaurantViewStateItems.toString());
-            for (RestaurantsViewState restaurant : restaurantViewStateItems) {
-                Log.d("RESTAURANTS_DATA", "Name: " + restaurant.getName() + ", Address: " + restaurant.getTypeOfCuisineAndAddress());
-            }
-        });
-
-        /*List<RestaurantsViewState> restaurants = new ArrayList<>();
-
-        // Ajoutez des restaurants fictifs à la liste
-        restaurants.add(new RestaurantsViewState(1, "Restaurant 1", "Italian - 42 Rue de la Mifa", "Open until 23pm", "210m", "(1)", "https://picsum.photos/200/300"));
-        restaurants.add(new RestaurantsViewState(2, "Restaurant 2", "French - 12 Rue de la Mifa", "Open until 22pm", "350m", "(3)", "https://picsum.photos/200/300"));
-        restaurants.add(new RestaurantsViewState(3, "Restaurant 3", "Mexican - 25 Rue de la Mifa", "Open until 24pm", "500m", "(2)", "https://picsum.photos/200/300"));
-        restaurants.add(new RestaurantsViewState(4, "Restaurant 4", "Japanese - 15 Rue de la Mifa", "Open until 21pm", "700m", "(4)", "https://picsum.photos/200/300"));
-        // Ajoutez plus de restaurants fictifs si nécessaire
-
-        // Mettez à jour l'adaptateur avec la liste des restaurants
-        adapter.submitList(restaurants);*/
+        viewModel.getRestaurantsLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 }

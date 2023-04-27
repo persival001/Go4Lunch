@@ -1,10 +1,8 @@
 package com.persival.go4lunch.Data;
 
 import com.google.gson.annotations.SerializedName;
-import com.persival.go4lunch.model.Restaurant;
 
 import java.util.List;
-import java.util.Objects;
 
 public class NearbySearchResponse {
 
@@ -21,7 +19,7 @@ public class NearbySearchResponse {
 
     public static class Place {
         @SerializedName("place_id")
-        private long id;
+        private String id;
         @SerializedName("name")
         private String name;
 
@@ -43,11 +41,11 @@ public class NearbySearchResponse {
         @SerializedName("photos")
         private List<Photo> photos;
 
-        public long getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(long id) {
+        public void setId(String id) {
             this.id = id;
         }
 

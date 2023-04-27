@@ -44,18 +44,13 @@ public class RestaurantsViewModel extends ViewModel {
                         List<RestaurantsViewState> restaurantViewStates
                             = convertRestaurantsToViewStates(response.body().getRestaurants());
                         restaurantsLiveData.setValue(restaurantViewStates);
-                        Log.d("API_RESPONSE", "Raw response: " + response.raw().toString());
-                        Log.d("API_RESPONSE", "Response body: " + response.body().toString());
-
                     } else {
-                        // Gérer l'échec de la requête ici
                         Log.d("API_RESPONSE", "Failure: " + response.errorBody().toString());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<NearbySearchResponse> call, Throwable t) {
-                    // Gérer l'échec de la requête ici
                     Log.d("API_RESPONSE", "Error: " + t.getMessage());
                 }
             });
@@ -67,14 +62,14 @@ public class RestaurantsViewModel extends ViewModel {
             Log.d("API_RESPONSE", "Place: " + place.toString());
             // Conversion d'un objet Place en un objet Restaurant
             Restaurant restaurant = new Restaurant(
-                place.getId(), // Utiliser le hashCode de place_id comme ID
+                place.getId().hashCode(), // Utiliser le hashCode de place_id comme ID
                 place.getName(),
                 place.getAddress(),
                 place.getName(),
                 place.getName(),
                 place.getName(),
                 place.getName()
-                // Récupérez l'URL de la photo à partir de l'objet Photo
+                // Récupérer l'URL de la photo à partir de l'objet Photo
                 // et des autres informations nécessaires pour construire l'objet Restaurant
             );
 

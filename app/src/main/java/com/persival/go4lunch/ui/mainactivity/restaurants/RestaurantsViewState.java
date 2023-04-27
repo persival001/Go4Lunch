@@ -79,14 +79,14 @@ public class RestaurantsViewState {
         return participants;
     }
 
-    //@NonNull
-    //public int getStars() {
-        //return stars;
-   // }
-
     @NonNull
     public String getPictureUrl() {
         return pictureUrl;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, typeOfCuisineAndAddress, openingTime, distance, participants, pictureUrl);
     }
 
     @Override
@@ -104,10 +104,5 @@ public class RestaurantsViewState {
             && distance.equals(that.distance)
             && participants.equals(that.participants)
             && pictureUrl.equals(that.pictureUrl);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, typeOfCuisineAndAddress, openingTime, distance, participants, pictureUrl);
     }
 }

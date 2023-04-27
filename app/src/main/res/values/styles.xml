@@ -7,6 +7,14 @@
         <item name="colorAccent">@android:color/holo_red_dark</item>
     </style>
 
+    <!-- RatingBar theme. -->
+    <style name="MyRatingBar" parent="android:style/Widget.RatingBar">
+        <!-- CUSTOMIZATION -->
+        <item name="android:progressDrawable">@drawable/star_ratingbar</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+    </style>
+
     <!-- STYLE FOR MAIN ACTIVITY -->
     <style name="AppTheme.NoTitle" parent="AppTheme">
         <item name="windowNoTitle">true</item>

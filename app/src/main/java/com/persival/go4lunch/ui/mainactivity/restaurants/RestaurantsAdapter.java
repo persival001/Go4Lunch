@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.fido.fido2.api.common.RequestOptions;
 import com.persival.go4lunch.R;
 
 public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, RestaurantsAdapter.ViewHolder> {
@@ -54,7 +53,7 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
             restaurantOpeningTime = itemView.findViewById(R.id.restaurant_availability);
             restaurantDistance = itemView.findViewById(R.id.restaurant_distance);
             restaurantParticipants = itemView.findViewById(R.id.workmate_icon);
-            restaurantStars = itemView.findViewById(R.id.rate_icon);
+            restaurantStars = itemView.findViewById(R.id.rating_bar);
             restaurantPicture = itemView.findViewById(R.id.restaurant_picture);
         }
 

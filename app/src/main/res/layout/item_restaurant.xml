@@ -84,20 +84,22 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             app:drawableStartCompat="@drawable/baseline_perm_identity_24"
-            app:layout_constraintBottom_toTopOf="@+id/rate_icon"
+            app:layout_constraintBottom_toTopOf="@+id/rating_bar"
             app:layout_constraintEnd_toStartOf="@+id/restaurant_picture"
             app:layout_constraintTop_toBottomOf="@+id/restaurant_distance"
             tools:text="(1)" />
 
-        <ImageView
-            android:id="@+id/rate_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+        <RatingBar
+            android:id="@+id/rating_bar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
-            android:contentDescription="@string/restaurant_picture"
+            android:numStars="3"
+            android:rating="3"
+            android:stepSize="0.5"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/restaurant_picture"
-            app:srcCompat="@drawable/baseline_star_rate_24" />
+            app:layout_constraintEnd_toStartOf="@+id/restaurant_picture" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
