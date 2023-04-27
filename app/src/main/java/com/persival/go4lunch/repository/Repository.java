@@ -30,9 +30,10 @@ public class Repository {
         googlePlacesApi = retrofit.create(GooglePlacesApi.class);
     }
 
-    public Call<NearbySearchResponse> getNearbyRestaurants(String location, int radius, String apiKey) {
-        return googlePlacesApi.getNearbyRestaurants(location, radius, "restaurant", MAPS_API_KEY);
+    public Call<NearbySearchResponse> getNearbyRestaurants(String location, int radius, String type, String apiKey, String rankBy, int maxResults) {
+        return googlePlacesApi.getNearbyPlaces(location, radius, type, apiKey, rankBy, maxResults);
     }
+
 
     public LiveData<List<Restaurant>> getRestaurantsLiveData() {
         return restaurantsLiveData;

@@ -1,8 +1,7 @@
 package com.persival.go4lunch.ui.mainactivity.restaurants;
 
-import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
-
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.persival.go4lunch.Data.GooglePlacesApi;
-import com.persival.go4lunch.Data.NearbySearchResponse;
-import com.persival.go4lunch.Data.RestClient;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.ViewModelFactory;
-import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
 import com.persival.go4lunch.ui.mainactivity.details.DetailsActivity;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RestaurantsFragment extends Fragment {
 
@@ -42,33 +30,7 @@ public class RestaurantsFragment extends Fragment {
         @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState
     ) {
-        //getNearbyRestaurants();
         return inflater.inflate(R.layout.fragment_restaurants, container, false);
-    }
-
-    private void getNearbyRestaurants() {
-        GooglePlacesApi api = RestClient.createGooglePlacesApi();
-        String location = "48.8566,2.3522"; // Coordonnées de Paris, France
-        int radius = 1000; // Rayon de 1000 mètres
-        String type = "restaurant";
-
-        Call<NearbySearchResponse> call = api.getNearbyRestaurants(location, radius, type, MAPS_API_KEY);
-        call.enqueue(new Callback<NearbySearchResponse>() {
-            @Override
-            public void onResponse(Call<NearbySearchResponse> call, Response<NearbySearchResponse> response) {
-                if (response.isSuccessful()) {
-                    NearbySearchResponse nearbySearchResponse = response.body();
-                    // Utilisez les données de nearbySearchResponse pour afficher les restaurants
-                } else {
-                    // Gérez les erreurs
-                }
-            }
-
-            @Override
-            public void onFailure(Call<NearbySearchResponse> call, Throwable t) {
-                // Gérez les erreurs
-            }
-        });
     }
 
     @Override
@@ -86,13 +48,19 @@ public class RestaurantsFragment extends Fragment {
             }
         });
 
+        String location = "48.8566,2.3522"; // Coordonnées de Paris, France
+        int radius = 10000; // Rayon de 1000 mètres
+        viewModel.fetchRestaurants(location, radius, 10);
+
         recyclerView.setAdapter(adapter);
 
-
-
-        viewModel.getRestaurantsLiveData().observe(getViewLifecycleOwner(), restaurantViewStateItems ->
-            adapter.submitList(restaurantViewStateItems)
-        );
+        viewModel.getRestaurantsLiveData().observe(getViewLifecycleOwner(), restaurantViewStateItems -> {
+            adapter.submitList(restaurantViewStateItems);
+            Log.d("RECYCLER_VIEW_DATA", "Data submitted to adapter: " + restaurantViewStateItems.toString());
+            for (RestaurantsViewState restaurant : restaurantViewStateItems) {
+                Log.d("RESTAURANTS_DATA", "Name: " + restaurant.getName() + ", Address: " + restaurant.getTypeOfCuisineAndAddress());
+            }
+        });
 
         /*List<RestaurantsViewState> restaurants = new ArrayList<>();
 

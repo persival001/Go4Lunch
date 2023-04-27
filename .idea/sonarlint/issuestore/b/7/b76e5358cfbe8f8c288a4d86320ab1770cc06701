@@ -1,0 +1,7 @@
+
+{
+java:S1488"^Immediately return this expression instead of assigning it to the temporary variable "intent".(ı–‘Ş8Ì¬’äû0
+s
+java:S1450"VRemove the "binding" field and declare it as a local variable in the relevant methods.(ÃòŸë8Ö¬’äû0
+U
+java:S1172"3Remove this unused method parameter "restaurantId".(·š’æüÿÿÿÿ8Ö¬’äû0

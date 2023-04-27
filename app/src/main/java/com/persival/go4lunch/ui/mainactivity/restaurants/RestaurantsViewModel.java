@@ -35,36 +35,36 @@ public class RestaurantsViewModel extends ViewModel {
         return restaurantsLiveData;
     }
 
-    public void fetchRestaurants(String location, int radius, String apiKey) {
-        repository.getNearbyRestaurants(location, radius, MAPS_API_KEY).enqueue(new Callback<NearbySearchResponse>() {
-            @Override
-            public void onResponse(Call<NearbySearchResponse> call, Response<NearbySearchResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<NearbySearchResponse.Place> places = response.body().getRestaurants();
+    public void fetchRestaurants(String location, int radius, int maxResults) {
+        repository.getNearbyRestaurants(location, radius, "restaurant", MAPS_API_KEY, "distance", maxResults)
+            .enqueue(new Callback<NearbySearchResponse>() {
+                @Override
+                public void onResponse(Call<NearbySearchResponse> call, Response<NearbySearchResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        List<RestaurantsViewState> restaurantViewStates
+                            = convertRestaurantsToViewStates(response.body().getRestaurants());
+                        restaurantsLiveData.setValue(restaurantViewStates);
+                        Log.d("API_RESPONSE", "Raw response: " + response.raw().toString());
+                        Log.d("API_RESPONSE", "Response body: " + response.body().toString());
 
-                    // Limiter le nombre de restaurants à 10
-                    List<NearbySearchResponse.Place> limitedPlaces = new ArrayList<>();
-                    for (int i = 0; i < 10 && i < places.size(); i++) {
-                        limitedPlaces.add(places.get(i));
+                    } else {
+                        // Gérer l'échec de la requête ici
+                        Log.d("API_RESPONSE", "Failure: " + response.errorBody().toString());
                     }
-
-                    List<RestaurantsViewState> restaurantViewStates
-                        = convertRestaurantsToViewStates(limitedPlaces);
-                    restaurantsLiveData.setValue(restaurantViewStates);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<NearbySearchResponse> call, Throwable t) {
-                Log.d("RestaurantsViewModel", "onFailure: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<NearbySearchResponse> call, Throwable t) {
+                    // Gérer l'échec de la requête ici
+                    Log.d("API_RESPONSE", "Error: " + t.getMessage());
+                }
+            });
     }
-
 
     private List<RestaurantsViewState> convertRestaurantsToViewStates(List<NearbySearchResponse.Place> places) {
         List<RestaurantsViewState> restaurantViewStates = new ArrayList<>();
         for (NearbySearchResponse.Place place : places) {
+            Log.d("API_RESPONSE", "Place: " + place.toString());
             // Conversion d'un objet Place en un objet Restaurant
             Restaurant restaurant = new Restaurant(
                 place.getId(), // Utiliser le hashCode de place_id comme ID
@@ -90,6 +90,8 @@ public class RestaurantsViewModel extends ViewModel {
             );
             restaurantViewStates.add(viewState);
         }
+        Log.d("CONVERTED_DATA", "RestaurantsViewState: " + restaurantViewStates.toString());
+
         return restaurantViewStates;
     }
 }
