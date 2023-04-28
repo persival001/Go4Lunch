@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.persival.go4lunch.Data.GooglePlacesApi;
-import com.persival.go4lunch.Data.NearbySearchResponse;
+import com.persival.go4lunch.Data.model.RestaurantEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Repository {
     private static final String GOOGLE_PLACES_API_BASE_URL = "https://maps.googleapis.com/";
-    private final MutableLiveData<List<NearbySearchResponse.Place>> placesLiveData = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<RestaurantEntity.Place>> placesLiveData = new MutableLiveData<>(new ArrayList<>());
     private GooglePlacesApi googlePlacesApi;
 
     public Repository() {
@@ -30,9 +30,9 @@ public class Repository {
     }
 
     public void getNearbyRestaurants(String location, int radius, String type, String apiKey) {
-        googlePlacesApi.getNearbyPlaces(location, radius, type, apiKey).enqueue(new Callback<NearbySearchResponse>() {
+        googlePlacesApi.getNearbyPlaces(location, radius, type, apiKey).enqueue(new Callback<RestaurantEntity>() {
             @Override
-            public void onResponse(Call<NearbySearchResponse> call, Response<NearbySearchResponse> response) {
+            public void onResponse(Call<RestaurantEntity> call, Response<RestaurantEntity> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     placesLiveData.setValue(response.body().getResults());
                 } else {
@@ -41,13 +41,13 @@ public class Repository {
             }
 
             @Override
-            public void onFailure(Call<NearbySearchResponse> call, Throwable t) {
+            public void onFailure(Call<RestaurantEntity> call, Throwable t) {
                 // Handle the error
             }
         });
     }
 
-    public LiveData<List<NearbySearchResponse.Place>> getPlacesLiveData() {
+    public LiveData<List<RestaurantEntity.Place>> getPlacesLiveData() {
         return placesLiveData;
     }
 }

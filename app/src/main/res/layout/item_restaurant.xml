@@ -25,6 +25,7 @@
             android:textColor="#000000"
             android:textSize="@dimen/default_text_size"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/restaurant_distance"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="La Convalida Nostra" />
@@ -38,6 +39,7 @@
             android:textSize="@dimen/default_text_size"
             android:textStyle="normal"
             app:layout_constraintBottom_toTopOf="@+id/restaurant_availability"
+            app:layout_constraintEnd_toStartOf="@+id/workmate_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/restaurant_name"
             tools:text="Italian - 42 rue de la Mifa" />
@@ -64,6 +66,7 @@
             android:textSize="@dimen/default_text_size"
             android:textStyle="normal|italic"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rating_bar"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Open until 23pm" />
 
@@ -73,6 +76,7 @@
             android:layout_height="100dp"
             android:layout_margin="@dimen/default_margin"
             android:contentDescription="@string/restaurant_picture"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -96,7 +100,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:numStars="3"
-            android:rating="3"
             android:stepSize="0.5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/restaurant_picture" />

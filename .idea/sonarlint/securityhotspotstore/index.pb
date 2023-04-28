@@ -1378,8 +1378,6 @@ P
  app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 ‡
 Wapp/src/main/java/com/persival/go4lunch/ui/mainactivity/userlist/UserListViewModel.java,b/1/b14a1ae7963e2d2ae662dcdd072a295d8e0e41c0
-…
-Uapp/src/main/java/com/persival/go4lunch/ui/mainactivity/details/DetailsViewModel.java,0/f/0f9c92f11ff9f342b7afb7195d9aec35e287e4d5
 m
 =app/src/main/java/com/persival/go4lunch/ViewModelFactory.java,e/9/e95891b73a0139ade738bcc919c8571382716500
 H

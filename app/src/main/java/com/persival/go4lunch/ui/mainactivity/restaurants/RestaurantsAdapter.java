@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,7 +43,7 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
         private final TextView restaurantOpeningTime;
         private final TextView restaurantDistance;
         private final TextView restaurantParticipants;
-        //private final ImageView restaurantStars;
+        private final RatingBar restaurantStars;
         private final ImageView restaurantPicture;
 
         public ViewHolder(@NonNull View itemView) {
@@ -53,17 +54,16 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
             restaurantOpeningTime = itemView.findViewById(R.id.restaurant_availability);
             restaurantDistance = itemView.findViewById(R.id.restaurant_distance);
             restaurantParticipants = itemView.findViewById(R.id.workmate_icon);
-            //restaurantStars = itemView.findViewById(R.id.rating_bar);
+            restaurantStars = itemView.findViewById(R.id.rating_bar);
             restaurantPicture = itemView.findViewById(R.id.restaurant_picture);
         }
 
         public void bind(RestaurantsViewState item, OnRestaurantClickedListener listener) {
-            Log.d("RestaurantsAdapter", "Binding item: " + item.getName());
             itemView.setOnClickListener(v -> listener.onRestaurantClicked(item.getId()));
             Glide.with(itemView)
                 .load(item.getPictureUrl())
-                .placeholder(R.drawable.logoresto) // Image par défaut en cas d'échec du chargement
-                .error(R.drawable.baseline_error_24) // Image à afficher en cas d'erreur
+                .placeholder(R.drawable.logoresto)
+                .error(R.drawable.baseline_error_24)
                 .into(restaurantPicture);
 
             restaurantName.setText(item.getName());
@@ -71,7 +71,7 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
             restaurantOpeningTime.setText(item.getOpeningTime());
             restaurantDistance.setText(item.getDistance());
             restaurantParticipants.setText(item.getParticipants());
-            //restaurantStars.setImageResource(item.getStars());
+            restaurantStars.setRating(item.getRating());
         }
     }
 
