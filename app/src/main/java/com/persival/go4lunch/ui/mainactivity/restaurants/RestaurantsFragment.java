@@ -52,8 +52,8 @@ public class RestaurantsFragment extends Fragment {
         });
 
         String location = "48.8566,2.3522"; // Coordonnées de Paris, France
-        int radius = 10000; // Rayon de 1000 mètres
-        viewModel.fetchRestaurants(location, radius, 10);
+        int radius = 1000; // Rayon de 1000 mètres
+        viewModel.fetchRestaurants(location, radius);
 
         recyclerView.setAdapter(adapter);
 

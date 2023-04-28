@@ -7,10 +7,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.Data.NearbySearchResponse;
-import com.persival.go4lunch.model.Restaurant;
 import com.persival.go4lunch.repository.Repository;
 
 import java.util.ArrayList;
@@ -35,46 +35,28 @@ public class RestaurantsViewModel extends ViewModel {
         return restaurantsLiveData;
     }
 
-    public void fetchRestaurants(String location, int radius, int maxResults) {
-        repository.getNearbyRestaurants(location, radius, "restaurant", MAPS_API_KEY, "distance", maxResults)
-            .enqueue(new Callback<NearbySearchResponse>() {
-                @Override
-                public void onResponse(Call<NearbySearchResponse> call, Response<NearbySearchResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        List<RestaurantsViewState> restaurantViewStates
-                            = convertRestaurantsToViewStates(response.body().getRestaurants());
-                        restaurantsLiveData.setValue(restaurantViewStates);
-                    } else {
-                        Log.d("API_RESPONSE", "Failure: " + response.errorBody().toString());
-                    }
+    public void fetchRestaurants(String location, int radius) {
+        repository.getNearbyRestaurants(location, radius, "restaurant", MAPS_API_KEY);
+        repository.getPlacesLiveData().observeForever(new Observer<List<NearbySearchResponse.Place>>() {
+            @Override
+            public void onChanged(List<NearbySearchResponse.Place> places) {
+                // Transform NearbySearchResponse.Place list to RestaurantsViewState list
+                List<RestaurantsViewState> restaurants = new ArrayList<>();
+                for (NearbySearchResponse.Place place : places) {
+                    // Assuming RestaurantsViewState has a constructor that takes a NearbySearchResponse.Place object
+                    restaurants.add(new RestaurantsViewState(place));
                 }
-
-                @Override
-                public void onFailure(Call<NearbySearchResponse> call, Throwable t) {
-                    Log.d("API_RESPONSE", "Error: " + t.getMessage());
-                }
-            });
+                restaurantsLiveData.setValue(restaurants);
+            }
+        });
     }
+}
 
-    private List<RestaurantsViewState> convertRestaurantsToViewStates(List<NearbySearchResponse.Place> places) {
-        List<RestaurantsViewState> restaurantViewStates = new ArrayList<>();
-        for (NearbySearchResponse.Place place : places) {
-            Log.d("API_RESPONSE", "Place: " + place.toString());
-            // Conversion d'un objet Place en un objet Restaurant
-            Restaurant restaurant = new Restaurant(
-                place.getId().hashCode(), // Utiliser le hashCode de place_id comme ID
-                place.getName(),
-                place.getAddress(),
-                place.getName(),
-                place.getName(),
-                place.getName(),
-                place.getName()
-                // Récupérer l'URL de la photo à partir de l'objet Photo
-                // et des autres informations nécessaires pour construire l'objet Restaurant
-            );
 
-            // Conversion d'un objet Restaurant en un objet RestaurantsViewState
-            RestaurantsViewState viewState = new RestaurantsViewState(
+    /*public LiveData<List<RestaurantsViewState>> getRestaurantsViewStateLiveData() {
+        List<RestaurantsViewState> restaurantsViewState = new ArrayList<>();
+
+        restaurantsViewState.add(new restaurantsViewState(
                 restaurant.getId(),
                 restaurant.getName(),
                 restaurant.getAddress(),
@@ -82,11 +64,9 @@ public class RestaurantsViewModel extends ViewModel {
                 restaurant.getOpeningHours(),
                 restaurant.getDistance(),
                 restaurant.getWorkmates()
-            );
-            restaurantViewStates.add(viewState);
-        }
-        Log.d("CONVERTED_DATA", "RestaurantsViewState: " + restaurantViewStates.toString());
+            )
+        );
 
-        return restaurantViewStates;
-    }
-}
+        return restaurantsViewState;
+    }*/
+

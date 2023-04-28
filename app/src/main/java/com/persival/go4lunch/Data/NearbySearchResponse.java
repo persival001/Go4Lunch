@@ -7,14 +7,14 @@ import java.util.List;
 public class NearbySearchResponse {
 
     @SerializedName("results")
-    private List<Place> restaurants;
+    private List<Place> results;
 
-    public List<Place> getRestaurants() {
-        return restaurants;
+    public List<Place> getResults() {
+        return results;
     }
 
-    public void setRestaurants(List<Place> restaurants) {
-        this.restaurants = restaurants;
+    public void setResults(List<Place> results) {
+        this.results = results;
     }
 
     public static class Place {

@@ -11,9 +11,7 @@ public interface GooglePlacesApi {
         @Query("location") String location,
         @Query("radius") int radius,
         @Query("type") String type,
-        @Query("key") String apiKey,
-        @Query("rankby") String rankBy,
-        @Query("maxResults") int maxResults
+        @Query("key") String apiKey
     );
 }
 

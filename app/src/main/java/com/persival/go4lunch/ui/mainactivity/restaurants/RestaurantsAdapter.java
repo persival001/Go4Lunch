@@ -42,7 +42,7 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
         private final TextView restaurantOpeningTime;
         private final TextView restaurantDistance;
         private final TextView restaurantParticipants;
-        private final ImageView restaurantStars;
+        //private final ImageView restaurantStars;
         private final ImageView restaurantPicture;
 
         public ViewHolder(@NonNull View itemView) {
@@ -53,7 +53,7 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
             restaurantOpeningTime = itemView.findViewById(R.id.restaurant_availability);
             restaurantDistance = itemView.findViewById(R.id.restaurant_distance);
             restaurantParticipants = itemView.findViewById(R.id.workmate_icon);
-            restaurantStars = itemView.findViewById(R.id.rating_bar);
+            //restaurantStars = itemView.findViewById(R.id.rating_bar);
             restaurantPicture = itemView.findViewById(R.id.restaurant_picture);
         }
 
