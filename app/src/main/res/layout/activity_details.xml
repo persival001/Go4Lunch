@@ -21,7 +21,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/restaurant_picture"
+                    android:id="@+id/details_picture"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:scaleType="centerCrop"
@@ -39,7 +39,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/name"
+                            android:id="@+id/details_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/default_margin"
@@ -47,52 +47,23 @@
                             android:textSize="@dimen/default_text_big_size"
                             tools:text="Casa Nostra" />
 
-                        <ImageView
-                            android:id="@+id/first_star"
-                            android:layout_width="@dimen/stars_size"
-                            android:layout_height="@dimen/stars_size"
-                            android:visibility="invisible"
-                            app:srcCompat="@drawable/baseline_star_rate_24"
+                        <RatingBar
+                            android:id="@+id/details_rating_bar"
+                            style="@style/Widget.AppCompat.RatingBar.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            tools:ignore="VectorDrawableCompat" />
-                        <ImageView
-                            android:id="@+id/second_star"
-                            android:layout_width="@dimen/stars_size"
-                            android:layout_height="@dimen/stars_size"
-                            android:visibility="invisible"
-                            app:srcCompat="@drawable/baseline_star_rate_24"
-                            android:layout_gravity="center"
-                            tools:ignore="VectorDrawableCompat" />
-                        <ImageView
-                            android:id="@+id/third_star"
-                            android:layout_width="@dimen/stars_size"
-                            android:layout_height="@dimen/stars_size"
-                            android:visibility="invisible"
-                            app:srcCompat="@drawable/baseline_star_rate_24"
-                            android:layout_gravity="center"
-                            tools:ignore="VectorDrawableCompat" />
-                        <ImageView
-                            android:id="@+id/four_star"
-                            android:layout_width="@dimen/stars_size"
-                            android:layout_height="@dimen/stars_size"
-                            android:visibility="invisible"
-                            app:srcCompat="@drawable/baseline_star_rate_24"
-                            android:layout_gravity="center"
-                            tools:ignore="VectorDrawableCompat" />
-                        <ImageView
-                            android:id="@+id/five_star"
-                            android:layout_width="@dimen/stars_size"
-                            android:layout_height="@dimen/stars_size"
-                            android:visibility="invisible"
-                            app:srcCompat="@drawable/baseline_star_rate_24"
-                            android:layout_gravity="center"
-                            tools:ignore="VectorDrawableCompat" />
+                            android:layout_margin="@dimen/default_margin"
+                            android:numStars="3"
+                            android:stepSize="0.5"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/restaurant_picture" />
 
 
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/detail_formatted_address"
+                        android:id="@+id/details_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/default_margin"
@@ -168,8 +139,8 @@
                 </GridLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_detail_resto"
-
+                    android:id="@+id/details_recycler_view"
+                    tools:listitem="@layout/item_details"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </LinearLayout>
@@ -178,9 +149,10 @@
                 android:id="@+id/choose_this_restaurant_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
                 android:foreground="@drawable/baseline_check_circle_24"
                 app:backgroundTint="@color/quantum_white_100"
-                app:layout_anchor="@id/restaurant_picture"
+                app:layout_anchor="@id/details_picture"
                 app:layout_anchorGravity="bottom|right|end" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

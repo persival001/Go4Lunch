@@ -1,10 +1,17 @@
 package com.persival.go4lunch.repository;
 
+import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
+
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
+import com.google.android.libraries.places.api.model.Place;
 import com.persival.go4lunch.Data.GooglePlacesApi;
 import com.persival.go4lunch.Data.model.RestaurantEntity;
+import com.persival.go4lunch.ui.mainactivity.details.DetailsViewState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Repository {
     private static final String GOOGLE_PLACES_API_BASE_URL = "https://maps.googleapis.com/";
-    private final MutableLiveData<List<RestaurantEntity.Place>> placesLiveData = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<RestaurantEntity.Place>> restaurantsLiveData = new MutableLiveData<>(new ArrayList<>());
     private GooglePlacesApi googlePlacesApi;
 
     public Repository() {
@@ -34,20 +41,33 @@ public class Repository {
             @Override
             public void onResponse(Call<RestaurantEntity> call, Response<RestaurantEntity> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    placesLiveData.setValue(response.body().getResults());
+                    restaurantsLiveData.setValue(response.body().getResults());
+                    Log.d("REPONSE", "onResponse: " + response.body().getResults().get(0).getName());
                 } else {
-                    // Handle the error
+                    Log.d("NO RESPONSE", " <------------ " + response.body().getResults().get(0).getName());
                 }
             }
 
             @Override
             public void onFailure(Call<RestaurantEntity> call, Throwable t) {
-                // Handle the error
+                Log.d("FAILURE", " <------------ ");
             }
         });
     }
 
-    public LiveData<List<RestaurantEntity.Place>> getPlacesLiveData() {
-        return placesLiveData;
+    public LiveData<List<RestaurantEntity.Place>> getRestaurantsLiveData() {
+        return restaurantsLiveData;
     }
+
+   public LiveData<RestaurantEntity.Place> getRestaurantLiveData(long restaurantId) {
+        return Transformations.map(restaurantsLiveData, restaurants -> {
+            for (RestaurantEntity.Place restaurant : restaurants) {
+                if (restaurant.getId() == restaurantId) {
+                    return restaurant;
+                }
+            }
+            return null;
+        });
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.persival.go4lunch.Data.model;
 
+import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -14,8 +16,7 @@ public class RestaurantEntity {
     }
 
     public static class Place {
-        @SerializedName("place_id")
-        private String id;
+        public long id;
         @SerializedName("name")
         private String name;
 
@@ -44,7 +45,7 @@ public class RestaurantEntity {
             return rating * 3 / 5;
         }
 
-        public String getId() {
+        public long getId() {
             return id;
         }
 
@@ -76,6 +77,26 @@ public class RestaurantEntity {
             return photos;
         }
 
+        public String getTypeOfCuisineAndAddress() {return types.get(0) + " - " + address;
+        }
+
+        public String getPictureUrl() {
+            if (photos != null && !photos.isEmpty()) {
+                String photoReference = photos.get(0).getPhotoReference();
+                return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                    photoReference + "&key=" + MAPS_API_KEY;
+            } else {
+                return "https://unsplash.com/fr/photos/5dsZnCVDHd0";
+            }
+        }
+
+        public String getOpeningTime() {
+            if (openingHours != null && openingHours.isOpenNow()) {
+                return "Open now";
+            } else {
+                return "Closed";
+            }
+        }
     }
 
     public static class OpeningHours {

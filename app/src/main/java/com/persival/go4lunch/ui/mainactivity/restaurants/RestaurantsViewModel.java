@@ -15,8 +15,8 @@ import java.util.List;
 
 public class RestaurantsViewModel extends ViewModel {
 
-    private final MutableLiveData<List<RestaurantsViewState>> restaurantsLiveData = new MutableLiveData<>();
     private final Repository repository;
+    private final MutableLiveData<List<RestaurantsViewState>> restaurantsLiveData = new MutableLiveData<>();
 
     public RestaurantsViewModel(
         @NonNull final Repository repository
@@ -30,15 +30,23 @@ public class RestaurantsViewModel extends ViewModel {
 
     public void fetchRestaurants(String location, int radius) {
         repository.getNearbyRestaurants(location, radius, "restaurant", MAPS_API_KEY);
-        repository.getPlacesLiveData().observeForever(places -> {
-            // Transform NearbySearchResponse.Place list to RestaurantsViewState list
-            List<RestaurantsViewState> restaurants = new ArrayList<>();
-            for (RestaurantEntity.Place place : places) {
-                // Assuming RestaurantsViewState has a constructor that takes a NearbySearchResponse.Place object
-                restaurants.add(new RestaurantsViewState(place));
+        repository.getRestaurantsLiveData().observeForever(restaurants -> {
+            List<RestaurantsViewState> restaurantsList = new ArrayList<>();
+            for (RestaurantEntity.Place restaurant : restaurants) {
+                restaurantsList.add(new RestaurantsViewState(
+                    restaurant.getId(),
+                    restaurant.getName(),
+                    restaurant.getTypeOfCuisineAndAddress(),
+                    restaurant.getOpeningTime(),
+                    "200",
+                    "(2)",
+                    restaurant.getRating(),
+                    restaurant.getPictureUrl()
+                ));
             }
-            restaurantsLiveData.setValue(restaurants);
+            restaurantsLiveData.setValue(restaurantsList);
         });
     }
+
 }
 

@@ -14,33 +14,38 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.ViewModelFactory;
+import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
 import com.persival.go4lunch.ui.mainactivity.details.DetailsActivity;
 
 public class RestaurantsFragment extends Fragment {
+
+    private FragmentRestaurantsBinding binding;
 
     public static RestaurantsFragment newInstance() {
         return new RestaurantsFragment();
     }
 
-    @Nullable
     @Override
     public View onCreateView(
         @NonNull LayoutInflater inflater,
         @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState
     ) {
-        return inflater.inflate(R.layout.fragment_restaurants, container, false);
+        binding = FragmentRestaurantsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        RestaurantsViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(RestaurantsViewModel.class);
+        RestaurantsViewModel viewModel = new ViewModelProvider(
+            this, ViewModelFactory.getInstance()).get(RestaurantsViewModel.class);
 
-        RecyclerView recyclerView = view.findViewById(R.id.restaurants_recycler_view);
+        RecyclerView recyclerView = binding.restaurantsRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        RestaurantsAdapter adapter = new RestaurantsAdapter(restaurantId -> startActivity(DetailsActivity.navigate(requireContext(), restaurantId)));
+        RestaurantsAdapter adapter = new RestaurantsAdapter(restaurantId ->
+            startActivity(DetailsActivity.navigate(requireContext(), restaurantId)));
 
         String location = "48.6921,6.1844"; // Nancy
         int radius = 500; // Rayon de 500 mètres
@@ -49,5 +54,11 @@ public class RestaurantsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         viewModel.getRestaurantsLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
