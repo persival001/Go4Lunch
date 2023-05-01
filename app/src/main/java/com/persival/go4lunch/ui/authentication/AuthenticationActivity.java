@@ -2,10 +2,12 @@ package com.persival.go4lunch.ui.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -22,7 +24,9 @@ import com.persival.go4lunch.ui.mainactivity.MainActivity;
 import java.util.Arrays;
 import java.util.List;
 
-public class AuthenticationActivity extends BaseActivity<ActivityAuthenticationBinding> {
+public class AuthenticationActivity extends AppCompatActivity {
+
+    private ActivityAuthenticationBinding binding;
 
     private final ActivityResultLauncher<Intent> signInActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
@@ -30,13 +34,12 @@ public class AuthenticationActivity extends BaseActivity<ActivityAuthenticationB
     );
 
     @Override
-    public ActivityAuthenticationBinding getViewBinding() {
-        return ActivityAuthenticationBinding.inflate(getLayoutInflater());
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityAuthenticationBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
         checkIfUserIsConnected();
     }
 

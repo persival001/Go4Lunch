@@ -44,8 +44,12 @@ public class RestaurantsFragment extends Fragment {
         RecyclerView recyclerView = binding.restaurantsRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        RestaurantsAdapter adapter = new RestaurantsAdapter(restaurantId ->
-            startActivity(DetailsActivity.navigate(requireContext(), restaurantId)));
+        RestaurantsAdapter adapter = new RestaurantsAdapter(new OnRestaurantClickedListener() {
+            @Override
+            public void onRestaurantClicked(String restaurantId) {
+                startActivity(DetailsActivity.navigate(requireContext(), restaurantId));
+            }
+        });
 
         String location = "48.6921,6.1844"; // Nancy
         int radius = 500; // Rayon de 500 mètres

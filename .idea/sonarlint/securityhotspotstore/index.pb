@@ -668,8 +668,6 @@ w
 G.idea/sonarlint/issuestore/f/0/f07866736216be0ee2aba49e392191aeae700a35,b/f/bfb9453d49af9bc40f5f7a5f034be3c7ef8fa6bf
 Å
 Q.idea/sonarlint/securityhotspotstore/f/0/f07866736216be0ee2aba49e392191aeae700a35,2/5/25f6469773b9f3ebb994178c1114a60412389f58
-{
-Kapp/src/main/java/com/persival/go4lunch/ui/authentication/BaseActivity.java,7/b/7b8d84ea9dd80b04bd6c0999f542498c04f1bbfa
 @
 app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
 Å
@@ -1366,8 +1364,6 @@ w
 G.idea/sonarlint/issuestore/0/8/080e38da0fc911f03ccaa4998ea77b1c6991dc4d,2/4/24d16c49121a6c62215b9a2f860b7281413ca65b
 w
 G.idea/sonarlint/issuestore/0/3/030c10dec76644846deaff3b40f30c64390abf30,f/0/f01ed9edb223a8fad248b16cf5a571e6302b81ad
-y
-Iapp/src/main/java/com/persival/go4lunch/ui/mainactivity/MainActivity.java,a/1/a103c407a6043247d6caf9e38fe29096bd8a8b5e
 P
  app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 á
@@ -2784,9 +2780,3 @@ G.idea/sonarlint/issuestore/6/a/6abd912bbde560d3c0a5751bbabc070ab4fc016f,9/1/91
 Q.idea/sonarlint/securityhotspotstore/c/e/ce742702cdea124433bd58afeec853e28835281a,c/d/cd5a179e07b624561329650346c194dff4e4a78f
 Å
 Q.idea/sonarlint/securityhotspotstore/c/c/ccd08ac9c528221d0b79bf7c7d64ef9bae75f91c,5/0/50d07337a0b1a0befc296f010ec44928f4958ea3
-m
-=app/src/main/java/com/persival/go4lunch/ViewModelFactory.java,e/9/e95891b73a0139ade738bcc919c8571382716500
-î
-dapp/src/main/java/com/persival/go4lunch/ui/mainactivity/restaurants/OnRestaurantClickedListener.java,e/6/e6b80fff62f4e266b8bf5a5d9b2fb2f2bf0a1a39
-q
-Aapp/src/main/java/com/persival/go4lunch/Data/GooglePlacesApi.java,6/7/676d1723f28a7b11a28008739fd74453137808ff

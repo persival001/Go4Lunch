@@ -16,38 +16,33 @@ public class RestaurantEntity {
     }
 
     public static class Place {
-        public long id;
+        @SerializedName("place_id")
+        private String placeId;
         @SerializedName("name")
         private String name;
-
         @SerializedName("types")
         private List<String> types;
-
         @SerializedName("vicinity")
         private String address;
-
         @SerializedName("opening_hours")
         private OpeningHours openingHours;
-
         @SerializedName("website")
         private String website;
-
         @SerializedName("formatted_phone_number")
         private String phoneNumber;
-
         @SerializedName("photos")
         private List<Photo> photos;
-
         @SerializedName("rating")
         private float rating;
+
+        public String getId() {
+            return placeId;
+        }
 
         public float getRating() {
             return rating * 3 / 5;
         }
 
-        public long getId() {
-            return id;
-        }
 
         public String getName() {
             return name;
@@ -77,7 +72,8 @@ public class RestaurantEntity {
             return photos;
         }
 
-        public String getTypeOfCuisineAndAddress() {return types.get(0) + " - " + address;
+        public String getTypeOfCuisineAndAddress() {
+            return types.get(0) + " - " + address;
         }
 
         public String getPictureUrl() {

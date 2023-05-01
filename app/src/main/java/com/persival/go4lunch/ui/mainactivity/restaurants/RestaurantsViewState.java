@@ -5,7 +5,8 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 
 public class RestaurantsViewState {
-    private final long id;
+    @NonNull
+    private final String id;
     @NonNull
     private final String name;
 
@@ -26,7 +27,7 @@ public class RestaurantsViewState {
     @NonNull
     private final String pictureUrl;
 
-    public RestaurantsViewState(long id,
+    public RestaurantsViewState(@NonNull String id,
                                 @NonNull String name,
                                 @NonNull String typeOfCuisineAndAddress,
                                 @NonNull String openingTime,
@@ -45,7 +46,7 @@ public class RestaurantsViewState {
         this.pictureUrl = pictureUrl;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -105,7 +106,7 @@ public class RestaurantsViewState {
             return false;
         RestaurantsViewState that = (RestaurantsViewState) o;
         return name.equals(that.name)
-            && id == that.id
+            && id.equals(that.id)
             && typeOfCuisineAndAddress.equals(that.typeOfCuisineAndAddress)
             && openingTime.equals(that.openingTime)
             && distance.equals(that.distance)

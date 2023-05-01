@@ -45,6 +45,8 @@
                             android:layout_margin="@dimen/default_margin"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/default_text_big_size"
+                            android:maxLength="22"
+                            android:ellipsize="end"
                             tools:text="Casa Nostra" />
 
                         <RatingBar
@@ -56,9 +58,10 @@
                             android:layout_margin="@dimen/default_margin"
                             android:numStars="3"
                             android:stepSize="0.5"
+                            android:progressTint="@color/filled_star_color"
+                            android:progressBackgroundTint="@color/colorPrimary"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/restaurant_picture" />
-
 
                     </LinearLayout>
 

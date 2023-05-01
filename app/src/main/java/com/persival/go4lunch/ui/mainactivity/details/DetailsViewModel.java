@@ -20,37 +20,28 @@ import java.util.List;
 public class DetailsViewModel extends ViewModel {
     private final Repository repository;
 
-    private final MutableLiveData<List<DetailsViewState>> detailRestaurantLiveData = new MutableLiveData<>();
-
     public DetailsViewModel(
         @NonNull final Repository repository
     ) {
         this.repository = repository;
     }
 
-    public LiveData<List<DetailsViewState>> getDetailRestaurantLiveData() {
-        return detailRestaurantLiveData;
-    }
-
-    public void getRestaurantDetailsViewStateLiveData(long restaurantId) {
-        repository.getRestaurantLiveData(restaurantId).observeForever(restaurant -> {
-            List<DetailsViewState> restaurantsList = new ArrayList<>();
-            if (restaurant != null) {
-                restaurantsList.add(new DetailsViewState(
-                    restaurant.getId(),
-                    restaurant.getPictureUrl(),
-                    restaurant.getName(),
-                    restaurant.getRating(),
-                    restaurant.getTypeOfCuisineAndAddress(),
-                    restaurant.getPhoneNumber(),
-                    restaurant.getWebsite(),
-                    true,
-                    "(2)",
-                    "https://pravatar.cc/150?img=3"
-                ));
-            }
-            detailRestaurantLiveData.setValue(restaurantsList);
-        });
+    public LiveData<DetailsViewState> getDetailViewStateLiveData(String restaurantId) {
+        return Transformations.map(
+            repository.getRestaurantLiveData(restaurantId),
+            restaurant -> new DetailsViewState(
+                restaurant.getId(),
+                restaurant.getPictureUrl(),
+                restaurant.getName(),
+                restaurant.getRating(),
+                restaurant.getTypeOfCuisineAndAddress(),
+                restaurant.getPhoneNumber(),
+                restaurant.getWebsite(),
+                true,
+                "(2)",
+                "https://pravatar.cc/150?img=3"
+            )
+        );
     }
 }
 

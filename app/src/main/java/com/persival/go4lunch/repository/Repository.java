@@ -15,6 +15,7 @@ import com.persival.go4lunch.ui.mainactivity.details.DetailsViewState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,10 +60,10 @@ public class Repository {
         return restaurantsLiveData;
     }
 
-   public LiveData<RestaurantEntity.Place> getRestaurantLiveData(long restaurantId) {
+   public LiveData<RestaurantEntity.Place> getRestaurantLiveData(String restaurantId) {
         return Transformations.map(restaurantsLiveData, restaurants -> {
             for (RestaurantEntity.Place restaurant : restaurants) {
-                if (restaurant.getId() == restaurantId) {
+                if (Objects.equals(restaurant.getId(), restaurantId)) {
                     return restaurant;
                 }
             }

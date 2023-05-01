@@ -17,13 +17,15 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.ViewModelFactory;
 import com.persival.go4lunch.databinding.ActivityDetailsBinding;
 
+import java.util.Objects;
+
 public class DetailsActivity extends AppCompatActivity {
 
     private static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
     private final DetailsAdapter detailsAdapter = new DetailsAdapter();
     private ActivityDetailsBinding binding;
 
-    public static Intent navigate(Context context, long restaurantId) {
+    public static Intent navigate(Context context, String restaurantId) {
         Intent intent = new Intent(context, DetailsActivity.class);
         intent.putExtra(KEY_RESTAURANT_ID, restaurantId);
         return intent;
@@ -36,21 +38,29 @@ public class DetailsActivity extends AppCompatActivity {
         binding = ActivityDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        long restaurantId = getIntent().getLongExtra(KEY_RESTAURANT_ID, -1);
+        String restaurantId = getIntent().getStringExtra(KEY_RESTAURANT_ID);
 
-        if (restaurantId == -1) {
+        if (Objects.equals(restaurantId, "")) {
             throw new IllegalStateException("Please use DetailsActivity.navigate() to launch the Activity");
         }
 
         DetailsViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(DetailsViewModel.class);
 
-        viewModel.getRestaurantDetailsViewStateLiveData(restaurantId);
+        viewModel.getDetailViewStateLiveData(restaurantId).observe(this, restaurantDetailViewState -> {
+            Glide.with(binding.detailsPicture)
+                .load(restaurantDetailViewState.getPictureUrl())
+                .placeholder(R.drawable.logoresto)
+                .error(R.drawable.baseline_error_24)
+                .into(binding.detailsPicture);
+            binding.detailsName.setText(restaurantDetailViewState.getName());
+            binding.detailsAddress.setText(restaurantDetailViewState.getTypeOfCuisineAndAddress());
+            binding.detailsRatingBar.setRating(restaurantDetailViewState.getRating());
+        });
 
         binding.detailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         binding.detailsRecyclerView.setAdapter(detailsAdapter);
 
-        viewModel.getDetailRestaurantLiveData().observe(this, detailsAdapter::submitList);
+        //viewModel.getDetailRestaurantLiveData().observe(this, detailsAdapter::submitList);
     }
 
     @Override

@@ -5,7 +5,8 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 
 public class DetailsViewState {
-    private final long id;
+    @NonNull
+    private final String id;
     @NonNull
     private final String pictureUrl;
     @NonNull
@@ -24,7 +25,7 @@ public class DetailsViewState {
     @NonNull
     private String avatarUrl;
 
-    public DetailsViewState(long id,
+    public DetailsViewState(@NonNull String id,
                             @NonNull String pictureUrl,
                             @NonNull String name,
                             float rating,
@@ -60,7 +61,7 @@ public class DetailsViewState {
             return false;
         DetailsViewState that = (DetailsViewState) o;
         return Float.compare(that.rating, rating) == 0 &&
-            id == that.id &&
+            id.equals(that.id) &&
             pictureUrl.equals(that.pictureUrl) &&
             name.equals(that.name) &&
             typeOfCuisineAndAddress.equals(that.typeOfCuisineAndAddress) &&
@@ -87,9 +88,11 @@ public class DetailsViewState {
             '}';
     }
 
-    public long getId() {
+    @NonNull
+    public String getId() {
         return id;
     }
+
     @NonNull
     public String getName() {
         return name;

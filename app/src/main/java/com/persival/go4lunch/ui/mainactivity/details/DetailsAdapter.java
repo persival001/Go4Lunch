@@ -53,24 +53,12 @@ public class DetailsAdapter extends ListAdapter<DetailsViewState, DetailsAdapter
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView restaurantPicture;
-        private final TextView restaurantName;
-        private final RatingBar restaurantStars;
-        private final TextView restaurantAddress;
-        private final TextView restaurantPhoneNumber;
-        private final TextView restaurantWebSite;
         private final ImageView avatarPicture;
         private final TextView avatarName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            restaurantPicture = itemView.findViewById(R.id.details_picture);
-            restaurantName = itemView.findViewById(R.id.details_name);
-            restaurantStars = itemView.findViewById(R.id.details_rating_bar);
-            restaurantAddress = itemView.findViewById(R.id.details_address);
-            restaurantPhoneNumber = itemView.findViewById(R.id.call_button);
-            restaurantWebSite = itemView.findViewById(R.id.website_button);
             avatarName = itemView.findViewById(R.id.avatar_name);
             avatarPicture = itemView.findViewById(R.id.avatar_picture);
         }
@@ -82,15 +70,7 @@ public class DetailsAdapter extends ListAdapter<DetailsViewState, DetailsAdapter
                 .error(R.drawable.baseline_error_24)
                 .into(avatarPicture);
 
-            Glide.with(itemView)
-                .load(item.getPictureUrl())
-                .placeholder(R.drawable.ic_anon_user_48dp)
-                .error(R.drawable.baseline_error_24)
-                .into(restaurantPicture);
-
-            restaurantName.setText(item.getName());
-            restaurantAddress.setText(item.getTypeOfCuisineAndAddress());
-            restaurantStars.setRating(item.getRating());
+            avatarName.setText(item.getName());
         }
     }
 }
