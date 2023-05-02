@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.mainactivity.restaurants;
+package com.persival.go4lunch.ui.main.restaurants;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,10 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.persival.go4lunch.R;
 import com.persival.go4lunch.ViewModelFactory;
 import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
-import com.persival.go4lunch.ui.mainactivity.details.DetailsActivity;
+import com.persival.go4lunch.ui.main.details.DetailsActivity;
 
 public class RestaurantsFragment extends Fragment {
 
@@ -50,10 +49,6 @@ public class RestaurantsFragment extends Fragment {
                 startActivity(DetailsActivity.navigate(requireContext(), restaurantId));
             }
         });
-
-        String location = "48.6921,6.1844"; // Nancy
-        int radius = 500; // Rayon de 500 mètres
-        viewModel.fetchRestaurants(location, radius);
 
         recyclerView.setAdapter(adapter);
 

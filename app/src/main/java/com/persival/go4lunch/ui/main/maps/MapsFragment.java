@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.mainactivity.maps;
+package com.persival.go4lunch.ui.main.maps;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 

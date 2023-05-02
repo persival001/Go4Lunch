@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.mainactivity;
+package com.persival.go4lunch.ui.main;
 
 import android.os.Bundle;
 
@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment;
 
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
-import com.persival.go4lunch.ui.mainactivity.maps.MapsFragment;
-import com.persival.go4lunch.ui.mainactivity.restaurants.RestaurantsFragment;
-import com.persival.go4lunch.ui.mainactivity.userlist.UserListFragment;
+import com.persival.go4lunch.ui.main.maps.MapsFragment;
+import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
+import com.persival.go4lunch.ui.main.userlist.UserListFragment;
 
 public class MainActivity extends AppCompatActivity {
 

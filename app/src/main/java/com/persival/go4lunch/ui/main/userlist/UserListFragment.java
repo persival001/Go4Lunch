@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.mainactivity.userlist;
+package com.persival.go4lunch.ui.main.userlist;
 
 import android.os.Bundle;
 

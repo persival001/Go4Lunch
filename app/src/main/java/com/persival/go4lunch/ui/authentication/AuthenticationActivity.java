@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityAuthenticationBinding;
-import com.persival.go4lunch.ui.mainactivity.MainActivity;
+import com.persival.go4lunch.ui.main.MainActivity;
 
 import java.util.Arrays;
 import java.util.List;

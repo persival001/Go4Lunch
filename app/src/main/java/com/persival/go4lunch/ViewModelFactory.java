@@ -4,13 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.persival.go4lunch.repository.Repository;
-import com.persival.go4lunch.ui.mainactivity.details.DetailsViewModel;
-import com.persival.go4lunch.ui.mainactivity.restaurants.RestaurantsViewModel;
-import com.persival.go4lunch.ui.mainactivity.userlist.UserListViewModel;
-
-import java.time.Clock;
-import java.time.format.DateTimeFormatter;
+import com.persival.go4lunch.data.repository.GooglePlacesRepository;
+import com.persival.go4lunch.ui.main.details.DetailsViewModel;
+import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel;
+import com.persival.go4lunch.ui.main.userlist.UserListViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
@@ -21,7 +18,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             synchronized (ViewModelFactory.class) {
                 if (factory == null) {
                     factory = new ViewModelFactory(
-                        new Repository()
+                        new GooglePlacesRepository()
                     );
                 }
             }
@@ -31,12 +28,13 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     }
 
     @NonNull
-    private final Repository repository;
+    private final GooglePlacesRepository googlePlacesRepository;
 
     private ViewModelFactory(
-        @NonNull Repository repository
+        @NonNull GooglePlacesRepository googlePlacesRepository
     ) {
-        this.repository = repository;
+        this.googlePlacesRepository = googlePlacesRepository;
+        // TODO Persival use FusedLocationProviderClient for LocationRepository
     }
 
     @SuppressWarnings("unchecked")
@@ -45,15 +43,15 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if (modelClass.isAssignableFrom(RestaurantsViewModel.class)) {
             return (T) new RestaurantsViewModel(
-                repository
+                googlePlacesRepository
             );
         } else if (modelClass.isAssignableFrom(UserListViewModel.class)) {
             return (T) new UserListViewModel(
-                repository
+                googlePlacesRepository
             );
         } else if (modelClass.isAssignableFrom(DetailsViewModel.class)) {
             return (T) new DetailsViewModel(
-                repository
+                googlePlacesRepository
             );
         }
         throw new IllegalArgumentException("Unknown ViewModel class");

@@ -1,12 +1,14 @@
-package com.persival.go4lunch.Data.model;
+package com.persival.go4lunch.data.model;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
+
+import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RestaurantEntity {
+public class NearbyRestaurantsResponse {
 
     @SerializedName("results")
     private List<Place> results;
@@ -33,14 +35,16 @@ public class RestaurantEntity {
         @SerializedName("photos")
         private List<Photo> photos;
         @SerializedName("rating")
-        private float rating;
+        @Nullable
+        private Float rating;
 
         public String getId() {
             return placeId;
         }
 
-        public float getRating() {
-            return rating * 3 / 5;
+        @Nullable
+        public Float getRating() {
+            return rating;
         }
 
 

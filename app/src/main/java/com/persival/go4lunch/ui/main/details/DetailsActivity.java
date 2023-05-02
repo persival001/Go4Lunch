@@ -1,10 +1,9 @@
-package com.persival.go4lunch.ui.mainactivity.details;
+package com.persival.go4lunch.ui.main.details;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +21,6 @@ import java.util.Objects;
 public class DetailsActivity extends AppCompatActivity {
 
     private static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
-    private final DetailsAdapter detailsAdapter = new DetailsAdapter();
     private ActivityDetailsBinding binding;
 
     public static Intent navigate(Context context, String restaurantId) {
@@ -44,6 +42,10 @@ public class DetailsActivity extends AppCompatActivity {
             throw new IllegalStateException("Please use DetailsActivity.navigate() to launch the Activity");
         }
 
+        DetailsAdapter detailsAdapter = new DetailsAdapter();
+        binding.detailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.detailsRecyclerView.setAdapter(detailsAdapter);
+
         DetailsViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(DetailsViewModel.class);
 
         viewModel.getDetailViewStateLiveData(restaurantId).observe(this, restaurantDetailViewState -> {
@@ -57,8 +59,6 @@ public class DetailsActivity extends AppCompatActivity {
             binding.detailsRatingBar.setRating(restaurantDetailViewState.getRating());
         });
 
-        binding.detailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.detailsRecyclerView.setAdapter(detailsAdapter);
 
         //viewModel.getDetailRestaurantLiveData().observe(this, detailsAdapter::submitList);
     }

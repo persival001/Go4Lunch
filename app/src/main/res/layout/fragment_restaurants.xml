@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundRecyclerView"
-    tools:context=".ui.mainactivity.restaurants.RestaurantsFragment">
+    tools:context=".ui.main.restaurants.RestaurantsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/restaurants_recycler_view"

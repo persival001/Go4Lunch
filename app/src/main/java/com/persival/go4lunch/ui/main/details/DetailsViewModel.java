@@ -1,39 +1,31 @@
-package com.persival.go4lunch.ui.mainactivity.details;
+package com.persival.go4lunch.ui.main.details;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
-import android.content.res.Resources;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.Data.model.RestaurantEntity;
-import com.persival.go4lunch.repository.Repository;
-import com.persival.go4lunch.ui.mainactivity.restaurants.RestaurantsViewState;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.persival.go4lunch.data.repository.GooglePlacesRepository;
 
 public class DetailsViewModel extends ViewModel {
-    private final Repository repository;
+    private final GooglePlacesRepository googlePlacesRepository;
 
     public DetailsViewModel(
-        @NonNull final Repository repository
+        @NonNull final GooglePlacesRepository googlePlacesRepository
     ) {
-        this.repository = repository;
+        this.googlePlacesRepository = googlePlacesRepository;
     }
 
     public LiveData<DetailsViewState> getDetailViewStateLiveData(String restaurantId) {
         return Transformations.map(
-            repository.getRestaurantLiveData(restaurantId),
+            googlePlacesRepository.getRestaurantLiveData(restaurantId, MAPS_API_KEY),
             restaurant -> new DetailsViewState(
                 restaurant.getId(),
                 restaurant.getPictureUrl(),
                 restaurant.getName(),
-                restaurant.getRating(),
+                restaurant.getRating(), // TODO Persival transformer le rating sur 3 ici par exemple
                 restaurant.getTypeOfCuisineAndAddress(),
                 restaurant.getPhoneNumber(),
                 restaurant.getWebsite(),

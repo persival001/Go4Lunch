@@ -39,11 +39,11 @@
         </activity>
 
         <activity
-            android:name=".ui.mainactivity.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.NoTitle" />
 
         <activity
-            android:name=".ui.mainactivity.details.DetailsActivity"
+            android:name=".ui.main.details.DetailsActivity"
             android:theme="@style/AppTheme.NoTitle" />
 
         <activity

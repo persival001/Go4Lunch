@@ -39,7 +39,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="com.persival.go4lunch.ui.mainactivity.maps.MapsFragment"
+        android:name="com.persival.go4lunch.ui.main.maps.MapsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/main_layout"
