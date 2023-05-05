@@ -1,6 +1,8 @@
 package com.persival.go4lunch.ui.main.details;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
+import static com.persival.go4lunch.utils.ConversionUtils.getPictureUrl;
+import static com.persival.go4lunch.utils.ConversionUtils.getRating;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -23,10 +25,10 @@ public class DetailsViewModel extends ViewModel {
             googlePlacesRepository.getRestaurantLiveData(restaurantId, MAPS_API_KEY),
             restaurant -> new DetailsViewState(
                 restaurant.getId(),
-                restaurant.getPictureUrl(),
+                getPictureUrl(restaurant.getPhotos()),
                 restaurant.getName(),
-                restaurant.getRating(), // TODO Persival transformer le rating sur 3 ici par exemple
-                restaurant.getTypeOfCuisineAndAddress(),
+                getRating(restaurant.getRating()),
+                restaurant.getAddress(),
                 restaurant.getPhoneNumber(),
                 restaurant.getWebsite(),
                 true,
@@ -35,5 +37,7 @@ public class DetailsViewModel extends ViewModel {
             )
         );
     }
+
+
 }
 

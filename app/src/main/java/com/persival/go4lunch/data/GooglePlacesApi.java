@@ -16,7 +16,7 @@ public interface GooglePlacesApi {
         @Query("key") String apiKey
     );
 
-    @GET("maps/api/place/detail/json")
+    @GET("maps/api/place/details/json")
     Call<NearbyRestaurantsResponse.Place> getPlaceDetail(
         @Query("place_id") String placeId,
         @Query("key") String apiKey

@@ -1,13 +1,18 @@
 package com.persival.go4lunch.ui.authentication;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -26,12 +31,27 @@ import java.util.List;
 
 public class AuthenticationActivity extends AppCompatActivity {
 
+    private static final int REQUEST_LOCATION_PERMISSION_CODE = 100;
     private ActivityAuthenticationBinding binding;
-
     private final ActivityResultLauncher<Intent> signInActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
         result -> handleResponseAfterSignIn(result.getResultCode(), result.getData())
     );
+
+    private void requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_LOCATION_PERMISSION_CODE
+            );
+        } else {
+            checkIfUserIsConnected();
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,8 +59,19 @@ public class AuthenticationActivity extends AppCompatActivity {
         binding = ActivityAuthenticationBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        requestLocationPermission();
+    }
 
-        checkIfUserIsConnected();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_LOCATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                checkIfUserIsConnected();
+            } else {
+                finish();
+            }
+        }
     }
 
     private void checkIfUserIsConnected() {
@@ -135,6 +166,4 @@ public class AuthenticationActivity extends AppCompatActivity {
         }
         return false;
     }
-
-
 }

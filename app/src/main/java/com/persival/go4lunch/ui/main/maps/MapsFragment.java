@@ -27,14 +27,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.persival.go4lunch.R;
+import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 
 public class MapsFragment extends Fragment {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private PlacesClient placesClient;
     private GoogleMap mMap;
     private ActivityResultLauncher<String> requestPermissionLauncher;
 
@@ -86,11 +85,9 @@ public class MapsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //
         Places.initialize(requireContext(), MAPS_API_KEY);
-        placesClient = Places.createClient(requireContext());
+        Places.createClient(requireContext());
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
-        //
 
         requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),

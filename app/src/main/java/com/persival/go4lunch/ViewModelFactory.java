@@ -1,49 +1,78 @@
 package com.persival.go4lunch;
 
+import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.location.LocationServices;
+import com.persival.go4lunch.data.permission_checker.PermissionChecker;
 import com.persival.go4lunch.data.repository.GooglePlacesRepository;
+import com.persival.go4lunch.data.repository.LocationRepository;
 import com.persival.go4lunch.ui.main.details.DetailsViewModel;
+import com.persival.go4lunch.ui.main.maps.MapsViewModel;
 import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel;
 import com.persival.go4lunch.ui.main.userlist.UserListViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private static ViewModelFactory factory;
+    private volatile static ViewModelFactory sInstance;
+    @NonNull
+    private final PermissionChecker permissionChecker;
+    @NonNull
+    private final LocationRepository locationRepository;
+    @NonNull
+    private final GooglePlacesRepository googlePlacesRepository;
+
+    private ViewModelFactory(
+        @NonNull PermissionChecker permissionChecker,
+        @NonNull LocationRepository locationRepository,
+        @NonNull GooglePlacesRepository googlePlacesRepository
+    ) {
+        this.googlePlacesRepository = googlePlacesRepository;
+        this.permissionChecker = permissionChecker;
+        this.locationRepository = locationRepository;
+    }
 
     public static ViewModelFactory getInstance() {
-        if (factory == null) {
+        if (sInstance == null) {
             synchronized (ViewModelFactory.class) {
-                if (factory == null) {
-                    factory = new ViewModelFactory(
+                if (sInstance == null) {
+                    Application application = MainApplication.getApplication();
+
+                    sInstance = new ViewModelFactory(
+                        new PermissionChecker(
+                            application
+                        ),
+                        new LocationRepository(
+                            LocationServices.getFusedLocationProviderClient(
+                                application
+                            ), application
+                        ),
                         new GooglePlacesRepository()
                     );
                 }
             }
         }
 
-        return factory;
-    }
-
-    @NonNull
-    private final GooglePlacesRepository googlePlacesRepository;
-
-    private ViewModelFactory(
-        @NonNull GooglePlacesRepository googlePlacesRepository
-    ) {
-        this.googlePlacesRepository = googlePlacesRepository;
-        // TODO Persival use FusedLocationProviderClient for LocationRepository
+        return sInstance;
     }
 
     @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(RestaurantsViewModel.class)) {
+        if (modelClass.isAssignableFrom(MapsViewModel.class)) {
+            return (T) new MapsViewModel(
+                locationRepository,
+                permissionChecker
+            );
+        } else if (modelClass.isAssignableFrom(RestaurantsViewModel.class)) {
             return (T) new RestaurantsViewModel(
-                googlePlacesRepository
+                googlePlacesRepository,
+                permissionChecker,
+                locationRepository
             );
         } else if (modelClass.isAssignableFrom(UserListViewModel.class)) {
             return (T) new UserListViewModel(

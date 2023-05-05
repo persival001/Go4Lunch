@@ -11,7 +11,7 @@ public class DetailsViewState {
     private final String pictureUrl;
     @NonNull
     private final String name;
-    private final float rating;
+    private final Float rating;
     @NonNull
     private final String typeOfCuisineAndAddress;
     @NonNull
@@ -28,7 +28,7 @@ public class DetailsViewState {
     public DetailsViewState(@NonNull String id,
                             @NonNull String pictureUrl,
                             @NonNull String name,
-                            float rating,
+                            Float rating,
                             @NonNull String typeOfCuisineAndAddress,
                             @NonNull String phoneNumber,
                             @NonNull String website,
@@ -103,7 +103,7 @@ public class DetailsViewState {
         return pictureUrl;
     }
 
-    public float getRating() {
+    public Float getRating() {
         return rating;
     }
 

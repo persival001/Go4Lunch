@@ -12,7 +12,7 @@ import com.persival.go4lunch.R;
 
 public class UserListFragment extends Fragment {
 
-    private UserListViewModel mViewModel;
+    private UserListViewModel viewModel;
 
     public static UserListFragment newInstance() {
         return new UserListFragment();
@@ -29,4 +29,6 @@ public class UserListFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_user_list, container, false);
     }
+
+
 }

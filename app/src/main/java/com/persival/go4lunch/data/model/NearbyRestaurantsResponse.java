@@ -1,5 +1,6 @@
 package com.persival.go4lunch.data.model;
 
+
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
 import androidx.annotation.Nullable;
@@ -9,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class NearbyRestaurantsResponse {
-
+    @Nullable
     @SerializedName("results")
     private List<Place> results;
 
@@ -18,26 +19,35 @@ public class NearbyRestaurantsResponse {
     }
 
     public static class Place {
+        @Nullable
         @SerializedName("place_id")
         private String placeId;
+        @Nullable
         @SerializedName("name")
         private String name;
+        @Nullable
         @SerializedName("types")
         private List<String> types;
+        @Nullable
         @SerializedName("vicinity")
         private String address;
+        @Nullable
         @SerializedName("opening_hours")
         private OpeningHours openingHours;
         @SerializedName("website")
+        @Nullable
         private String website;
         @SerializedName("formatted_phone_number")
+        @Nullable
         private String phoneNumber;
         @SerializedName("photos")
+        @Nullable
         private List<Photo> photos;
         @SerializedName("rating")
         @Nullable
         private Float rating;
 
+        @Nullable
         public String getId() {
             return placeId;
         }
@@ -47,63 +57,42 @@ public class NearbyRestaurantsResponse {
             return rating;
         }
 
-
+        @Nullable
         public String getName() {
             return name;
         }
 
-        public List<String> getTypes() {
-            return types;
-        }
-
+        @Nullable
         public String getAddress() {
             return address;
         }
 
+        @Nullable
         public OpeningHours getOpeningHours() {
             return openingHours;
         }
 
+        @Nullable
         public String getWebsite() {
             return website;
         }
 
+        @Nullable
         public String getPhoneNumber() {
             return phoneNumber;
         }
 
+        @Nullable
         public List<Photo> getPhotos() {
             return photos;
-        }
-
-        public String getTypeOfCuisineAndAddress() {
-            return types.get(0) + " - " + address;
-        }
-
-        public String getPictureUrl() {
-            if (photos != null && !photos.isEmpty()) {
-                String photoReference = photos.get(0).getPhotoReference();
-                return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                    photoReference + "&key=" + MAPS_API_KEY;
-            } else {
-                return "https://unsplash.com/fr/photos/5dsZnCVDHd0";
-            }
-        }
-
-        public String getOpeningTime() {
-            if (openingHours != null && openingHours.isOpenNow()) {
-                return "Open now";
-            } else {
-                return "Closed";
-            }
         }
     }
 
     public static class OpeningHours {
         @SerializedName("open_now")
-        private boolean openNow;
+        private Boolean openNow;
 
-        public boolean isOpenNow() {
+        public Boolean isOpenNow() {
             return openNow;
         }
     }

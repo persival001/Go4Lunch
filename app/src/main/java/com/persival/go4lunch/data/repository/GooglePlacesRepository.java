@@ -39,15 +39,15 @@ public class GooglePlacesRepository {
             public void onResponse(@NonNull Call<NearbyRestaurantsResponse> call, @NonNull Response<NearbyRestaurantsResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     restaurantsLiveData.setValue(response.body().getResults());
-                    Log.d("REPONSE", "onResponse: " + response.body().getResults().get(0).getName());
+                    Log.d("RESPONSE", "The server responds to requests");
                 } else {
-                    Log.d("NO RESPONSE", " <------------ " + response.body().getResults().get(0).getName());
+                    Log.d("NO RESPONSE", "The server does not respond to requests");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<NearbyRestaurantsResponse> call, @NonNull Throwable t) {
-                Log.d("FAILURE", " <------------ ");
+                Log.d("FAILURE", "Server failure");
             }
         });
 
@@ -62,15 +62,15 @@ public class GooglePlacesRepository {
             public void onResponse(@NonNull Call<NearbyRestaurantsResponse.Place> call, @NonNull Response<NearbyRestaurantsResponse.Place> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     restaurantLiveData.setValue(response.body());
-                    Log.d("REPONSE", "onResponse: " + response.body().getName());
+                    Log.d("RESPONSE", "The server responds to requests");
                 } else {
-                    Log.d("NO RESPONSE", " <------------ " + response.body().getName());
+                    Log.d("NO RESPONSE", "The server does not respond to requests");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<NearbyRestaurantsResponse.Place> call, @NonNull Throwable t) {
-                Log.d("FAILURE", " <------------ ");
+                Log.d("FAILURE", "Server failure");
             }
         });
 

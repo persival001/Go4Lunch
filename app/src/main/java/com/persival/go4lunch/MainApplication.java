@@ -4,13 +4,16 @@ import android.app.Application;
 
 public class MainApplication extends Application {
 
-    private static Application application;
+    private static Application sApplication;
 
-    public MainApplication() {
-        application = this;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        sApplication = this;
     }
 
-    public static Application getInstance() {
-        return application;
+    public static Application getApplication() {
+        return sApplication;
     }
 }
