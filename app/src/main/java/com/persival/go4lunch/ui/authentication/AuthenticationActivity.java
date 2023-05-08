@@ -1,15 +1,20 @@
 package com.persival.go4lunch.ui.authentication;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -37,6 +42,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         new ActivityResultContracts.StartActivityForResult(),
         result -> handleResponseAfterSignIn(result.getResultCode(), result.getData())
     );
+
 
     private void requestLocationPermission() {
         if (ContextCompat.checkSelfPermission(

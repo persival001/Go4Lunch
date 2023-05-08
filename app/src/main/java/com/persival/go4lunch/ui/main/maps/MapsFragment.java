@@ -28,7 +28,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.persival.go4lunch.R;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 
 public class MapsFragment extends Fragment {
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresPermission;
@@ -15,7 +14,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.tasks.Task;
 
 public class LocationRepository {
     private static final int LOCATION_REQUEST_INTERVAL_MS = 10_000;
@@ -46,7 +44,8 @@ public class LocationRepository {
                 public void onLocationResult(@NonNull LocationResult locationResult) {
                     Location gpsLocation = locationResult.getLastLocation();
                     if (gpsLocation == null) {
-                       sharedPreferences = context.getSharedPreferences("LatLng", Context.MODE_PRIVATE);
+                        // Get last known location
+                        sharedPreferences = context.getSharedPreferences("LatLng", Context.MODE_PRIVATE);
                         double latitude = sharedPreferences.getFloat("latitude", 0);
                         double longitude = sharedPreferences.getFloat("longitude", 0);
 
@@ -55,25 +54,23 @@ public class LocationRepository {
                             gpsLocation = new Location("Server");
                             gpsLocation.setLatitude(48.6921);
                             gpsLocation.setLongitude(6.1844);
-                            Log.d("LOCATION (0,0)", "Location shared 0,0" + gpsLocation.getLatitude() + " " + gpsLocation.getLongitude());
-
                         }
 
+                        // Set last known location or Nancy
                         Location lastKnownLocation = new Location("Server");
                         lastKnownLocation.setLatitude(latitude);
                         lastKnownLocation.setLongitude(longitude);
-                        Log.d("LOCATION LASTKNOWN", "Location LASTKNOWN " + gpsLocation.getLatitude() + " " + gpsLocation.getLongitude());
+                        locationMutableLiveData.setValue(gpsLocation);
+                    } else {
+                        // Save actual location
+                        saveLastKnownLocation(gpsLocation.getLatitude(), gpsLocation.getLongitude());
                         locationMutableLiveData.setValue(gpsLocation);
                     }
-                    saveLastKnownLocation(gpsLocation.getLatitude(), gpsLocation.getLongitude());
-                    Log.d("LOCATION SUCCESS", "Location shared Success" + gpsLocation.getLatitude() + " " + gpsLocation.getLongitude());
-                    locationMutableLiveData.setValue(gpsLocation);
                 }
             };
         }
 
         fusedLocationProviderClient.removeLocationUpdates(callback);
-
         fusedLocationProviderClient.requestLocationUpdates(
             LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -82,38 +79,6 @@ public class LocationRepository {
             callback,
             Looper.getMainLooper()
         );
-
-       /* Task<Location> location = fusedLocationProviderClient.getLastLocation();
-        location.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Location gpsLocation = task.getResult();
-                if (gpsLocation == null) {
-                    Log.d("LOCATION", "Location is null ");
-                    sharedPreferences = context.getSharedPreferences("LatLng", Context.MODE_PRIVATE);
-                    double latitude = sharedPreferences.getFloat("latitude", 0);
-                    double longitude = sharedPreferences.getFloat("longitude", 0);
-                    Log.d("LOCATION SHARED", "Location shared " + gpsLocation.getLatitude() + " " + gpsLocation.getLongitude());
-
-                    // If default values are (0,0) then set to Nancy
-                    if (latitude == 0 && longitude == 0) {
-                        gpsLocation = new Location("Server");
-                        gpsLocation.setLatitude(48.6921);
-                        gpsLocation.setLongitude(6.1844);
-                        Log.d("LOCATION (0,0)", "Location shared 0,0" + gpsLocation.getLatitude() + " " + gpsLocation.getLongitude());
-
-                    }
-
-                    Location lastKnownLocation = new Location("Server");
-                    lastKnownLocation.setLatitude(latitude);
-                    lastKnownLocation.setLongitude(longitude);
-                    Log.d("LOCATION LASTKNOWN", "Location LASTKNOWN " + gpsLocation.getLatitude() + " " + gpsLocation.getLongitude());
-                    locationMutableLiveData.setValue(gpsLocation);
-                }
-                saveLastKnownLocation(gpsLocation.getLatitude(), gpsLocation.getLongitude());
-                Log.d("LOCATION SUCCESS", "Location shared Success" + gpsLocation.getLatitude() + " " + gpsLocation.getLongitude());
-                locationMutableLiveData.setValue(gpsLocation);
-            }
-        });*/
     }
 
     private void saveLastKnownLocation(double latitude, double longitude) {
