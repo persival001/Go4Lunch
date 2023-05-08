@@ -7,7 +7,7 @@
         <item name="colorAccent">@android:color/holo_red_dark</item>
     </style>
 
-    <!-- RatingBar theme. -->
+    <!-- RATINGBAR THEME -->
     <style name="MyRatingBar" parent="android:style/Widget.RatingBar">
         <!-- CUSTOMIZATION -->
         <item name="android:progressDrawable">@drawable/star_ratingbar</item>

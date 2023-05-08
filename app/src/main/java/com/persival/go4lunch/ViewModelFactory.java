@@ -13,7 +13,7 @@ import com.persival.go4lunch.data.repository.LocationRepository;
 import com.persival.go4lunch.ui.main.details.DetailsViewModel;
 import com.persival.go4lunch.ui.main.maps.MapsViewModel;
 import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel;
-import com.persival.go4lunch.ui.main.userlist.UserListViewModel;
+import com.persival.go4lunch.ui.main.user_list.UserListViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:background="@color/quantum_grey400"
+    android:padding="@dimen/default_large_margin"
+    android:theme="@style/AppTheme">
+
+    <TextView
+        android:id="@+id/go4lunch_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="@dimen/default_large_margin"
+        android:text="@string/app_name"
+        android:textColor="@color/quantum_white_100"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/user_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/go4lunch_title"
+        android:src="@drawable/ic_anon_user_48dp" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/go4lunch_title"
+        android:layout_toEndOf="@+id/user_image"
+        android:layout_marginStart="8dp"
+        tool:text="John Doe"
+        android:textColor="@color/quantum_white_100"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/user_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_name"
+        android:layout_toEndOf="@+id/user_image"
+        android:layout_marginStart="8dp"
+        tool:text="contact@johndoe.com"
+        android:textColor="@color/quantum_white_100"
+        android:textSize="14sp" />
+
+</RelativeLayout>

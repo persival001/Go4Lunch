@@ -8,8 +8,8 @@
 
     <ProgressBar
         android:id="@+id/gps_message_progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center"
         android:indeterminate="true"
         android:indeterminateTint="@color/quantum_black_100"

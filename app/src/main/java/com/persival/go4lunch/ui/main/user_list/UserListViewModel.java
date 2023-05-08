@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.userlist;
+package com.persival.go4lunch.ui.main.user_list;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

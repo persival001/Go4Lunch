@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Go 4 Lunch</string>
+    <string name="app_name">Go4Lunch</string>
 
     <string name="main_activity_description">Chat with your colleagues</string>
 
@@ -51,4 +51,9 @@
     <string name="closed">Closed</string>
     <string name="open">Open now</string>
     <string name="no_gps_signal">No Gps Signal</string>
+    <string name="lunch">YOUR LUNCH</string>
+    <string name="settings">SETTINGS</string>
+    <string name="logout">LOGOUT</string>
+    <string name="open_nav">Open</string>
+    <string name="close_nav">Close</string>
 </resources>

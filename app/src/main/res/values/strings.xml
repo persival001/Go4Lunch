@@ -3,7 +3,7 @@
     <string name="fb_login_protocol_scheme" translatable="false">fb597067395685611</string>
     <string name="facebook_client_token" translatable="false">ce047cac8312eb61373184b48a06bf8d</string>
 
-    <string name="app_name">Go 4 Lunch</string>
+    <string name="app_name">Go4Lunch</string>
 
     <string name="main_activity_description">Discute avec tes collègues, tout simplement.</string>
 
@@ -56,5 +56,10 @@
     <string name="closed">Fermé</string>
     <string name="open">Ouvert</string>
     <string name="no_gps_signal">Pas de signal GPS</string>
+    <string name="lunch">YOUR LUNCH</string>
+    <string name="settings">SETTINGS</string>
+    <string name="logout">LOGOUT</string>
+    <string name="open_nav">Open</string>
+    <string name="close_nav">Close</string>
 
 </resources>
