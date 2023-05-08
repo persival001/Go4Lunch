@@ -8,8 +8,8 @@ import java.util.List;
 
 public class ConversionUtils {
 
-    public static Float getRating(Float rating) {
-        return rating * 3 / 5;
+    public static float getRating(Float rating) {
+        return rating * 3F / 5F;
     }
 
     public static String getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {

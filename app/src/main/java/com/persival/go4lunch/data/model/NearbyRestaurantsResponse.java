@@ -1,8 +1,6 @@
 package com.persival.go4lunch.data.model;
 
 
-import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
-
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
@@ -25,9 +23,6 @@ public class NearbyRestaurantsResponse {
         @Nullable
         @SerializedName("name")
         private String name;
-        @Nullable
-        @SerializedName("types")
-        private List<String> types;
         @Nullable
         @SerializedName("vicinity")
         private String address;

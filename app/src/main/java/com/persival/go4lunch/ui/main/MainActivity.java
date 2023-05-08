@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
+import com.persival.go4lunch.ui.main.maps.MapsFragment;
 import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 import com.persival.go4lunch.ui.main.userlist.UserListFragment;
 
@@ -24,23 +25,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment;
-            switch (item.getItemId()) {
-                case R.id.item_1:
-                    selectedFragment = RestaurantsFragment.newInstance();
-                    break;
-                case R.id.item_2:
-                    selectedFragment = RestaurantsFragment.newInstance();
-                    break;
-                case R.id.item_3:
-                    selectedFragment = UserListFragment.newInstance();
-                    break;
-                default:
-                    selectedFragment = RestaurantsFragment.newInstance();
-            }
-
+            Fragment selectedFragment = getSelectedFragment(item.getItemId());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, selectedFragment).commit();
             return true;
         });
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private Fragment getSelectedFragment(int itemId) {
+        switch (itemId) {
+            case R.id.item_1:
+                return MapsFragment.newInstance();
+            case R.id.item_2:
+                return RestaurantsFragment.newInstance();
+            case R.id.item_3:
+                return UserListFragment.newInstance();
+            default:
+                return MapsFragment.newInstance();
+        }
     }
 }

@@ -36,7 +36,9 @@ public class GooglePlacesRepository {
 
         googlePlacesApi.getNearbyPlaces(location, radius, type, apiKey).enqueue(new Callback<NearbyRestaurantsResponse>() {
             @Override
-            public void onResponse(@NonNull Call<NearbyRestaurantsResponse> call, @NonNull Response<NearbyRestaurantsResponse> response) {
+            public void onResponse(@NonNull Call<NearbyRestaurantsResponse> call,
+                                   @NonNull Response<NearbyRestaurantsResponse> response
+            ) {
                 if (response.isSuccessful() && response.body() != null) {
                     restaurantsLiveData.setValue(response.body().getResults());
                     Log.d("RESPONSE", "The server responds to requests");
@@ -55,14 +57,17 @@ public class GooglePlacesRepository {
     }
 
     public LiveData<NearbyRestaurantsResponse.Place> getRestaurantLiveData(String restaurantId, String apiKey) {
+        Log.d("OOOOOOOOOOOO", "GET RESTO LIVE DATA");
         MutableLiveData<NearbyRestaurantsResponse.Place> restaurantLiveData = new MutableLiveData<>();
 
         googlePlacesApi.getPlaceDetail(restaurantId, apiKey).enqueue(new Callback<NearbyRestaurantsResponse.Place>() {
             @Override
-            public void onResponse(@NonNull Call<NearbyRestaurantsResponse.Place> call, @NonNull Response<NearbyRestaurantsResponse.Place> response) {
+            public void onResponse(@NonNull Call<NearbyRestaurantsResponse.Place> call,
+                                   @NonNull Response<NearbyRestaurantsResponse.Place> response
+            ) {
                 if (response.isSuccessful() && response.body() != null) {
                     restaurantLiveData.setValue(response.body());
-                    Log.d("RESPONSE", "The server responds to requests");
+                    Log.d("RESPONSE", "RESPONSE OK RESTO ID");
                 } else {
                     Log.d("NO RESPONSE", "The server does not respond to requests");
                 }
@@ -73,7 +78,7 @@ public class GooglePlacesRepository {
                 Log.d("FAILURE", "Server failure");
             }
         });
-
+        Log.d("OOOOOOOOOOOO", "FIN GET RESTO LIVE DATA");
         return restaurantLiveData;
     }
 }

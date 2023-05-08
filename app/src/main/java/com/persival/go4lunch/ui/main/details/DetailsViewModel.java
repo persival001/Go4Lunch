@@ -4,6 +4,8 @@ import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 import static com.persival.go4lunch.utils.ConversionUtils.getPictureUrl;
 import static com.persival.go4lunch.utils.ConversionUtils.getRating;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -21,6 +23,7 @@ public class DetailsViewModel extends ViewModel {
     }
 
     public LiveData<DetailsViewState> getDetailViewStateLiveData(String restaurantId) {
+        Log.d("XXXXXXXXXX", "getDetailViewStateLiveData: " + restaurantId);
         return Transformations.map(
             googlePlacesRepository.getRestaurantLiveData(restaurantId, MAPS_API_KEY),
             restaurant -> new DetailsViewState(
@@ -32,12 +35,10 @@ public class DetailsViewModel extends ViewModel {
                 restaurant.getPhoneNumber(),
                 restaurant.getWebsite(),
                 true,
-                "(2)",
+                "Ginette",
                 "https://pravatar.cc/150?img=3"
             )
         );
     }
-
-
 }
 

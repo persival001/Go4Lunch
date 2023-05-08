@@ -55,5 +55,6 @@
     <string name="avatar">avatar</string>
     <string name="closed">Fermé</string>
     <string name="open">Ouvert</string>
+    <string name="no_gps_signal">Pas de signal GPS</string>
 
 </resources>

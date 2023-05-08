@@ -1,5 +1,7 @@
 package com.persival.go4lunch.ui.main.details;
 
+import static com.persival.go4lunch.utils.ConversionUtils.getRating;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,19 +50,16 @@ public class DetailsActivity extends AppCompatActivity {
 
         DetailsViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(DetailsViewModel.class);
 
-        viewModel.getDetailViewStateLiveData(restaurantId).observe(this, restaurantDetailViewState -> {
+        viewModel.getDetailViewStateLiveData(restaurantId).observe(this, restaurantDetail -> {
             Glide.with(binding.detailsPicture)
-                .load(restaurantDetailViewState.getPictureUrl())
+                .load(restaurantDetail.getPictureUrl())
                 .placeholder(R.drawable.logoresto)
                 .error(R.drawable.baseline_error_24)
                 .into(binding.detailsPicture);
-            binding.detailsName.setText(restaurantDetailViewState.getName());
-            binding.detailsAddress.setText(restaurantDetailViewState.getTypeOfCuisineAndAddress());
-            binding.detailsRatingBar.setRating(restaurantDetailViewState.getRating());
+            binding.detailsName.setText(restaurantDetail.getName());
+            binding.detailsAddress.setText(restaurantDetail.getAddress());
+            binding.detailsRatingBar.setRating(restaurantDetail.getRating());
         });
-
-
-        //viewModel.getDetailRestaurantLiveData().observe(this, detailsAdapter::submitList);
     }
 
     @Override
