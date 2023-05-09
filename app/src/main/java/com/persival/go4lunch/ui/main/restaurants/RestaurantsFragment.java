@@ -31,7 +31,6 @@ public class RestaurantsFragment extends Fragment {
 
     private FragmentRestaurantsBinding binding;
     private RestaurantsViewModel viewModel;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
 
     public static RestaurantsFragment newInstance() {
         return new RestaurantsFragment();

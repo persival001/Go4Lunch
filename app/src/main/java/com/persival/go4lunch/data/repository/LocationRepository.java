@@ -57,9 +57,9 @@ public class LocationRepository {
                         }
 
                         // Set last known location or Nancy
-                        Location lastKnownLocation = new Location("Server");
-                        lastKnownLocation.setLatitude(latitude);
-                        lastKnownLocation.setLongitude(longitude);
+                        gpsLocation = new Location("Server");
+                        gpsLocation.setLatitude(latitude);
+                        gpsLocation.setLongitude(longitude);
                         locationMutableLiveData.setValue(gpsLocation);
                     } else {
                         // Save actual location

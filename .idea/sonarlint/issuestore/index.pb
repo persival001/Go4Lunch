@@ -1161,8 +1161,6 @@ Q.idea/sonarlint/securityhotspotstore/3/c/3c341b2915c6725bd81a51e174c41ab4225a17
 Å
 Q.idea/sonarlint/securityhotspotstore/3/9/39c88459f45b74483c7428246913d975da206e6b,0/3/037c490b0d31d3314e364db7ed8732c07083992b
 Å
-Q.idea/sonarlint/securityhotspotstore/3/9/399ed2798b577ba4ad1a56886e933a98b4325f83,2/0/2050c5af9bff04a1369cc0d037262a209ce618f7
-Å
 Q.idea/sonarlint/securityhotspotstore/2/b/2beacaf530a8a559b1986f76605f14bce3151a4a,1/7/170a6bd85bb3af3ba17fe54701a176588aa6d8ba
 Å
 Q.idea/sonarlint/securityhotspotstore/2/9/29ab5a9284ae59917d4871576fbb99293b7af3c7,a/8/a81aac7eb83bec7c3b83e7ef8269f02b1ebec1b9
@@ -2742,15 +2740,19 @@ G.idea/sonarlint/issuestore/6/a/6abd912bbde560d3c0a5751bbabc070ab4fc016f,9/1/91
 Q.idea/sonarlint/securityhotspotstore/c/e/ce742702cdea124433bd58afeec853e28835281a,c/d/cd5a179e07b624561329650346c194dff4e4a78f
 Å
 Q.idea/sonarlint/securityhotspotstore/c/c/ccd08ac9c528221d0b79bf7c7d64ef9bae75f91c,5/0/50d07337a0b1a0befc296f010ec44928f4958ea3
-É
-Sapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsAdapter.java,6/8/6867fbea15207798241aba0de222e63b14281f3d
 Å
 Q.idea/sonarlint/securityhotspotstore/6/8/6867fbea15207798241aba0de222e63b14281f3d,2/1/21f83414019a28096dd4bc8d8614583d8eed2b25
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
 Ü
 Vapp/src/main/java/com/persival/go4lunch/data/permission_checker/PermissionChecker.java,8/f/8f27dc7fe2e9a49dbfe9f9f07586a9ddca502425
-~
-Napp/src/main/java/com/persival/go4lunch/ui/main/userlist/UserListFragment.java,6/2/6299d7074d587d4d7ebe67187ac21b75f53a9b3d
-Ö
-Uapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsViewState.java,9/7/975b5d39f6975a05d80df064789d4b91dfe128b5
+r
+Bapp/src/main/java/com/persival/go4lunch/utils/ConversionUtils.java,7/3/73c378118eeb5d56ad9dc741986348fc48fdbb80
+}
+Mapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsViewModel.java,5/e/5ebfe3a1a688b9bdcf6bd82f429486adc8ac9502
+}
+Mapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsViewState.java,1/5/154e2da56208d9a947cc901cfdb37f63ab75e5c4
+Å
+Qapp/src/main/java/com/persival/go4lunch/data/model/NearbyRestaurantsResponse.java,c/4/c4c2cebba846ae41c24c3a1ccde48058a8ab761a
+l
+<app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a

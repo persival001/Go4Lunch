@@ -19,8 +19,8 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
 import com.persival.go4lunch.ui.main.maps.MapsFragment;
 import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
+import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 import com.persival.go4lunch.ui.main.user_list.UserListFragment;
-import com.persival.go4lunch.ui.user_info.UserInfoActivity;
 
 import java.util.Objects;
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_settings:
-                startActivity(UserInfoActivity.navigate(this));
+                SettingsFragment.newInstance();
                 break;
 
             case R.id.nav_logout:

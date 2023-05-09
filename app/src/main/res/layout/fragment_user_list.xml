@@ -3,11 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundRecyclerView"
     tools:context=".ui.main.user_list.UserListFragment">
 
-    <TextView
+    <ProgressBar
+        android:id="@+id/user_list_progressBar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/quantum_black_100"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/user_list_recycler_view"
+        tools:listitem="@layout/item_user_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="match_parent" />
+
 
 </FrameLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_navigation"
+    app:startDestination="@id/mapsFragment">
+
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.persival.go4lunch.ui.main.maps.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps">
+        <action
+            android:id="@+id/action_mapsFragment_to_restaurantsFragment"
+            app:destination="@id/restaurantsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/restaurantsFragment"
+        android:name="com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment"
+        android:label="fragment_restaurants"
+        tools:layout="@layout/fragment_restaurants" >
+        <action
+            android:id="@+id/action_restaurantsFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.persival.go4lunch.ui.main.user_list.UserListFragment"
+        android:label="fragment_user_list"
+        tools:layout="@layout/fragment_user_list" />
+
+    <activity
+        android:id="@+id/detailsActivity"
+        android:name="com.persival.go4lunch.ui.main.details.DetailsActivity"
+        android:label="DetailsActivity"  >
+        <action
+            android:id="@+id/action_detailsActivity_to_restaurantsFragment"
+            app:destination="@id/restaurantsFragment" />
+    </activity>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.persival.go4lunch.ui.main.settings.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
+
+</navigation>
