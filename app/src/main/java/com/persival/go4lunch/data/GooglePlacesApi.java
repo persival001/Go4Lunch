@@ -1,6 +1,7 @@
 package com.persival.go4lunch.data;
 
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.data.model.PlaceDetailsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,7 +18,7 @@ public interface GooglePlacesApi {
     );
 
     @GET("maps/api/place/details/json")
-    Call<NearbyRestaurantsResponse.Place> getPlaceDetail(
+    Call<PlaceDetailsResponse> getPlaceDetail(
         @Query("place_id") String placeId,
         @Query("key") String apiKey
     );

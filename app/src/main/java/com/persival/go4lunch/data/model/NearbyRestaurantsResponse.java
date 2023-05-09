@@ -42,6 +42,20 @@ public class NearbyRestaurantsResponse {
         @Nullable
         private Float rating;
 
+        @Override
+        public String toString() {
+            return "Place{" +
+                "placeId='" + placeId + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", openingHours=" + openingHours +
+                ", website='" + website + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", photos=" + photos +
+                ", rating=" + rating +
+                '}';
+        }
+
         @Nullable
         public String getId() {
             return placeId;

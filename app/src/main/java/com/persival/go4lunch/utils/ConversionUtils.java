@@ -9,7 +9,11 @@ import java.util.List;
 public class ConversionUtils {
 
     public static float getRating(Float rating) {
-        return rating * 3F / 5F;
+        if (rating != null) {
+            return rating * 3F / 5F;
+        } else {
+            return 0F;
+        }
     }
 
     public static String getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {
@@ -26,7 +30,7 @@ public class ConversionUtils {
             return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                 photoReference + "&key=" + MAPS_API_KEY;
         } else {
-            return "https://unsplash.com/fr/photos/5dsZnCVDHd0";
+            return "https://picsum.photos/200";
         }
     }
 }

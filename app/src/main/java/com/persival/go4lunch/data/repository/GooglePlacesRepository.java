@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.persival.go4lunch.data.GooglePlacesApi;
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.data.model.PlaceDetailsResponse;
 
 import java.util.List;
 
@@ -57,16 +58,15 @@ public class GooglePlacesRepository {
     }
 
     public LiveData<NearbyRestaurantsResponse.Place> getRestaurantLiveData(String restaurantId, String apiKey) {
-        Log.d("OOOOOOOOOOOO", "GET RESTO LIVE DATA");
         MutableLiveData<NearbyRestaurantsResponse.Place> restaurantLiveData = new MutableLiveData<>();
 
-        googlePlacesApi.getPlaceDetail(restaurantId, apiKey).enqueue(new Callback<NearbyRestaurantsResponse.Place>() {
+        googlePlacesApi.getPlaceDetail(restaurantId, apiKey).enqueue(new Callback<PlaceDetailsResponse>() {
             @Override
-            public void onResponse(@NonNull Call<NearbyRestaurantsResponse.Place> call,
-                                   @NonNull Response<NearbyRestaurantsResponse.Place> response
+            public void onResponse(@NonNull Call<PlaceDetailsResponse> call,
+                                   @NonNull Response<PlaceDetailsResponse> response
             ) {
                 if (response.isSuccessful() && response.body() != null) {
-                    restaurantLiveData.setValue(response.body());
+                    restaurantLiveData.setValue(response.body().getResult());
                     Log.d("RESPONSE", "RESPONSE OK RESTO ID");
                 } else {
                     Log.d("NO RESPONSE", "The server does not respond to requests");
@@ -74,11 +74,11 @@ public class GooglePlacesRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<NearbyRestaurantsResponse.Place> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<PlaceDetailsResponse> call, @NonNull Throwable t) {
                 Log.d("FAILURE", "Server failure");
             }
         });
-        Log.d("OOOOOOOOOOOO", "FIN GET RESTO LIVE DATA");
+
         return restaurantLiveData;
     }
 }

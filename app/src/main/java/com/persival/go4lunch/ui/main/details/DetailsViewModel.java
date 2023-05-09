@@ -26,18 +26,24 @@ public class DetailsViewModel extends ViewModel {
         Log.d("XXXXXXXXXX", "getDetailViewStateLiveData: " + restaurantId);
         return Transformations.map(
             googlePlacesRepository.getRestaurantLiveData(restaurantId, MAPS_API_KEY),
-            restaurant -> new DetailsViewState(
-                restaurant.getId(),
-                getPictureUrl(restaurant.getPhotos()),
-                restaurant.getName(),
-                getRating(restaurant.getRating()),
-                restaurant.getAddress(),
-                restaurant.getPhoneNumber(),
-                restaurant.getWebsite(),
-                true,
-                "Ginette",
-                "https://pravatar.cc/150?img=3"
-            )
+
+            restaurant -> {
+                // Ajouter un log pour vérifier les données de restaurant
+                Log.d("YYYYYYYYYY", "Restaurant data: " + restaurant);
+
+                return new DetailsViewState(
+                    restaurant.getId(),
+                    getPictureUrl(restaurant.getPhotos()),
+                    restaurant.getName(),
+                    getRating(restaurant.getRating()),
+                    restaurant.getAddress(),
+                    restaurant.getPhoneNumber(),
+                    restaurant.getWebsite(),
+                    true,
+                    "Ginette",
+                    "https://picsum.photos/200"
+                );
+            }
         );
     }
 }

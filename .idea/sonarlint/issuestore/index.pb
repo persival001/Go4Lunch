@@ -2746,13 +2746,5 @@ Q.idea/sonarlint/securityhotspotstore/6/8/6867fbea15207798241aba0de222e63b14281f
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
 Ü
 Vapp/src/main/java/com/persival/go4lunch/data/permission_checker/PermissionChecker.java,8/f/8f27dc7fe2e9a49dbfe9f9f07586a9ddca502425
-r
-Bapp/src/main/java/com/persival/go4lunch/utils/ConversionUtils.java,7/3/73c378118eeb5d56ad9dc741986348fc48fdbb80
-}
-Mapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsViewModel.java,5/e/5ebfe3a1a688b9bdcf6bd82f429486adc8ac9502
-}
-Mapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsViewState.java,1/5/154e2da56208d9a947cc901cfdb37f63ab75e5c4
-Å
-Qapp/src/main/java/com/persival/go4lunch/data/model/NearbyRestaurantsResponse.java,c/4/c4c2cebba846ae41c24c3a1ccde48058a8ab761a
 l
 <app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a

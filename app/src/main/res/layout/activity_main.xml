@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:background="@color/quantum_white_100"
-            app:queryHint="Search" />
+            app:queryHint="Search restaurants" />
 
         </androidx.appcompat.widget.Toolbar>
 
