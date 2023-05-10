@@ -15,6 +15,11 @@ import dagger.hilt.components.SingletonComponent;
 @Module
 @InstallIn(SingletonComponent.class)
 public class AppModule {
+
+    // This class is not meant to be instantiated
+    private AppModule() {
+    }
+
     @Provides
     public static PermissionChecker providePermissionChecker(Application application) {
         return new PermissionChecker(application);

@@ -9,8 +9,8 @@ import java.util.Locale;
 
 public class ConversionUtils {
 
+    // This class is not meant to be instantiated
     private ConversionUtils() {
-        // This class is not meant to be instantiated
     }
 
     // Convert rating from 5 to 3 stars
