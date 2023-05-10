@@ -1,45 +1,41 @@
 package com.persival.go4lunch.ui.main.maps;
 
-import android.annotation.SuppressLint;
+import android.location.Location;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.RequiresPermission;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.repository.LocationRepository;
 import com.persival.go4lunch.data.permission_checker.PermissionChecker;
+import com.persival.go4lunch.data.repository.LocationRepository;
 
 public class MapsViewModel extends ViewModel {
-
-    @NonNull
-    private final PermissionChecker permissionChecker;
-    @NonNull
     private final LocationRepository locationRepository;
-    private final MutableLiveData<Boolean> hasGpsPermissionLiveData = new MutableLiveData<>();
+    private final PermissionChecker permissionChecker;
 
-    public MapsViewModel(
-        @NonNull LocationRepository locationRepository,
-        @NonNull PermissionChecker permissionChecker
-    ) {
+    public MapsViewModel(@NonNull LocationRepository locationRepository, @NonNull PermissionChecker permissionChecker) {
         this.locationRepository = locationRepository;
         this.permissionChecker = permissionChecker;
     }
 
-    @SuppressLint("MissingPermission")
-    public void startLocation() {
+    public boolean hasLocationPermission() {
+        return permissionChecker.hasLocationPermission();
+    }
+
+    public LiveData<Location> getLocationLiveData() {
+        return locationRepository.getLocationLiveData();
+    }
+
+    @RequiresPermission(anyOf = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"})
+    public void startLocationRequest() {
         locationRepository.startLocationRequest();
     }
 
-    @SuppressLint("MissingPermission")
-    public void refresh() {
-        boolean hasGpsPermission = permissionChecker.hasLocationPermission();
-        hasGpsPermissionLiveData.setValue(hasGpsPermission);
-
-        if (hasGpsPermission) {
-            locationRepository.startLocationRequest();
-        } else {
-            locationRepository.stopLocationRequest();
-        }
+    public void stopLocationRequest() {
+        locationRepository.stopLocationRequest();
     }
 }
+
+
 

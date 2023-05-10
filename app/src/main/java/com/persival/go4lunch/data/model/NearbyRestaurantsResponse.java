@@ -17,6 +17,8 @@ public class NearbyRestaurantsResponse {
     }
 
     public static class Place {
+        @SerializedName("geometry")
+        private Geometry geometry;
         @Nullable
         @SerializedName("place_id")
         private String placeId;
@@ -42,18 +44,12 @@ public class NearbyRestaurantsResponse {
         @Nullable
         private Float rating;
 
-        @Override
-        public String toString() {
-            return "Place{" +
-                "placeId='" + placeId + '\'' +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", openingHours=" + openingHours +
-                ", website='" + website + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", photos=" + photos +
-                ", rating=" + rating +
-                '}';
+        public double getLatitude() {
+            return geometry != null && geometry.location != null ? geometry.location.lat : 0.0;
+        }
+
+        public double getLongitude() {
+            return geometry != null && geometry.location != null ? geometry.location.lng : 0.0;
         }
 
         @Nullable
@@ -112,6 +108,18 @@ public class NearbyRestaurantsResponse {
 
         public String getPhotoReference() {
             return photoReference;
+        }
+    }
+
+    private static class Geometry {
+        @SerializedName("location")
+        private Location location;
+
+        private static class Location {
+            @SerializedName("lat")
+            private double lat;
+            @SerializedName("lng")
+            private double lng;
         }
     }
 }

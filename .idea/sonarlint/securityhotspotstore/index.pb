@@ -2744,7 +2744,5 @@ Q.idea/sonarlint/securityhotspotstore/c/c/ccd08ac9c528221d0b79bf7c7d64ef9bae75f9
 Q.idea/sonarlint/securityhotspotstore/6/8/6867fbea15207798241aba0de222e63b14281f3d,2/1/21f83414019a28096dd4bc8d8614583d8eed2b25
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-†
-Vapp/src/main/java/com/persival/go4lunch/data/permission_checker/PermissionChecker.java,8/f/8f27dc7fe2e9a49dbfe9f9f07586a9ddca502425
 l
 <app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a

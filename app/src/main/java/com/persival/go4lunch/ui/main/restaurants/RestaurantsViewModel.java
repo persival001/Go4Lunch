@@ -1,6 +1,7 @@
 package com.persival.go4lunch.ui.main.restaurants;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
+import static com.persival.go4lunch.utils.ConversionUtils.getHaversineDistance;
 import static com.persival.go4lunch.utils.ConversionUtils.getOpeningTime;
 import static com.persival.go4lunch.utils.ConversionUtils.getPictureUrl;
 import static com.persival.go4lunch.utils.ConversionUtils.getRating;
@@ -23,6 +24,7 @@ import com.persival.go4lunch.data.repository.GooglePlacesRepository;
 import com.persival.go4lunch.data.repository.LocationRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RestaurantsViewModel extends ViewModel {
@@ -72,7 +74,7 @@ public class RestaurantsViewModel extends ViewModel {
                                 restaurant.getName(),
                                 restaurant.getAddress(),
                                 getOpeningTime(restaurant.getOpeningHours()),
-                                "200",
+                                getHaversineDistance(restaurant.getLatitude(), restaurant.getLongitude(), gpsLocationLiveData.getValue()),
                                 "(2)",
                                 getRating(restaurant.getRating()),
                                 getPictureUrl(restaurant.getPhotos())
@@ -102,8 +104,23 @@ public class RestaurantsViewModel extends ViewModel {
         }
     }
 
-    public LiveData<List<RestaurantsViewState>> getRestaurantsLiveData() {
-        return restaurantsLiveData;
+    public LiveData<List<RestaurantsViewState>> getSortedRestaurantsLiveData() {
+        return Transformations.map(restaurantsLiveData, restaurantsList -> {
+            if (restaurantsList == null) return null;
+
+            List<RestaurantsViewState> sortedRestaurantsList = new ArrayList<>(restaurantsList);
+            Collections.sort(sortedRestaurantsList, (r1, r2) -> {
+                String distance1Str = r1.getDistance().replaceAll("\\s+m", "");
+                String distance2Str = r2.getDistance().replaceAll("\\s+m", "");
+
+                double distance1 = Double.parseDouble(distance1Str);
+                double distance2 = Double.parseDouble(distance2Str);
+
+                return Double.compare(distance1, distance2);
+            });
+
+            return sortedRestaurantsList;
+        });
     }
 
     @SuppressLint("MissingPermission")

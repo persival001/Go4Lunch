@@ -38,7 +38,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_settings:
-                SettingsFragment.newInstance();
+                SettingsFragment settingsFragment = SettingsFragment.newInstance();
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, settingsFragment)
+                    .addToBackStack(null)
+                    .commit();
                 break;
 
             case R.id.nav_logout:
