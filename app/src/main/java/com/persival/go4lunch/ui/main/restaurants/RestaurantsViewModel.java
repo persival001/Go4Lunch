@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class RestaurantsViewModel extends ViewModel {
 
     public static final int ANIMATION_STATUS = 1;
@@ -39,8 +44,9 @@ public class RestaurantsViewModel extends ViewModel {
     private final MutableLiveData<String> gpsLocationLiveData = new MutableLiveData<>();
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
 
+    @Inject
     public RestaurantsViewModel(
-        @NonNull final GooglePlacesRepository googlePlacesRepository,
+        @NonNull GooglePlacesRepository googlePlacesRepository,
         @NonNull PermissionChecker permissionChecker,
         @NonNull LocationRepository locationRepository
     ) {

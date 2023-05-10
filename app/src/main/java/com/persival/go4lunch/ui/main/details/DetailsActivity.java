@@ -1,7 +1,5 @@
 package com.persival.go4lunch.ui.main.details;
 
-import static com.persival.go4lunch.utils.ConversionUtils.getRating;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,15 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.persival.go4lunch.R;
-import com.persival.go4lunch.ViewModelFactory;
 import com.persival.go4lunch.databinding.ActivityDetailsBinding;
 
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class DetailsActivity extends AppCompatActivity {
 
     private static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
     private ActivityDetailsBinding binding;
+    private DetailsViewModel viewModel;
 
     public static Intent navigate(Context context, String restaurantId) {
         Intent intent = new Intent(context, DetailsActivity.class);
@@ -48,7 +49,7 @@ public class DetailsActivity extends AppCompatActivity {
         binding.detailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.detailsRecyclerView.setAdapter(detailsAdapter);
 
-        DetailsViewModel viewModel = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(DetailsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(DetailsViewModel.class);
 
         viewModel.getDetailViewStateLiveData(restaurantId).observe(this, restaurantDetail -> {
             Glide.with(binding.detailsPicture)

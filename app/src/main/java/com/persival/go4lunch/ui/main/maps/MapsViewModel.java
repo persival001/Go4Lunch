@@ -10,10 +10,16 @@ import androidx.lifecycle.ViewModel;
 import com.persival.go4lunch.data.permission_checker.PermissionChecker;
 import com.persival.go4lunch.data.repository.LocationRepository;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class MapsViewModel extends ViewModel {
     private final LocationRepository locationRepository;
     private final PermissionChecker permissionChecker;
 
+    @Inject
     public MapsViewModel(@NonNull LocationRepository locationRepository, @NonNull PermissionChecker permissionChecker) {
         this.locationRepository = locationRepository;
         this.permissionChecker = permissionChecker;

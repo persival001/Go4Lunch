@@ -34,6 +34,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private static final int REQUEST_LOCATION_PERMISSION_CODE = 100;
     private ActivityAuthenticationBinding binding;
 
+
     private final ActivityResultLauncher<Intent> signInActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
         result -> handleResponseAfterSignIn(result.getResultCode(), result.getData())

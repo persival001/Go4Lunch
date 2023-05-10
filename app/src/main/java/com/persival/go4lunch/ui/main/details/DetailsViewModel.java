@@ -13,9 +13,12 @@ import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.repository.GooglePlacesRepository;
 
+import javax.inject.Inject;
+
 public class DetailsViewModel extends ViewModel {
     private final GooglePlacesRepository googlePlacesRepository;
 
+    @Inject
     public DetailsViewModel(
         @NonNull final GooglePlacesRepository googlePlacesRepository
     ) {

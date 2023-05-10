@@ -1,16 +1,10 @@
 package com.persival.go4lunch.ui.main.user_list;
 
-import static com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel.ANIMATION_STATUS;
-
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,18 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.persival.go4lunch.R;
-import com.persival.go4lunch.ViewModelFactory;
-import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
 import com.persival.go4lunch.databinding.FragmentUserListBinding;
-import com.persival.go4lunch.ui.main.details.DetailsActivity;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsAdapter;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewState;
 
-import java.util.List;
+import dagger.hilt.EntryPoint;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class UserListFragment extends Fragment {
 
     private FragmentUserListBinding binding;
@@ -54,8 +43,7 @@ public class UserListFragment extends Fragment {
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(
-            this, ViewModelFactory.getInstance()).get(UserListViewModel.class);
+        viewModel = new ViewModelProvider(this).get(UserListViewModel.class);
 
         RecyclerView recyclerView = binding.userListRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

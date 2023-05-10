@@ -2742,7 +2742,3 @@ Q.idea/sonarlint/securityhotspotstore/c/e/ce742702cdea124433bd58afeec853e2883528
 Q.idea/sonarlint/securityhotspotstore/c/c/ccd08ac9c528221d0b79bf7c7d64ef9bae75f91c,5/0/50d07337a0b1a0befc296f010ec44928f4958ea3
 Å
 Q.idea/sonarlint/securityhotspotstore/6/8/6867fbea15207798241aba0de222e63b14281f3d,2/1/21f83414019a28096dd4bc8d8614583d8eed2b25
-<
-build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-l
-<app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a

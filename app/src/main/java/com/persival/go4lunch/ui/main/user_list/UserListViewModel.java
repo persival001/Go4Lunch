@@ -9,10 +9,16 @@ import com.persival.go4lunch.data.repository.GooglePlacesRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class UserListViewModel extends ViewModel {
     private final GooglePlacesRepository googlePlacesRepository;
     private MutableLiveData<List<UserListViewState>> userListLiveData;
 
+    @Inject
     public UserListViewModel(
         @NonNull final GooglePlacesRepository googlePlacesRepository
     ) {
