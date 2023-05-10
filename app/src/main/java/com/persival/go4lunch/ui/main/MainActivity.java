@@ -1,6 +1,5 @@
 package com.persival.go4lunch.ui.main;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -31,29 +30,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawerLayout;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+        int itemId = item.getItemId();
 
-            case R.id.nav_your_lunch:
-                Toast.makeText(this, "Lunch!", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.nav_settings:
-                SettingsFragment settingsFragment = SettingsFragment.newInstance();
-                getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, settingsFragment)
-                    .addToBackStack(null)
-                    .commit();
-                break;
-
-            case R.id.nav_logout:
-                Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
-                break;
-
-            default:
-                break;
+        if (itemId == R.id.nav_your_lunch) {
+            Toast.makeText(this, "Lunch!", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.nav_settings) {
+            SettingsFragment settingsFragment = SettingsFragment.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerView, settingsFragment)
+                .addToBackStack(null)
+                .commit();
+        } else if (itemId == R.id.nav_logout) {
+            Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -103,17 +93,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @SuppressLint("NonConstantResourceId")
     private Fragment getSelectedFragment(int itemId) {
-        switch (itemId) {
-            case R.id.item_1:
-                return MapsFragment.newInstance();
-            case R.id.item_2:
-                return RestaurantsFragment.newInstance();
-            case R.id.item_3:
-                return UserListFragment.newInstance();
-            default:
-                return MapsFragment.newInstance();
+        if (itemId == R.id.item_2) {
+            return RestaurantsFragment.newInstance();
+        } else if (itemId == R.id.item_3) {
+            return UserListFragment.newInstance();
+        } else {
+            return MapsFragment.newInstance();
         }
     }
+
 }

@@ -14,6 +14,7 @@ public class UserListViewState {
     private final String avatarName;
     @NonNull
     private final String restaurantName;
+
     public UserListViewState(
         @NonNull String id,
         @NonNull String avatarPictureUrl,
@@ -41,6 +42,7 @@ public class UserListViewState {
         return id.equals(that.id) && avatarPictureUrl.equals(that.avatarPictureUrl) && avatarName.equals(that.avatarName) && restaurantName.equals(that.restaurantName);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "UserListViewState{" +

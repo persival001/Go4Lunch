@@ -112,7 +112,8 @@ public class RestaurantsViewModel extends ViewModel {
 
     public LiveData<List<RestaurantsViewState>> getSortedRestaurantsLiveData() {
         return Transformations.map(restaurantsLiveData, restaurantsList -> {
-            if (restaurantsList == null) return null;
+            if (restaurantsList == null)
+                return null;
 
             List<RestaurantsViewState> sortedRestaurantsList = new ArrayList<>(restaurantsList);
             Collections.sort(sortedRestaurantsList, (r1, r2) -> {

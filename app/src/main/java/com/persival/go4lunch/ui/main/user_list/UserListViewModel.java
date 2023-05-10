@@ -16,7 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class UserListViewModel extends ViewModel {
     private final GooglePlacesRepository googlePlacesRepository;
-    private MutableLiveData<List<UserListViewState>> userListLiveData;
+    private final MutableLiveData<List<UserListViewState>> userListLiveData;
 
     @Inject
     public UserListViewModel(

@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.persival.go4lunch.R;
+import java.util.Objects;
 
 public class UserListAdapter extends ListAdapter<UserListViewState, UserListAdapter.ViewHolder> {
 
@@ -61,7 +62,7 @@ public class UserListAdapter extends ListAdapter<UserListViewState, UserListAdap
     private static class UserListAdapterDiffCallback extends DiffUtil.ItemCallback<UserListViewState> {
         @Override
         public boolean areItemsTheSame(@NonNull UserListViewState oldItem, @NonNull UserListViewState newItem) {
-            return oldItem.getId() == newItem.getId();
+            return Objects.equals(oldItem.getId(), newItem.getId());
         }
 
         @Override

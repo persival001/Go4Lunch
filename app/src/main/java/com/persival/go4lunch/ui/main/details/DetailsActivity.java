@@ -23,8 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class DetailsActivity extends AppCompatActivity {
 
     private static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
-    private ActivityDetailsBinding binding;
-    private DetailsViewModel viewModel;
 
     public static Intent navigate(Context context, String restaurantId) {
         Intent intent = new Intent(context, DetailsActivity.class);
@@ -34,6 +32,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        DetailsViewModel viewModel;
+        ActivityDetailsBinding binding;
         super.onCreate(savedInstanceState);
 
         binding = ActivityDetailsBinding.inflate(getLayoutInflater());

@@ -92,37 +92,46 @@ public class DetailsViewState {
     public String getId() {
         return id;
     }
+
     @NonNull
     public String getName() {
         return name;
     }
+
     @NonNull
     public String getPictureUrl() {
         return pictureUrl;
     }
+
     public Float getRating() {
         return rating;
     }
+
     @NonNull
     public String getAddress() {
         return address;
     }
+
     @NonNull
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
     @NonNull
     public String getWebsite() {
         return website;
     }
+
     @NonNull
     public Boolean getSelected() {
         return isSelected;
     }
+
     @NonNull
     public String getParticipants() {
         return nameOfParticipant;
     }
+
     @NonNull
     public String getAvatarUrl() {
         return avatarUrl;

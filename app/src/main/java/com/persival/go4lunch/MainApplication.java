@@ -16,7 +16,4 @@ public class MainApplication extends Application {
         sApplication = this;
     }
 
-    public static Application getApplication() {
-        return sApplication;
-    }
 }

@@ -20,9 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.persival.go4lunch.R;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel;
 
-import dagger.hilt.EntryPoint;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint

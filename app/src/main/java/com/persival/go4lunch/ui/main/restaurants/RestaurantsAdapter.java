@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.persival.go4lunch.R;
 
+import java.util.Objects;
+
 public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, RestaurantsAdapter.ViewHolder> {
 
     private final OnRestaurantClickedListener listener;
@@ -77,7 +79,7 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
     private static class ListRestaurantsItemCallback extends DiffUtil.ItemCallback<RestaurantsViewState> {
         @Override
         public boolean areItemsTheSame(@NonNull RestaurantsViewState oldItem, @NonNull RestaurantsViewState newItem) {
-            return oldItem.getId() == newItem.getId();
+            return Objects.equals(oldItem.getId(), newItem.getId());
         }
 
         @Override

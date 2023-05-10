@@ -2,6 +2,9 @@ package com.persival.go4lunch.ui.main.user_list;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,21 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.persival.go4lunch.databinding.FragmentUserListBinding;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel;
 
-import dagger.hilt.EntryPoint;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class UserListFragment extends Fragment {
 
     private FragmentUserListBinding binding;
-    private UserListViewModel viewModel;
 
     public static UserListFragment newInstance() {
         return new UserListFragment();
@@ -43,6 +39,7 @@ public class UserListFragment extends Fragment {
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        UserListViewModel viewModel;
         viewModel = new ViewModelProvider(this).get(UserListViewModel.class);
 
         RecyclerView recyclerView = binding.userListRecyclerView;
@@ -50,9 +47,7 @@ public class UserListFragment extends Fragment {
         UserListAdapter adapter = new UserListAdapter();
         recyclerView.setAdapter(adapter);
 
-        viewModel.populateUserListLiveData().observe(getViewLifecycleOwner(), userList -> {
-            adapter.submitList(userList);
-        });
+        viewModel.populateUserListLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 
     @Override

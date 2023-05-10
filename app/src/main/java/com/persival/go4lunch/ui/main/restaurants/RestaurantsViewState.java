@@ -46,6 +46,7 @@ public class RestaurantsViewState {
         this.pictureUrl = pictureUrl;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }
@@ -80,7 +81,6 @@ public class RestaurantsViewState {
         return pictureUrl;
     }
 
-    @NonNull
     public float getRating() {
         return rating;
     }

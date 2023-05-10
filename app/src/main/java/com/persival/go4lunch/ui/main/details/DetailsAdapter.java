@@ -41,7 +41,7 @@ public class DetailsAdapter extends ListAdapter<DetailsViewState, DetailsAdapter
     private static class DetailsAdapterDiffCallback extends DiffUtil.ItemCallback<DetailsViewState> {
         @Override
         public boolean areItemsTheSame(@NonNull DetailsViewState oldItem, @NonNull DetailsViewState newItem) {
-            return oldItem.getId() == newItem.getId();
+            return oldItem.getId().equals(newItem.getId());
         }
 
         @Override
