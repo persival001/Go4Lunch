@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.permission_checker.PermissionChecker;
-import com.persival.go4lunch.data.repository.LocationRepository;
+import com.persival.go4lunch.data.location.LocationRepository;
 
 import javax.inject.Inject;
 

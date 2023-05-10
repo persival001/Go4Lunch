@@ -8,11 +8,16 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class PermissionChecker {
 
     @NonNull
     private final Application application;
 
+    @Inject
     public PermissionChecker(@NonNull Application application) {
         this.application = application;
     }

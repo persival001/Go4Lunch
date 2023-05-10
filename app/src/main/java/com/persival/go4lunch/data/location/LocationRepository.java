@@ -1,7 +1,5 @@
-package com.persival.go4lunch.data.repository;
+package com.persival.go4lunch.data.location;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Looper;
 
@@ -14,22 +12,32 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.persival.go4lunch.data.shared_prefs.SharedPreferencesRepository;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class LocationRepository {
     private static final int LOCATION_REQUEST_INTERVAL_MS = 10_000;
     private static final float SMALLEST_DISPLACEMENT_THRESHOLD_METER = 25;
-    @NonNull
-    private final Context context;
+
     @NonNull
     private final FusedLocationProviderClient fusedLocationProviderClient;
     @NonNull
+    private final SharedPreferencesRepository sharedPreferencesRepository;
+
+    @NonNull
     private final MutableLiveData<Location> locationMutableLiveData = new MutableLiveData<>(null);
-    private SharedPreferences sharedPreferences;
     private LocationCallback callback;
 
-    public LocationRepository(@NonNull FusedLocationProviderClient fusedLocationProviderClient, @NonNull Context context) {
+    @Inject
+    public LocationRepository(
+        @NonNull FusedLocationProviderClient fusedLocationProviderClient,
+        @NonNull SharedPreferencesRepository sharedPreferencesRepository
+    ) {
         this.fusedLocationProviderClient = fusedLocationProviderClient;
-        this.context = context;
+        this.sharedPreferencesRepository = sharedPreferencesRepository;
     }
 
     public LiveData<Location> getLocationLiveData() {
@@ -45,25 +53,29 @@ public class LocationRepository {
                     Location gpsLocation = locationResult.getLastLocation();
                     if (gpsLocation == null) {
                         // Get last known location
-                        sharedPreferences = context.getSharedPreferences("LatLng", Context.MODE_PRIVATE);
-                        double latitude = sharedPreferences.getFloat("latitude", 0);
-                        double longitude = sharedPreferences.getFloat("longitude", 0);
+                        LocationEntity savedLocation = sharedPreferencesRepository.getLocation();
 
-                        // If default values are (0,0) then set to Nancy
-                        if (latitude == 0 && longitude == 0) {
-                            gpsLocation = new Location("Server");
-                            gpsLocation.setLatitude(48.6921);
-                            gpsLocation.setLongitude(6.1844);
+                        // If not found, then set to Nancy
+                        if (savedLocation == null) {
+                            savedLocation = new LocationEntity(
+                                48.6921,
+                                6.1844
+                            );
                         }
 
-                        // Set last known location or Nancy
-                        gpsLocation = new Location("Server");
-                        gpsLocation.setLatitude(latitude);
-                        gpsLocation.setLongitude(longitude);
+                        // TODO Persival
+                        gpsLocation = new Location("");
+                        gpsLocation.setLatitude(savedLocation.getLatitude());
+                        gpsLocation.setLongitude(savedLocation.getLongitude());
                         locationMutableLiveData.setValue(gpsLocation);
                     } else {
                         // Save actual location
-                        saveLastKnownLocation(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+                        sharedPreferencesRepository.saveLocation(
+                            new LocationEntity(
+                                gpsLocation.getLatitude(),
+                                gpsLocation.getLongitude()
+                            )
+                        );
                         locationMutableLiveData.setValue(gpsLocation);
                     }
                 }
@@ -79,14 +91,6 @@ public class LocationRepository {
             callback,
             Looper.getMainLooper()
         );
-    }
-
-    private void saveLastKnownLocation(double latitude, double longitude) {
-        sharedPreferences = context.getSharedPreferences("LatLng", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat("latitude", (float) latitude);
-        editor.putFloat("longitude", (float) longitude);
-        editor.apply();
     }
 
     public void stopLocationRequest() {

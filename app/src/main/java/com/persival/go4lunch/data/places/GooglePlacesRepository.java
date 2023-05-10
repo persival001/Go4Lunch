@@ -1,4 +1,4 @@
-package com.persival.go4lunch.data.repository;
+package com.persival.go4lunch.data.places;
 
 import android.util.Log;
 
@@ -12,24 +12,23 @@ import com.persival.go4lunch.data.model.PlaceDetailsResponse;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@Singleton
 public class GooglePlacesRepository {
-    private static final String GOOGLE_PLACES_API_BASE_URL = "https://maps.googleapis.com/";
 
     private final GooglePlacesApi googlePlacesApi;
 
-    public GooglePlacesRepository() {
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(GOOGLE_PLACES_API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-
-        googlePlacesApi = retrofit.create(GooglePlacesApi.class);
+    @Inject
+    public GooglePlacesRepository(GooglePlacesApi googlePlacesApi) {
+        this.googlePlacesApi = googlePlacesApi;
     }
 
     public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants(String location, int radius, String type, String apiKey) {

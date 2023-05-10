@@ -2,7 +2,6 @@ package com.persival.go4lunch.ui.main.restaurants;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 import static com.persival.go4lunch.utils.ConversionUtils.getHaversineDistance;
-import static com.persival.go4lunch.utils.ConversionUtils.getOpeningTime;
 import static com.persival.go4lunch.utils.ConversionUtils.getPictureUrl;
 import static com.persival.go4lunch.utils.ConversionUtils.getRating;
 
@@ -18,10 +17,10 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.R;
+import com.persival.go4lunch.data.location.LocationRepository;
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.data.permission_checker.PermissionChecker;
-import com.persival.go4lunch.data.repository.GooglePlacesRepository;
-import com.persival.go4lunch.data.repository.LocationRepository;
+import com.persival.go4lunch.data.places.GooglePlacesRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,9 +38,10 @@ public class RestaurantsViewModel extends ViewModel {
     private final PermissionChecker permissionChecker;
     @NonNull
     private final LocationRepository locationRepository;
-    private final MediatorLiveData<Integer> gpsMessageLiveData = new MediatorLiveData<>();
+
     private final MutableLiveData<Boolean> hasGpsPermissionLiveData = new MutableLiveData<>();
-    private final MutableLiveData<String> gpsLocationLiveData = new MutableLiveData<>();
+
+    private final MediatorLiveData<Integer> gpsMessageLiveData = new MediatorLiveData<>();
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
 
     @Inject
@@ -63,57 +63,49 @@ public class RestaurantsViewModel extends ViewModel {
             combine(locationLiveData.getValue(), hasGpsPermission)
         );
 
-        restaurantsLiveData = Transformations.switchMap(gpsLocationLiveData, location -> {
-            if (location != null) {
-                return Transformations.map(
-                    googlePlacesRepository.getNearbyRestaurants(
-                        location,
-                        5000,
-                        "restaurant",
-                        MAPS_API_KEY
-                    ),
-                    places -> {
-                        List<RestaurantsViewState> restaurantsList = new ArrayList<>();
-                        for (NearbyRestaurantsResponse.Place restaurant : places) {
-                            restaurantsList.add(new RestaurantsViewState(
+        LiveData<String> locationAsString = Transformations.map(
+            locationLiveData,
+            location -> location.getLatitude() + "," + location.getLongitude()
+        );
+
+        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData = Transformations.switchMap(
+            locationAsString,
+            location -> Transformations.map(
+                googlePlacesRepository.getNearbyRestaurants(
+                    location,
+                    5000,
+                    "restaurant",
+                    MAPS_API_KEY
+                ),
+                places -> {
+                    List<RestaurantsViewState> restaurantsList = new ArrayList<>();
+                    for (NearbyRestaurantsResponse.Place restaurant : places) {
+                        restaurantsList.add(
+                            new RestaurantsViewState(
                                 restaurant.getId(),
                                 restaurant.getName(),
                                 restaurant.getAddress(),
                                 getOpeningTime(restaurant.getOpeningHours()),
-                                getHaversineDistance(restaurant.getLatitude(), restaurant.getLongitude(), gpsLocationLiveData.getValue()),
+                                getHaversineDistance(
+                                    restaurant.getLatitude(),
+                                    restaurant.getLongitude(),
+                                    locationLiveData.getValue()
+                                ),
                                 "(2)",
                                 getRating(restaurant.getRating()),
                                 getPictureUrl(restaurant.getPhotos())
-                            ));
-                        }
-                        return restaurantsList;
+                            )
+                        );
                     }
-                );
-            } else {
-                return new MutableLiveData<>(null);
-            }
-        });
-    }
+                    return restaurantsList;
+                }
+            )
+        );
 
-    private void combine(@Nullable Location location, @Nullable Boolean hasGpsPermission) {
-        if (location == null) {
-            if (hasGpsPermission == null || !hasGpsPermission) {
-                // Showed in the view if gps is disabled
-                gpsMessageLiveData.setValue(R.drawable.baseline_location_off_24);
-            } else {
-                // Showed in the view if gps is in progress
-                gpsMessageLiveData.setValue(ANIMATION_STATUS);
-            }
-        } else {
-            // Gps location is available
-            gpsLocationLiveData.setValue(location.getLatitude() + "," + location.getLongitude());
-        }
-    }
-
-    public LiveData<List<RestaurantsViewState>> getSortedRestaurantsLiveData() {
-        return Transformations.map(restaurantsLiveData, restaurantsList -> {
-            if (restaurantsList == null)
+        restaurantsLiveData = Transformations.map(unsortedRestaurantsLiveData, restaurantsList -> {
+            if (restaurantsList == null) {
                 return null;
+            }
 
             List<RestaurantsViewState> sortedRestaurantsList = new ArrayList<>(restaurantsList);
             Collections.sort(sortedRestaurantsList, (r1, r2) -> {
@@ -130,6 +122,26 @@ public class RestaurantsViewModel extends ViewModel {
         });
     }
 
+    private void combine(@Nullable Location location, @Nullable Boolean hasGpsPermission) {
+        if (location == null) {
+            if (hasGpsPermission == null || !hasGpsPermission) {
+                // Showed in the view if gps is disabled
+                gpsMessageLiveData.setValue(R.drawable.baseline_location_off_24);
+            } else {
+                // Showed in the view if gps is in progress
+                gpsMessageLiveData.setValue(ANIMATION_STATUS);
+            }
+        }
+    }
+
+    public LiveData<List<RestaurantsViewState>> getSortedRestaurantsLiveData() {
+        return restaurantsLiveData;
+    }
+
+    public LiveData<Integer> getGpsMessageLiveData() {
+        return gpsMessageLiveData;
+    }
+
     @SuppressLint("MissingPermission")
     public void refresh() {
         boolean hasGpsPermission = permissionChecker.hasLocationPermission();
@@ -142,8 +154,12 @@ public class RestaurantsViewModel extends ViewModel {
         }
     }
 
-    public LiveData<Integer> getGpsMessageLiveData() {
-        return gpsMessageLiveData;
+    private String getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {
+        if (openingHours != null && openingHours.isOpenNow()) {
+            return "Open";
+        } else {
+            return "Closed";
+        }
     }
 }
 

@@ -2,6 +2,8 @@ package com.persival.go4lunch.utils;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
+import android.location.Location;
+
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
 
 import java.util.List;
@@ -22,15 +24,6 @@ public class ConversionUtils {
         }
     }
 
-    // Convert boolean to string "Open" or "Closed"
-    public static String getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {
-        if (openingHours != null && openingHours.isOpenNow()) {
-            return "Open";
-        } else {
-            return "Closed";
-        }
-    }
-
     // Get a photo reference if it exists and convert it to a picture url
     public static String getPictureUrl(List<NearbyRestaurantsResponse.Photo> photos) {
         if (photos != null && !photos.isEmpty()) {
@@ -43,38 +36,18 @@ public class ConversionUtils {
     }
 
     // Get the distance between two points
-    public static String getHaversineDistance(double lat1, double lon1, String latLng) {
-        if (latLng == null || latLng.isEmpty()) {
-            return "0";
-        }
-
-        String[] latLngArray = latLng.split(",");
-        if (latLngArray.length != 2) {
-            return "0";
-        }
-
-        double lat2;
-        double lon2;
-
-        try {
-            lat2 = Double.parseDouble(latLngArray[0]);
-            lon2 = Double.parseDouble(latLngArray[1]);
-        } catch (NumberFormatException e) {
-            return "0";
-        }
-
+    public static String getHaversineDistance(double lat1, double lon1, Location location) {
         final int R = 6371_000; // Radius of the earth in meters
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
+        double latDistance = Math.toRadians(location.getLatitude() - lat1);
+        double lonDistance = Math.toRadians(location.getLongitude() - lon1);
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-            + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+            + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(location.getLatitude()))
             * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = R * c;
 
         return String.format(Locale.getDefault(), "%.0f", distance) + " m";
     }
-
 }
 
 

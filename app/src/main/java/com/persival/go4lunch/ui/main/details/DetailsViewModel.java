@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.repository.GooglePlacesRepository;
+import com.persival.go4lunch.data.places.GooglePlacesRepository;
 
 import javax.inject.Inject;
 

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.repository.GooglePlacesRepository;
+import com.persival.go4lunch.data.places.GooglePlacesRepository;
 
 import java.util.ArrayList;
 import java.util.List;
