@@ -7,6 +7,7 @@ import androidx.annotation.RequiresPermission;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.persival.go4lunch.data.location.LocationEntity;
 import com.persival.go4lunch.data.permission_checker.PermissionChecker;
 import com.persival.go4lunch.data.location.LocationRepository;
 
@@ -29,7 +30,7 @@ public class MapsViewModel extends ViewModel {
         return permissionChecker.hasLocationPermission();
     }
 
-    public LiveData<Location> getLocationLiveData() {
+    public LiveData<LocationEntity> getLocationLiveData() {
         return locationRepository.getLocationLiveData();
     }
 

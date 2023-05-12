@@ -6,15 +6,6 @@
     android:background="@color/backgroundRecyclerView"
     tools:context=".ui.main.restaurants.RestaurantsFragment">
 
-    <ProgressBar
-        android:id="@+id/gps_message_progressBar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/quantum_black_100"
-        android:visibility="gone" />
-
     <ImageView
         android:id="@+id/gps_message_image"
         android:layout_width="match_parent"

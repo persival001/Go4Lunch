@@ -20,10 +20,6 @@ public class DetailsViewState {
     private final String website;
     @NonNull
     private final Boolean isSelected;
-    @NonNull
-    private final String nameOfParticipant;
-    @NonNull
-    private final String avatarUrl;
 
     public DetailsViewState(@NonNull String id,
                             @NonNull String pictureUrl,
@@ -32,9 +28,7 @@ public class DetailsViewState {
                             @NonNull String address,
                             @NonNull String phoneNumber,
                             @NonNull String website,
-                            @NonNull Boolean isSelected,
-                            @NonNull String nameOfParticipant,
-                            @NonNull String avatarUrl
+                            @NonNull Boolean isSelected
     ) {
         this.id = id;
         this.pictureUrl = pictureUrl;
@@ -44,13 +38,11 @@ public class DetailsViewState {
         this.phoneNumber = phoneNumber;
         this.website = website;
         this.isSelected = isSelected;
-        this.nameOfParticipant = nameOfParticipant;
-        this.avatarUrl = avatarUrl;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pictureUrl, name, rating, address, phoneNumber, website, isSelected, nameOfParticipant, avatarUrl);
+        return Objects.hash(id, pictureUrl, name, rating, address, phoneNumber, website, isSelected);
     }
 
     @Override
@@ -67,9 +59,7 @@ public class DetailsViewState {
             address.equals(that.address) &&
             phoneNumber.equals(that.phoneNumber) &&
             website.equals(that.website) &&
-            isSelected.equals(that.isSelected) &&
-            nameOfParticipant.equals(that.nameOfParticipant) &&
-            avatarUrl.equals(that.avatarUrl);
+            isSelected.equals(that.isSelected);
     }
 
     @Override
@@ -83,8 +73,6 @@ public class DetailsViewState {
             ", phoneNumber='" + phoneNumber + '\'' +
             ", website='" + website + '\'' +
             ", isSelected=" + isSelected +
-            ", participants='" + nameOfParticipant + '\'' +
-            ", avatarUrl='" + avatarUrl + '\'' +
             '}';
     }
 
@@ -125,15 +113,5 @@ public class DetailsViewState {
     @NonNull
     public Boolean getSelected() {
         return isSelected;
-    }
-
-    @NonNull
-    public String getParticipants() {
-        return nameOfParticipant;
-    }
-
-    @NonNull
-    public String getAvatarUrl() {
-        return avatarUrl;
     }
 }

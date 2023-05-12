@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.persival.go4lunch.R;
 
-public class DetailsAdapter extends ListAdapter<DetailsViewState, DetailsAdapter.ViewHolder> {
+public class DetailsAdapter extends ListAdapter<DetailsUserViewState, DetailsAdapter.ViewHolder> {
 
     public DetailsAdapter() {
         super(new DetailsAdapterDiffCallback());
@@ -38,15 +38,15 @@ public class DetailsAdapter extends ListAdapter<DetailsViewState, DetailsAdapter
         holder.bind(getItem(position));
     }
 
-    private static class DetailsAdapterDiffCallback extends DiffUtil.ItemCallback<DetailsViewState> {
+    private static class DetailsAdapterDiffCallback extends DiffUtil.ItemCallback<DetailsUserViewState> {
         @Override
-        public boolean areItemsTheSame(@NonNull DetailsViewState oldItem, @NonNull DetailsViewState newItem) {
-            return oldItem.getId().equals(newItem.getId());
+        public boolean areItemsTheSame(@NonNull DetailsUserViewState oldItem, @NonNull DetailsUserViewState newItem) {
+            return oldItem.getUid().equals(newItem.getUid());
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull DetailsViewState oldItem, @NonNull DetailsViewState newItem) {
-            return oldItem.getParticipants().equals(newItem.getParticipants());
+        public boolean areContentsTheSame(@NonNull DetailsUserViewState oldItem, @NonNull DetailsUserViewState newItem) {
+            return oldItem.getUid().equals(newItem.getUid());
         }
     }
 
@@ -62,9 +62,9 @@ public class DetailsAdapter extends ListAdapter<DetailsViewState, DetailsAdapter
             avatarPicture = itemView.findViewById(R.id.avatar_picture);
         }
 
-        public void bind(DetailsViewState item) {
+        public void bind(DetailsUserViewState item) {
             Glide.with(itemView)
-                .load(item.getAvatarUrl())
+                .load(item.getAvatarPictureUrl())
                 .placeholder(R.drawable.ic_anon_user_48dp)
                 .error(R.drawable.baseline_error_24)
                 .into(avatarPicture);

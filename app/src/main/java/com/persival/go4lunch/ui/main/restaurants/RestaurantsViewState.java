@@ -14,7 +14,7 @@ public class RestaurantsViewState {
     private final String typeOfCuisineAndAddress;
 
     @NonNull
-    private final String openingTime;
+    private final Boolean openingTime;
 
     @NonNull
     private final String distance;
@@ -30,7 +30,7 @@ public class RestaurantsViewState {
     public RestaurantsViewState(@NonNull String id,
                                 @NonNull String name,
                                 @NonNull String typeOfCuisineAndAddress,
-                                @NonNull String openingTime,
+                                @NonNull Boolean openingTime,
                                 @NonNull String distance,
                                 @NonNull String participants,
                                 float rating,
@@ -62,7 +62,7 @@ public class RestaurantsViewState {
     }
 
     @NonNull
-    public String getOpeningTime() {
+    public Boolean getOpeningTime() {
         return openingTime;
     }
 

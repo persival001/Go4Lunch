@@ -1,5 +1,6 @@
 package com.persival.go4lunch.ui.main.restaurants;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,16 +61,24 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
         }
 
         public void bind(RestaurantsViewState item, OnRestaurantClickedListener listener) {
+
             itemView.setOnClickListener(v -> listener.onRestaurantClicked(item.getId()));
             Glide.with(itemView)
                 .load(item.getPictureUrl())
                 .placeholder(R.drawable.logoresto)
-                .error(R.drawable.baseline_error_24)
+                .error(R.drawable.logoresto)
                 .into(restaurantPicture);
 
             restaurantName.setText(item.getName());
             restaurantAddress.setText(item.getTypeOfCuisineAndAddress());
-            restaurantOpeningTime.setText(item.getOpeningTime());
+            if (item.getOpeningTime()) {
+                restaurantOpeningTime.setText(R.string.open);
+                restaurantOpeningTime.setTextColor(itemView.getResources().getColor(com.google.android.libraries.places.R.color.quantum_black_text));
+            } else {
+                restaurantOpeningTime.setText(R.string.closed);
+                restaurantOpeningTime.setTextColor(itemView.getResources().getColor(com.google.android.libraries.places.R.color.quantum_googred));
+                restaurantOpeningTime.setTypeface(null, Typeface.BOLD);
+            }
             restaurantDistance.setText(item.getDistance());
             restaurantParticipants.setText(item.getParticipants());
             restaurantStars.setRating(item.getRating());

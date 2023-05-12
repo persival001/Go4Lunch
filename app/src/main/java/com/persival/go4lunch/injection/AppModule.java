@@ -21,8 +21,8 @@ public class AppModule {
 
     private static final String GOOGLE_PLACES_API_BASE_URL = "https://maps.googleapis.com/";
 
-    // This class is not meant to be instantiated
     private AppModule() {
+        // This class is not meant to be instantiated
     }
 
     @Singleton

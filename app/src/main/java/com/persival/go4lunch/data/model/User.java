@@ -3,15 +3,15 @@ package com.persival.go4lunch.data.model;
 public class User {
     private String uid;
     private String name;
-    private String email;
+    private String avatarPictureUrl;
 
     public User() {
     }
 
-    public User(String uid, String name, String email) {
+    public User(String uid, String name, String avatarPictureUrl) {
         this.uid = uid;
         this.name = name;
-        this.email = email;
+        this.avatarPictureUrl = avatarPictureUrl;
     }
 
     public String getUid() {
@@ -30,12 +30,12 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getAvatarPictureUrl() {
+        return avatarPictureUrl;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAvatarPictureUrl(String avatarPictureUrl) {
+        this.avatarPictureUrl = avatarPictureUrl;
     }
 
 

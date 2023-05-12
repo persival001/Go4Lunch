@@ -28,7 +28,7 @@ public class LocationRepository {
     private final SharedPreferencesRepository sharedPreferencesRepository;
 
     @NonNull
-    private final MutableLiveData<Location> locationMutableLiveData = new MutableLiveData<>(null);
+    private final MutableLiveData<LocationEntity> locationMutableLiveData = new MutableLiveData<>(null);
     private LocationCallback callback;
 
     @Inject
@@ -40,7 +40,7 @@ public class LocationRepository {
         this.sharedPreferencesRepository = sharedPreferencesRepository;
     }
 
-    public LiveData<Location> getLocationLiveData() {
+    public LiveData<LocationEntity> getLocationLiveData() {
         return locationMutableLiveData;
     }
 
@@ -50,8 +50,9 @@ public class LocationRepository {
             callback = new LocationCallback() {
                 @Override
                 public void onLocationResult(@NonNull LocationResult locationResult) {
-                    Location gpsLocation = locationResult.getLastLocation();
-                    if (gpsLocation == null) {
+                    Location location = locationResult.getLastLocation();
+                    if (location == null) {
+
                         // Get last known location
                         LocationEntity savedLocation = sharedPreferencesRepository.getLocation();
 
@@ -63,20 +64,26 @@ public class LocationRepository {
                             );
                         }
 
-                        // TODO Persival
-                        gpsLocation = new Location("");
-                        gpsLocation.setLatitude(savedLocation.getLatitude());
-                        gpsLocation.setLongitude(savedLocation.getLongitude());
-                        locationMutableLiveData.setValue(gpsLocation);
+                        LocationEntity lastKnownLocation = new LocationEntity(
+                            savedLocation.getLatitude(),
+                            savedLocation.getLongitude()
+                        );
+                        locationMutableLiveData.setValue(lastKnownLocation);
+
                     } else {
                         // Save actual location
                         sharedPreferencesRepository.saveLocation(
                             new LocationEntity(
-                                gpsLocation.getLatitude(),
-                                gpsLocation.getLongitude()
+                                location.getLatitude(),
+                                location.getLongitude()
                             )
                         );
-                        locationMutableLiveData.setValue(gpsLocation);
+                        locationMutableLiveData.setValue(
+                            new LocationEntity(
+                                location.getLatitude(),
+                                location.getLongitude()
+                            )
+                        );
                     }
                 }
             };

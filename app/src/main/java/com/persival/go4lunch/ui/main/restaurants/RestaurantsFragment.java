@@ -1,7 +1,5 @@
 package com.persival.go4lunch.ui.main.restaurants;
 
-import static com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel.ANIMATION_STATUS;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -19,11 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
 import com.persival.go4lunch.ui.main.details.DetailsActivity;
-
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -75,22 +70,6 @@ public class RestaurantsFragment extends Fragment {
 
         viewModel.getSortedRestaurantsLiveData().observe(getViewLifecycleOwner(), restaurantsList -> {
             adapter.submitList(restaurantsList);
-            updateListVisibility(restaurantsList);
-        });
-
-        viewModel.getGpsMessageLiveData().observe(getViewLifecycleOwner(), status -> {
-            binding.gpsMessageProgressBar.setVisibility(View.GONE);
-            binding.gpsMessageImage.setVisibility(View.GONE);
-            switch (status) {
-                case ANIMATION_STATUS:
-                    binding.gpsMessageProgressBar.setVisibility(View.VISIBLE);
-                    break;
-                case R.drawable.baseline_location_off_24:
-                    binding.gpsMessageImage.setVisibility(View.VISIBLE);
-                    break;
-                default:
-                    break;
-            }
         });
     }
 
@@ -106,11 +85,4 @@ public class RestaurantsFragment extends Fragment {
         binding = null;
     }
 
-    private void updateListVisibility(List<RestaurantsViewState> list) {
-        if (list == null || list.isEmpty()) {
-            binding.gpsMessageProgressBar.setVisibility(View.VISIBLE);
-        } else {
-            binding.gpsMessageProgressBar.setVisibility(View.GONE);
-        }
-    }
 }

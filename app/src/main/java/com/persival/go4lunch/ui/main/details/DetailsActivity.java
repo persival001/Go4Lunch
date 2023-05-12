@@ -2,6 +2,7 @@ package com.persival.go4lunch.ui.main.details;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -51,16 +52,30 @@ public class DetailsActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(DetailsViewModel.class);
 
+
+
         viewModel.getDetailViewStateLiveData(restaurantId).observe(this, restaurantDetail -> {
             Glide.with(binding.detailsPicture)
                 .load(restaurantDetail.getPictureUrl())
                 .placeholder(R.drawable.logoresto)
-                .error(R.drawable.baseline_error_24)
+                .error(R.drawable.logoresto)
                 .into(binding.detailsPicture);
             binding.detailsName.setText(restaurantDetail.getName());
             binding.detailsAddress.setText(restaurantDetail.getAddress());
             binding.detailsRatingBar.setRating(restaurantDetail.getRating());
+            binding.websiteButton.setOnClickListener(view -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurantDetail.getWebsite()));
+                startActivity(intent);
+            });
+            binding.callButton.setOnClickListener(view -> {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + restaurantDetail.getPhoneNumber()));
+                startActivity(intent);
+            });
+            //binding.likeButton.setOnClickListener(view -> viewModel.toggleLike(restaurantDetail));
+            //binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.chooseThisRestaurant(restaurantDetail));
         });
+
+        viewModel.getUserLiveData().observe(this, detailsAdapter::submitList);
     }
 
     @Override

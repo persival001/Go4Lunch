@@ -28,7 +28,7 @@
     <string name="text_input_username">Nom</string>
     <string name="text_input_firstname">Prénom</string>
     <string name="text_view_email">Adresse email :</string>
-    <string name="button_update_account">Mettre à jour le profil</string>
+    <string name="button_update_account">Mettre à jour mon profil</string>
     <string name="button_delete_account">Supprimer mon compte</string>
     <string name="button_sign_out_account">Déconnexion</string>
     <string name="info_no_email_found">Auncune adresse email</string>
