@@ -1,18 +1,13 @@
 package com.persival.go4lunch.ui.authentication;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -25,55 +20,32 @@ import com.google.firebase.auth.UserInfo;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityAuthenticationBinding;
 import com.persival.go4lunch.ui.main.MainActivity;
+import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 
 import java.util.Arrays;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AuthenticationActivity extends AppCompatActivity {
 
-    private static final int REQUEST_LOCATION_PERMISSION_CODE = 100;
     private ActivityAuthenticationBinding binding;
-
-
+    private AuthenticationViewModel viewModel;
     private final ActivityResultLauncher<Intent> signInActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
         result -> handleResponseAfterSignIn(result.getResultCode(), result.getData())
     );
 
-    private void requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_FINE_LOCATION
-        )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                REQUEST_LOCATION_PERMISSION_CODE
-            );
-        } else {
-            checkIfUserIsConnected();
-        }
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAuthenticationBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
-        requestLocationPermission();
-    }
+        setContentView(binding.getRoot());
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_LOCATION_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                checkIfUserIsConnected();
-            } else {
-                finish();
-            }
-        }
+        viewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
+
+        checkIfUserIsConnected();
     }
 
     private void checkIfUserIsConnected() {
@@ -109,11 +81,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         this.startActivity(startMainActivity);
     }
 
-    private void startUserInfoActivity() {
-        Intent startUserInfoActivity = new Intent(this, UserInfo.class);
-        this.startActivity(startUserInfoActivity);
-    }
-
     // Show Snack Bar with a message
     private void showSnackBar(String message) {
         Snackbar.make(binding.authenticationLayout, message, Snackbar.LENGTH_SHORT).show();
@@ -122,20 +89,22 @@ public class AuthenticationActivity extends AppCompatActivity {
     // Method that handles response after SignIn Activity close
     private void handleResponseAfterSignIn(int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            // SUCCESS
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (isEmailAuthentication(user)) {
-                startUserInfoActivity();
-            }
-
-            if (user != null && !isEmailAuthentication(user)) {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (isEmailAuthentication(firebaseUser)) {
+                viewModel.setFirestoreUser();
                 startMainActivity();
-
-            } else {
-                handleSignInError(IdpResponse.fromResultIntent(data));
             }
+
+            if (firebaseUser != null && !isEmailAuthentication(firebaseUser)) {
+                viewModel.setFirestoreUser();
+                startMainActivity();
+            }
+
+        } else {
+            handleSignInError(IdpResponse.fromResultIntent(data));
         }
     }
+
 
     private void handleSignInError(@Nullable IdpResponse response) {
         if (response == null) {

@@ -7,55 +7,42 @@ import java.util.Objects;
 public class UserListViewState {
 
     @NonNull
-    private final String id;
+    private final String uId;
+
+    @NonNull
+    private final String name;
+
+    @NonNull
+    private final String emailAddress;
+
     @NonNull
     private final String avatarPictureUrl;
-    @NonNull
-    private final String avatarName;
-    @NonNull
-    private final String restaurantName;
 
     public UserListViewState(
-        @NonNull String id,
-        @NonNull String avatarPictureUrl,
-        @NonNull String avatarName,
-        @NonNull String restaurantName
+        @NonNull final String uId,
+        @NonNull final String name,
+        @NonNull final String emailAddress,
+        @NonNull final String avatarPictureUrl
     ) {
-        this.id = id;
+        this.uId = uId;
+        this.name = name;
+        this.emailAddress = emailAddress;
         this.avatarPictureUrl = avatarPictureUrl;
-        this.avatarName = avatarName;
-        this.restaurantName = restaurantName;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, avatarPictureUrl, avatarName, restaurantName);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        UserListViewState that = (UserListViewState) o;
-        return id.equals(that.id) && avatarPictureUrl.equals(that.avatarPictureUrl) && avatarName.equals(that.avatarName) && restaurantName.equals(that.restaurantName);
     }
 
     @NonNull
-    @Override
-    public String toString() {
-        return "UserListViewState{" +
-            "id='" + id + '\'' +
-            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
-            ", avatarName='" + avatarName + '\'' +
-            ", restaurantName='" + restaurantName + '\'' +
-            '}';
+    public String getuId() {
+        return uId;
     }
 
     @NonNull
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
+    }
+
+    @NonNull
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
     @NonNull
@@ -63,15 +50,32 @@ public class UserListViewState {
         return avatarPictureUrl;
     }
 
-    @NonNull
-    public String getAvatarName() {
-        return avatarName;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getuId(), getName(), getEmailAddress(), getAvatarPictureUrl());
     }
 
-    @NonNull
-    public String getRestaurantName() {
-        return restaurantName;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof UserListViewState))
+            return false;
+        final UserListViewState that = (UserListViewState) o;
+        return Objects.equals(getuId(), that.getuId()) &&
+            Objects.equals(getName(), that.getName()) &&
+            Objects.equals(getEmailAddress(), that.getEmailAddress()) &&
+            Objects.equals(getAvatarPictureUrl(), that.getAvatarPictureUrl());
     }
 
+    @Override
+    public String toString() {
+        return "UserListViewState{" +
+            "uId='" + uId + '\'' +
+            ", name='" + name + '\'' +
+            ", emailAddress='" + emailAddress + '\'' +
+            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
+            '}';
+    }
 
 }

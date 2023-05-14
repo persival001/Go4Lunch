@@ -21,7 +21,6 @@
     <!-- LOGIN ACTIVITY -->
     <string name="toolbar_title_login_activity">Your Profile</string>
     <string name="text_input_username">Username</string>
-    <string name="text_input_firstname">First Name</string>
     <string name="text_view_email">Email address:</string>
     <string name="button_update_account">Change username</string>
     <string name="button_delete_account">Delete my account</string>
@@ -59,4 +58,7 @@
     <string name="avatar_picture">Workmate picture</string>
     <string name="go_to_this_restaurant">Go to this restaurant</string>
     <string name="illustrative_picture">illustrative picture</string>
+    <string name="picture_of_the_restaurant">picture_of_the_restaurant</string>
+    <string name="email_address">Email Address</string>
+    <string name="profile_image">Profile Image</string>
 </resources>

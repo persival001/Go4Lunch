@@ -9,7 +9,6 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
-import com.persival.go4lunch.data.model.User;
 import com.persival.go4lunch.data.places.GooglePlacesRepository;
 
 import java.util.ArrayList;

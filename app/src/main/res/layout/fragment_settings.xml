@@ -1,75 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/setting_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <!-- USER DATA CONTAINER -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="2"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_margin="@dimen/default_large_margin">
+            android:layout_margin="@dimen/default_large_margin"
+            android:gravity="center">
 
             <!-- PROFILE IMAGE -->
             <ImageButton
-                android:id="@+id/profileImageView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                app:srcCompat="@drawable/ic_anon_user_48dp"/>
+                android:id="@+id/profileImageButton"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                tools:src="@drawable/ic_anon_user_48dp"
+                android:contentDescription="@string/profile_image"
+                android:background="?android:attr/selectableItemBackgroundBorderless"/>
 
         </LinearLayout>
 
 
         <!-- PROFILE USERNAME -->
-        <EditText
-            android:id="@+id/usernameEditText"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/usernameTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/default_text_size"
             android:hint="@string/text_input_username"
-            android:layout_margin="@dimen/default_margin"/>
-
-        <EditText
-            android:id="@+id/surnameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:textSize="@dimen/default_text_size"
-            android:hint="@string/text_input_firstname"
-            android:layout_margin="@dimen/default_margin"/>
+            android:textStyle="bold" />
 
-        <!-- PROFILE EMAIL CONTAINER -->
+        <TextView
+            android:id="@+id/emailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/email_address"
+            android:textSize="@dimen/default_text_size" />
+
+        <!-- SEPARATOR CONTAINER -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="@dimen/default_margin">
+            android:layout_margin="@dimen/default_margin"
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_view_email"
-                android:textSize="@dimen/default_text_size"
-                android:textStyle="bold"/>
-
-            <!-- PROFILE EMAIL -->
-            <TextView
-                android:id="@+id/emailTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/default_text_size"
-                android:paddingLeft="@dimen/default_margin"/>
+            <!-- SEPARATOR -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/default_large_margin"
+                android:background="@android:color/darker_gray" />
 
         </LinearLayout>
 

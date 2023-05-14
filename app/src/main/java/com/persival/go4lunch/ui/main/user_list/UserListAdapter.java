@@ -55,14 +55,14 @@ public class UserListAdapter extends ListAdapter<UserListViewState, UserListAdap
                 .into(avatarPicture);
 
 
-            avatarName.setText(item.getAvatarName());
+            avatarName.setText(item.getName());
         }
     }
 
     private static class UserListAdapterDiffCallback extends DiffUtil.ItemCallback<UserListViewState> {
         @Override
         public boolean areItemsTheSame(@NonNull UserListViewState oldItem, @NonNull UserListViewState newItem) {
-            return Objects.equals(oldItem.getId(), newItem.getId());
+            return Objects.equals(oldItem.getuId(), newItem.getuId());
         }
 
         @Override
