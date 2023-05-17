@@ -5,10 +5,9 @@
 
     <string name="app_name">Go4Lunch</string>
 
-    <string name="main_activity_description">Discute avec tes collègues, tout simplement.</string>
+    <string name="main_activity_description">Un petit repas entre collègues ? Go4Lunch !</string>
 
     <string name="login">Connexion</string>
-    <string name="chat_with_colleague">Discute avec un collègue</string>
 
     <!-- NOTIFICATION SERVICE -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
@@ -25,7 +24,7 @@
 
     <!-- LOGIN ACTIVITY -->
     <string name="toolbar_title_login_activity">Votre Profil</string>
-    <string name="text_input_username">Nom</string>
+    <string name="text_input_username">Nom de l\'utilisateur</string>
     <string name="text_view_email">Adresse email :</string>
     <string name="button_update_account">Mettre à jour mon profil</string>
     <string name="button_delete_account">Supprimer mon compte</string>
@@ -46,25 +45,38 @@
     <string name="website_button">SITE WEB</string>
 
     <!-- MAPS FRAGMENT -->
-    <string name="title_activity_maps">Current Place Details</string>
-    <string name="default_info_title">Default Location</string>
-    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
-    <string name="option_get_place">Get place</string>
-    <string name="pick_place">Choose a place</string>
+    <string name="title_activity_maps">Détails</string>
+    <string name="default_info_title">Endroit par défaut</string>
+    <string name="default_info_snippet">La localisation est désactivée.</string>
+    <string name="option_get_place">Endroit trouvé</string>
+    <string name="pick_place">Choisissez un endroit</string>
     <string name="avatar">avatar</string>
     <string name="closed">Fermé</string>
     <string name="open">Ouvert</string>
     <string name="no_gps_signal">Pas de signal GPS</string>
-    <string name="lunch">YOUR LUNCH</string>
-    <string name="settings">SETTINGS</string>
-    <string name="logout">LOGOUT</string>
-    <string name="open_nav">Open</string>
-    <string name="close_nav">Close</string>
-    <string name="avatar_picture">Workmate picture</string>
+    <string name="lunch">VOTRE RESTAURANT</string>
+    <string name="settings">PARAMETRES</string>
+    <string name="logout">DECONNEXION</string>
+    <string name="open_nav">Ouvert</string>
+    <string name="close_nav">Fermé</string>
+    <string name="avatar_picture">Photo</string>
     <string name="go_to_this_restaurant">Aller dans ce restaurant</string>
-    <string name="illustrative_picture">illustrative picture</string>
-    <string name="picture_of_the_restaurant">picture_of_the_restaurant</string>
-    <string name="email_address">Email Address</string>
-    <string name="profile_image">Profile Image</string>
+    <string name="illustrative_picture">Photo d\'illustration</string>
+    <string name="picture_of_the_restaurant">Photo du restaurant</string>
+    <string name="email_address">Adresse Email</string>
+    <string name="profile_image">Photo du profil</string>
+    <string name="refused_permission">Permission refusée</string>
+    <string name="error_delete_account">Erreur lors de la suppression de votre compte</string>
+    <string name="nom">Nom</string>
+    <string name="email">Adresse Email</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="deleted_account">Votre profil a été supprimé</string>
+    <string name="picture_has_changed">Votre photo de profil a été changée</string>
+    <string name="network_error">Vérifiez votre connexion internet</string>
+    <string name="username_error">Nom d\'utilisateur incorrect</string>
+    <string name="email_error">Adresse mail incorrect</string>
+    <string name="password_error">Mot de passe incorrect</string>
+    <string name="password">Mot de passe</string>
+    <string name="username_updated">Votre nom d\'utilisateur a été changé</string>
 
 </resources>

@@ -44,7 +44,7 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".ui.main.details.DetailsActivity"
+            android:name=".ui.main.details.DetailsFragment"
             android:theme="@style/AppTheme" />
 
         <activity

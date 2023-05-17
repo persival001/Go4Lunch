@@ -2738,23 +2738,23 @@ Q.idea/sonarlint/securityhotspotstore/c/e/ce742702cdea124433bd58afeec853e2883528
 Q.idea/sonarlint/securityhotspotstore/c/c/ccd08ac9c528221d0b79bf7c7d64ef9bae75f91c,5/0/50d07337a0b1a0befc296f010ec44928f4958ea3
 Å
 Q.idea/sonarlint/securityhotspotstore/6/8/6867fbea15207798241aba0de222e63b14281f3d,2/1/21f83414019a28096dd4bc8d8614583d8eed2b25
-P
- app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 |
 Lapp/src/main/java/com/persival/go4lunch/data/model/PlaceDetailsResponse.java,6/4/64187980ec5121a0d57bd42c9e771391ee10554d
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-å
-\app/src/main/java/com/persival/go4lunch/ui/main/restaurants/OnRestaurantClickedListener.java,9/4/9462fe88474a0b5ffd7a63bb41b86ff8d2a4fe0e
-Ü
-Vapp/src/main/java/com/persival/go4lunch/data/permission_checker/PermissionChecker.java,8/f/8f27dc7fe2e9a49dbfe9f9f07586a9ddca502425
 ä
 Zapp/src/main/java/com/persival/go4lunch/data/shared_prefs/SharedPreferencesRepository.java,4/d/4d6b38395e761d72612040cd9c234e61555b33b0
 ã
 [app/src/main/java/com/persival/go4lunch/data/gps_provider/GpsProviderBroadcastReceiver.java,7/9/79c185e0bf32f308816eff4ddd46d4a6544d65a2
-y
-Iapp/src/main/java/com/persival/go4lunch/data/location/LocationEntity.java,a/e/ae5b5d521b0650c71fdc92014d23491b10dcee3b
 l
 <app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a
 Ö
 Uapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsViewState.java,9/7/975b5d39f6975a05d80df064789d4b91dfe128b5
+Å
+Qapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsUserViewState.java,5/5/55b074794ac40db1b4a587393d93909c77a5837e
+
+Oapp/src/main/java/com/persival/go4lunch/ui/main/settings/SettingsViewState.java,c/4/c4dda20045dcb240175d4147943aa030fb0938d6
+~
+Napp/src/main/java/com/persival/go4lunch/ui/main/user_list/UserListAdapter.java,2/b/2b8d9c56d2595d642be330b3547f50709de96662
+Ä
+Papp/src/main/java/com/persival/go4lunch/ui/main/user_list/UserListViewState.java,b/4/b4f2e8265b5065fa2652cbb2ec91f619e0bc2e90

@@ -22,12 +22,38 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class DetailsViewModel extends ViewModel {
     private final GooglePlacesRepository googlePlacesRepository;
     private MutableLiveData<List<DetailsUserViewState>> userListLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isRestaurantLiked;
+    private DetailsViewState restaurantDetail;
+    private MutableLiveData<Boolean> isRestaurantChosen;
 
     @Inject
     public DetailsViewModel(
         @NonNull final GooglePlacesRepository googlePlacesRepository
     ) {
         this.googlePlacesRepository = googlePlacesRepository;
+        isRestaurantLiked = new MutableLiveData<>();
+        isRestaurantLiked.setValue(false);
+        isRestaurantChosen = new MutableLiveData<>();
+        isRestaurantChosen.setValue(false);
+    }
+
+    public LiveData<Boolean> getIsRestaurantChosen() {
+        return isRestaurantChosen;
+    }
+
+    public LiveData<Boolean> getIsRestaurantLiked() {
+        return isRestaurantLiked;
+    }
+
+    public void chooseThisRestaurant(DetailsViewState detail) {
+        this.restaurantDetail = detail;
+        if (isRestaurantChosen.getValue() != null) {
+            isRestaurantChosen.setValue(!isRestaurantChosen.getValue());
+        }
+        if (restaurantDetail != null) {
+            // Supposant que vous ayez une méthode setChosen dans DetailsViewState
+            //restaurantDetail.setChosen(isRestaurantChosen.getValue());
+        }
     }
 
     public LiveData<List<DetailsUserViewState>> getUserLiveData() {
@@ -42,17 +68,30 @@ public class DetailsViewModel extends ViewModel {
         return Transformations.map(
             googlePlacesRepository.getRestaurantLiveData(restaurantId, MAPS_API_KEY),
 
-            restaurant -> new DetailsViewState(
-                restaurant.getId() != null ? restaurant.getId() : "",
-                getPictureUrl(restaurant.getPhotos()) != null ? getPictureUrl(restaurant.getPhotos()) : "",
-                restaurant.getName() != null ? restaurant.getName() : "",
-                getRating(restaurant.getRating()),
-                restaurant.getAddress() != null ? restaurant.getAddress() : "",
-                restaurant.getPhoneNumber() != null ? restaurant.getPhoneNumber() : "",
-                restaurant.getWebsite() != null ? restaurant.getWebsite() : "",
-                true
-            )
+            restaurant -> {
+                restaurantDetail = new DetailsViewState(
+                    restaurant.getId() != null ? restaurant.getId() : "",
+                    getPictureUrl(restaurant.getPhotos()) != null ? getPictureUrl(restaurant.getPhotos()) : "",
+                    restaurant.getName() != null ? restaurant.getName() : "",
+                    getRating(restaurant.getRating()),
+                    restaurant.getAddress() != null ? restaurant.getAddress() : "",
+                    restaurant.getPhoneNumber() != null ? restaurant.getPhoneNumber() : "",
+                    restaurant.getWebsite() != null ? restaurant.getWebsite() : "",
+                    isRestaurantLiked.getValue() != null && isRestaurantLiked.getValue(),
+                    isRestaurantChosen.getValue() != null && isRestaurantChosen.getValue()
+                );
+                return restaurantDetail;
+            }
         );
+    }
+
+    public void toggleLike() {
+        if (isRestaurantLiked.getValue() != null) {
+            isRestaurantLiked.setValue(!isRestaurantLiked.getValue());
+        }
+        if (restaurantDetail != null) {
+            //restaurantDetail.setLiked(isRestaurantLiked.getValue());
+        }
     }
 
     // Convert rating from 5 to 3 stars
@@ -75,4 +114,5 @@ public class DetailsViewModel extends ViewModel {
         }
     }
 }
+
 

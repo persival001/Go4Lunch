@@ -73,10 +73,12 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
             restaurantAddress.setText(item.getTypeOfCuisineAndAddress());
             if (item.getOpeningTime()) {
                 restaurantOpeningTime.setText(R.string.open);
-                restaurantOpeningTime.setTextColor(itemView.getResources().getColor(com.google.android.libraries.places.R.color.quantum_black_text));
+                restaurantOpeningTime.setTextColor(itemView.getResources()
+                    .getColor(com.google.android.libraries.places.R.color.quantum_black_text));
             } else {
                 restaurantOpeningTime.setText(R.string.closed);
-                restaurantOpeningTime.setTextColor(itemView.getResources().getColor(com.google.android.libraries.places.R.color.quantum_googred));
+                restaurantOpeningTime.setTextColor(itemView.getResources()
+                    .getColor(com.google.android.libraries.places.R.color.quantum_googred));
                 restaurantOpeningTime.setTypeface(null, Typeface.BOLD);
             }
             restaurantDistance.setText(item.getDistance());

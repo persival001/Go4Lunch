@@ -2,8 +2,6 @@ package com.persival.go4lunch.ui.main.restaurants;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
-import android.annotation.SuppressLint;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -29,20 +27,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class RestaurantsViewModel extends ViewModel {
 
     @NonNull
-    private final PermissionChecker permissionChecker;
-    @NonNull
     private final LocationRepository locationRepository;
 
-    private final MutableLiveData<Boolean> hasGpsPermissionLiveData = new MutableLiveData<>();
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
 
     @Inject
     public RestaurantsViewModel(
         @NonNull GooglePlacesRepository googlePlacesRepository,
-        @NonNull PermissionChecker permissionChecker,
         @NonNull LocationRepository locationRepository
     ) {
-        this.permissionChecker = permissionChecker;
         this.locationRepository = locationRepository;
 
         LiveData<LocationEntity> locationLiveData = locationRepository.getLocationLiveData();
@@ -114,18 +107,6 @@ public class RestaurantsViewModel extends ViewModel {
         return restaurantsLiveData;
     }
 
-    @SuppressLint("MissingPermission")
-    public void refresh() {
-        boolean hasGpsPermission = permissionChecker.hasLocationPermission();
-        hasGpsPermissionLiveData.setValue(hasGpsPermission);
-
-        if (hasGpsPermission) {
-            locationRepository.startLocationRequest();
-        } else {
-            locationRepository.stopLocationRequest();
-        }
-    }
-
     // Convert rating from 5 to 3 stars
     private float getRating(Float rating) {
         if (rating != null) {
@@ -180,6 +161,9 @@ public class RestaurantsViewModel extends ViewModel {
         return openingHours != null && openingHours.isOpenNow();
     }
 
+    public void stopLocationRequest() {
+        locationRepository.stopLocationRequest();
+    }
 
 }
 

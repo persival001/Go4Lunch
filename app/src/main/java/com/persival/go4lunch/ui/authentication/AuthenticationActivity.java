@@ -1,5 +1,6 @@
 package com.persival.go4lunch.ui.authentication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -36,6 +37,10 @@ public class AuthenticationActivity extends AppCompatActivity {
         new ActivityResultContracts.StartActivityForResult(),
         result -> handleResponseAfterSignIn(result.getResultCode(), result.getData())
     );
+
+    public static Intent navigate(Context context) {
+        return new Intent(context, AuthenticationActivity.class);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

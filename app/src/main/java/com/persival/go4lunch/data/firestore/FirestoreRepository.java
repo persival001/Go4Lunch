@@ -71,18 +71,8 @@ public class FirestoreRepository {
         db.collection("users")
             .document(user.getuId())
             .set(user)
-            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Log.d(TAG, "User successfully written!");
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w(TAG, "Error writing user", e);
-                }
-            });
+            .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
+            .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
     }
 
     public LiveData<List<User>> getAllUsers() {
@@ -90,21 +80,17 @@ public class FirestoreRepository {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("users")
-            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value,
-                                    @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
-
-                    List<User> users = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : value) {
-                        users.add(doc.toObject(User.class));
-                    }
-                    usersLiveData.setValue(users);
+            .addSnapshotListener((value, e) -> {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
                 }
+
+                List<User> users = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : value) {
+                    users.add(doc.toObject(User.class));
+                }
+                usersLiveData.setValue(users);
             });
         return usersLiveData;
     }

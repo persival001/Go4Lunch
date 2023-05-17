@@ -31,14 +31,14 @@
         android:label="fragment_user_list"
         tools:layout="@layout/fragment_user_list" />
 
-    <activity
-        android:id="@+id/detailsActivity"
-        android:name="com.persival.go4lunch.ui.main.details.DetailsActivity"
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.persival.go4lunch.ui.main.details.DetailsFragment"
         android:label="DetailsActivity"  >
         <action
             android:id="@+id/action_detailsActivity_to_restaurantsFragment"
             app:destination="@id/restaurantsFragment" />
-    </activity>
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.persival.go4lunch.ui.main.settings.SettingsFragment"

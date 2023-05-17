@@ -149,18 +149,17 @@
                     android:layout_height="match_parent" />
             </LinearLayout>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <ImageButton
                 android:id="@+id/choose_this_restaurant_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_margin="@dimen/default_large_margin"
-                android:scaleX="1.3"
-                android:scaleY="1.3"
-                android:foreground="@drawable/ic_go_fab"
-                app:backgroundTint="@color/quantum_white_100"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/go_to_this_restaurant"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_go_fab"
                 app:layout_anchor="@id/details_picture"
-                app:layout_anchorGravity="bottom|right|end"
-                android:contentDescription="@string/go_to_this_restaurant" />
+                app:layout_anchorGravity="bottom|right|end" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </ScrollView>

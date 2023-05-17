@@ -1,19 +1,17 @@
 package com.persival.go4lunch.ui.main.settings;
 
-import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
 import com.persival.go4lunch.data.firestore.User;
-import com.persival.go4lunch.ui.main.details.DetailsUserViewState;
-import com.persival.go4lunch.ui.main.details.DetailsViewState;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,8 +21,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class SettingsViewModel extends ViewModel {
 
     private final FirestoreRepository firestoreRepository;
-
-    private MutableLiveData<List<DetailsUserViewState>> userListLiveData = new MutableLiveData<>();
 
     @Inject
     public SettingsViewModel(
@@ -46,7 +42,37 @@ public class SettingsViewModel extends ViewModel {
         );
     }
 
-    public void getFirestoreUser() {
-        firestoreRepository.getFirestoreUser();
+    public void setFirestoreUser(String username) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String uId = firebaseUser.getUid();
+            String name = username;
+            String eMailAddress = firebaseUser.getEmail();
+            String avatarPictureUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
+
+            User user = new User(uId, name, eMailAddress, avatarPictureUrl);
+            firestoreRepository.setFirestoreUser(user);
+        }
     }
+
+    public void updateUserProfile(String username) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (firebaseUser != null) {
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(username)
+                .build();
+
+            firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // The user display name has been successfully updated
+                    } else {
+                        // An error occurred while updating the user display name
+                    }
+                });
+        }
+    }
+
+
 }

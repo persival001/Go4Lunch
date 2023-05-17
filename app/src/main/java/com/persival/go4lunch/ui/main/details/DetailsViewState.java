@@ -19,16 +19,19 @@ public class DetailsViewState {
     @NonNull
     private final String website;
     @NonNull
-    private final Boolean isSelected;
+    private final Boolean isLiked;
+    @NonNull
+    private final Boolean isChoosen;
 
-    public DetailsViewState(@NonNull String id,
-                            @NonNull String pictureUrl,
-                            @NonNull String name,
-                            Float rating,
-                            @NonNull String address,
-                            @NonNull String phoneNumber,
-                            @NonNull String website,
-                            @NonNull Boolean isSelected
+    public DetailsViewState(
+        @NonNull String id,
+        @NonNull String pictureUrl,
+        @NonNull String name, Float rating,
+        @NonNull String address,
+        @NonNull String phoneNumber,
+        @NonNull String website,
+        @NonNull Boolean isLiked,
+        @NonNull Boolean isChoosen
     ) {
         this.id = id;
         this.pictureUrl = pictureUrl;
@@ -37,43 +40,8 @@ public class DetailsViewState {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.website = website;
-        this.isSelected = isSelected;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, pictureUrl, name, rating, address, phoneNumber, website, isSelected);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        DetailsViewState that = (DetailsViewState) o;
-        return Float.compare(that.rating, rating) == 0 &&
-            id.equals(that.id) &&
-            pictureUrl.equals(that.pictureUrl) &&
-            name.equals(that.name) &&
-            address.equals(that.address) &&
-            phoneNumber.equals(that.phoneNumber) &&
-            website.equals(that.website) &&
-            isSelected.equals(that.isSelected);
-    }
-
-    @Override
-    public String toString() {
-        return "DetailsViewState{" +
-            "id=" + id +
-            "pictureUrl='" + pictureUrl + '\'' +
-            ", name='" + name + '\'' +
-            ", rating=" + rating +
-            ", address='" + address + '\'' +
-            ", phoneNumber='" + phoneNumber + '\'' +
-            ", website='" + website + '\'' +
-            ", isSelected=" + isSelected +
-            '}';
+        this.isLiked = isLiked;
+        this.isChoosen = isChoosen;
     }
 
     @NonNull
@@ -82,13 +50,13 @@ public class DetailsViewState {
     }
 
     @NonNull
-    public String getName() {
-        return name;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
     @NonNull
-    public String getPictureUrl() {
-        return pictureUrl;
+    public String getName() {
+        return name;
     }
 
     public Float getRating() {
@@ -111,7 +79,50 @@ public class DetailsViewState {
     }
 
     @NonNull
-    public Boolean getSelected() {
-        return isSelected;
+    public Boolean getLiked() {
+        return isLiked;
+    }
+
+    @NonNull
+    public Boolean getChoosen() {
+        return isChoosen;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pictureUrl, name, rating, address, phoneNumber, website, isLiked, isChoosen);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        DetailsViewState that = (DetailsViewState) o;
+        return id.equals(that.id) &&
+            pictureUrl.equals(that.pictureUrl) &&
+            name.equals(that.name) &&
+            Objects.equals(rating, that.rating) &&
+            address.equals(that.address) &&
+            phoneNumber.equals(that.phoneNumber) &&
+            website.equals(that.website) &&
+            isLiked.equals(that.isLiked) &&
+            isChoosen.equals(that.isChoosen);
+    }
+
+    @Override
+    public String toString() {
+        return "DetailsViewState{" +
+            "id='" + id + '\'' +
+            ", pictureUrl='" + pictureUrl + '\'' +
+            ", name='" + name + '\'' +
+            ", rating=" + rating +
+            ", address='" + address + '\'' +
+            ", phoneNumber='" + phoneNumber + '\'' +
+            ", website='" + website + '\'' +
+            ", isLiked=" + isLiked +
+            ", isChoosen=" + isChoosen +
+            '}';
     }
 }

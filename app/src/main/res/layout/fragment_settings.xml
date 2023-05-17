@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/setting_layout"
     android:layout_width="match_parent"
@@ -27,19 +26,21 @@
                 android:id="@+id/profileImageButton"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                tools:src="@drawable/ic_anon_user_48dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/profile_image"
-                android:background="?android:attr/selectableItemBackgroundBorderless"/>
+                tools:src="@drawable/ic_anon_user_48dp" />
 
         </LinearLayout>
 
 
         <!-- PROFILE USERNAME -->
-        <TextView
-            android:id="@+id/usernameTextView"
+        <EditText
+            android:id="@+id/usernameEditText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:autofillHints=""
             android:hint="@string/text_input_username"
+            android:inputType="textPersonName"
             android:textSize="@dimen/default_text_size"
             android:textStyle="bold" />
 
@@ -61,8 +62,8 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="2dp"
-                android:layout_weight="1"
                 android:layout_margin="@dimen/default_large_margin"
+                android:layout_weight="1"
                 android:background="@android:color/darker_gray" />
 
         </LinearLayout>
@@ -98,18 +99,6 @@
             android:background="@drawable/button_radius_accent_color"
             android:padding="@dimen/default_margin"
             android:text="@string/button_delete_account"
-            android:textColor="#fff"
-            android:textSize="@dimen/default_text_size" />
-
-        <!-- BUTTON SIGN OUT -->
-        <Button
-            android:id="@+id/signOutButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:background="@drawable/button_radius_error_color"
-            android:padding="@dimen/default_margin"
-            android:text="@string/button_sign_out_account"
             android:textColor="#fff"
             android:textSize="@dimen/default_text_size" />
 

@@ -1,5 +1,7 @@
 package com.persival.go4lunch.ui.authentication;
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -30,13 +32,16 @@ public class AuthenticationViewModel extends ViewModel {
 
     public void setFirestoreUser() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        String uId = firebaseUser.getUid() ;
+        if (firebaseUser != null) {
+        String uId = firebaseUser.getUid();
         String name = firebaseUser.getDisplayName();
         String eMailAddress = firebaseUser.getEmail();
         String avatarPictureUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
 
         User user = new User(uId, name, eMailAddress, avatarPictureUrl);
         firestoreRepository.setFirestoreUser(user);
+        } else {
+            Toast.makeText(null, "No user found", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -33,7 +33,7 @@ public class PermissionRepository {
         boolean hasPermission = ActivityCompat.checkSelfPermission(
             context, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED;
-        locationPermissionLiveData.postValue(hasPermission);
+        locationPermissionLiveData.setValue(hasPermission);
     }
 
     public void requestLocationPermission(Activity activity, int requestCode) {

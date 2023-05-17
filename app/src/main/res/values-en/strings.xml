@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
 
-    <string name="main_activity_description">Chat with your colleagues</string>
+    <string name="main_activity_description">Have a lunch with your workmates ? Go4Lunch !</string>
 
     <string name="login">Login</string>
-    <string name="chat_with_colleague">Chat with a colleague</string>
 
     <!-- NOTIFICATION SERVICE -->
     <string name="notification_title">You have a new notification</string>
@@ -61,4 +60,17 @@
     <string name="picture_of_the_restaurant">picture_of_the_restaurant</string>
     <string name="email_address">Email Address</string>
     <string name="profile_image">Profile Image</string>
+    <string name="refused_permission">Refused Permission</string>
+    <string name="error_delete_account">Error to delete your account</string>
+    <string name="nom">Nom</string>
+    <string name="email">Email</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="deleted_account">Your profil has been deleted</string>
+    <string name="picture_has_changed">Profile picture has been changed</string>
+    <string name="network_error">Please check your network connection</string>
+    <string name="username_error">Username is incorrect</string>
+    <string name="email_error">Email address is incorrect</string>
+    <string name="password_error">Password error</string>
+    <string name="password">Password</string>
+    <string name="username_updated">Your username is updated</string>
 </resources>

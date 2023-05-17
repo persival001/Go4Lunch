@@ -3,13 +3,18 @@ package com.persival.go4lunch.ui.main.settings;
 import static android.app.Activity.RESULT_OK;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,19 +25,23 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentSettingsBinding;
+import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class SettingsFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     private FragmentSettingsBinding binding;
-
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -69,8 +78,10 @@ public class SettingsFragment extends Fragment {
         SettingsViewModel viewModel;
         viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
+        setupDoneButtonOnEditText(binding.usernameEditText);
+
         viewModel.getFirestoreUserViewStateLiveData().observe(getViewLifecycleOwner(), user -> {
-            binding.usernameTextView.setText(user.getAvatarName());
+            binding.usernameEditText.setText(user.getAvatarName());
             binding.emailTextView.setText(user.getEmail());
             Glide.with(binding.profileImageButton)
                 .load(user.getAvatarPictureUrl())
@@ -80,12 +91,38 @@ public class SettingsFragment extends Fragment {
                 .into(binding.profileImageButton);
         });
 
-        binding.profileImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser();
+        binding.profileImageButton.setOnClickListener(v -> openFileChooser());
+
+        binding.deleteButton.setOnClickListener(v -> firebaseUser.delete()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext()
+                        , getString(R.string.deleted_account)
+                        , Toast.LENGTH_SHORT).show();
+                    deleteUserDataFromFirestore();
+                    startActivity(AuthenticationActivity.navigate(requireContext()));
+                } else {
+                    Toast.makeText(getContext()
+                        , getString(R.string.network_error)
+                        , Toast.LENGTH_SHORT).show();
+                }
+            }));
+
+        binding.updateButton.setOnClickListener(v -> {
+            String username = binding.usernameEditText.getText().toString();
+
+            if (username.isEmpty()) {
+                binding.usernameEditText.setError(getString(R.string.username_error));
+                binding.usernameEditText.requestFocus();
+            } else {
+                viewModel.updateUserProfile(username);
+                Toast.makeText(getContext()
+                    , getString(R.string.username_updated)
+                    , Toast.LENGTH_SHORT).show();
+                viewModel.setFirestoreUser(username);
             }
         });
+
     }
 
     @Override
@@ -116,6 +153,38 @@ public class SettingsFragment extends Fragment {
         binding = null;
     }
 
+    // Listener for the edit text name (when the user click on done button on the keyboard)
+    public void setupDoneButtonOnEditText(EditText editText) {
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Clear focus
+                editText.clearFocus();
+
+                // Close keyboard
+                InputMethodManager imm = (InputMethodManager) v.getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void deleteUserDataFromFirestore() {
+        DocumentReference userDocRef = FirebaseFirestore.getInstance().collection("users")
+            .document(firebaseUser.getUid());
+
+        // Delete document user of Firestore
+        userDocRef.delete()
+            .addOnSuccessListener(aVoid -> {
+                // Delete user from Firebase Auth
+            })
+            .addOnFailureListener(e -> Toast.makeText(getContext()
+                , getString(R.string.network_error)
+                , Toast.LENGTH_SHORT).show());
+    }
+
     private void uploadImageToFirebaseStorage(Uri imageUri) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference("uploads");
         StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
@@ -134,7 +203,9 @@ public class SettingsFragment extends Fragment {
                 });
             })
             .addOnFailureListener(e -> {
-                // TODO on failure
+                Toast.makeText(getContext()
+                    , getString(R.string.network_error)
+                    , Toast.LENGTH_SHORT).show();
             });
     }
 
@@ -151,10 +222,14 @@ public class SettingsFragment extends Fragment {
         db.collection("users").document(uid)
             .update("avatarPictureUrl", imageUrl)
             .addOnSuccessListener(aVoid -> {
-                // Update ok
+                Toast.makeText(getContext()
+                    , getString(R.string.picture_has_changed)
+                    , Toast.LENGTH_SHORT).show();
             })
             .addOnFailureListener(e -> {
-                // TODO update failed
+                Toast.makeText(getContext()
+                    , getString(R.string.network_error)
+                    , Toast.LENGTH_SHORT).show();
             });
     }
 }
