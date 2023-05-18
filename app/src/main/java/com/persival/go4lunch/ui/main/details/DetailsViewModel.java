@@ -21,10 +21,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class DetailsViewModel extends ViewModel {
     private final GooglePlacesRepository googlePlacesRepository;
-    private MutableLiveData<List<DetailsUserViewState>> userListLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isRestaurantLiked;
+    private final MutableLiveData<List<DetailsUserViewState>> userListLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isRestaurantLiked;
+    private final MutableLiveData<Boolean> isRestaurantChosen;
     private DetailsViewState restaurantDetail;
-    private MutableLiveData<Boolean> isRestaurantChosen;
 
     @Inject
     public DetailsViewModel(

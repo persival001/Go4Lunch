@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -33,7 +31,7 @@ public class DetailsFragment extends Fragment {
     private FragmentDetailsBinding binding;
     private DetailsViewModel viewModel;
 
-    public static DetailsFragment newInstance(String restaurantId) {
+    public static DetailsFragment newInstance(@NonNull String restaurantId) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
         args.putString(KEY_RESTAURANT_ID, restaurantId);
@@ -89,7 +87,7 @@ public class DetailsFragment extends Fragment {
             viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
                 if (isLiked) {
                     binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_rate_24));
-                    } else {
+                } else {
                     binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_border_24));
                 }
             });
@@ -103,7 +101,6 @@ public class DetailsFragment extends Fragment {
             });
 
             binding.chooseThisRestaurantButton.setOnClickListener(v -> viewModel.chooseThisRestaurant(restaurantDetail));
-
 
 
         });

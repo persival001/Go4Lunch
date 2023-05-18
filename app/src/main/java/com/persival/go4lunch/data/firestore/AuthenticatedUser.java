@@ -1,17 +1,30 @@
 package com.persival.go4lunch.data.firestore;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.Objects;
 
-public class User {
+public class AuthenticatedUser {
+    @NonNull
     private String uId;
+    @NonNull
     private String name;
+    @NonNull
     private String emailAddress;
+    @Nullable
     private String avatarPictureUrl;
 
-    // Empty constructor needed for Firestore deserialization
-    public User() {}
+    // Empty constructor needed for Firebase deserialization
+    public AuthenticatedUser() {
+    }
 
-    public User(String uId, String name, String emailAddress, String avatarPictureUrl) {
+    public AuthenticatedUser(
+        @NonNull String uId,
+        @NonNull String name,
+        @NonNull String emailAddress,
+        @Nullable String avatarPictureUrl
+    ) {
         this.uId = uId;
         this.name = name;
         this.emailAddress = emailAddress;
@@ -29,10 +42,14 @@ public class User {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        User user = (User) o;
-        return Objects.equals(uId, user.uId) && Objects.equals(name, user.name) && Objects.equals(emailAddress, user.emailAddress) && Objects.equals(avatarPictureUrl, user.avatarPictureUrl);
+        AuthenticatedUser user = (AuthenticatedUser) o;
+        return Objects.equals(uId, user.uId)
+            && Objects.equals(name, user.name)
+            && Objects.equals(emailAddress, user.emailAddress)
+            && Objects.equals(avatarPictureUrl, user.avatarPictureUrl);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "User{" +
@@ -43,36 +60,24 @@ public class User {
             '}';
     }
 
+    @NonNull
     public String getuId() {
         return uId;
     }
 
-    public void setuId(String uId) {
-        this.uId = uId;
-    }
-
+    @NonNull
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    @NonNull
     public String getEmailAddress() {
         return emailAddress;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
+    @Nullable
     public String getAvatarPictureUrl() {
         return avatarPictureUrl;
-    }
-
-    public void setAvatarPictureUrl(String avatarPictureUrl) {
-        this.avatarPictureUrl = avatarPictureUrl;
     }
 
 }

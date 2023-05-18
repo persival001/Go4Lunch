@@ -3,16 +3,12 @@ package com.persival.go4lunch.ui.authentication;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.data.firestore.User;
-import com.persival.go4lunch.ui.main.details.DetailsUserViewState;
-
-import java.util.List;
+import com.persival.go4lunch.data.firestore.FirestoreUser;
 
 import javax.inject.Inject;
 
@@ -33,13 +29,14 @@ public class AuthenticationViewModel extends ViewModel {
     public void setFirestoreUser() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
-        String uId = firebaseUser.getUid();
-        String name = firebaseUser.getDisplayName();
-        String eMailAddress = firebaseUser.getEmail();
-        String avatarPictureUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
+            String uId = firebaseUser.getUid();
+            String name = firebaseUser.getDisplayName();
+            String avatarPictureUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
+            boolean isAtRestaurant = false;
+            boolean isFavoriteRestaurant = false;
 
-        User user = new User(uId, name, eMailAddress, avatarPictureUrl);
-        firestoreRepository.setFirestoreUser(user);
+            FirestoreUser firestoreUser = new FirestoreUser(uId, name, avatarPictureUrl, isAtRestaurant, isFavoriteRestaurant);
+            firestoreRepository.setFirestoreUser(firestoreUser);
         } else {
             Toast.makeText(null, "No user found", Toast.LENGTH_SHORT).show();
         }

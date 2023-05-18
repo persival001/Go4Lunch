@@ -21,7 +21,6 @@ import com.google.firebase.auth.UserInfo;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityAuthenticationBinding;
 import com.persival.go4lunch.ui.main.MainActivity;
-import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -95,21 +94,14 @@ public class AuthenticationActivity extends AppCompatActivity {
     private void handleResponseAfterSignIn(int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (isEmailAuthentication(firebaseUser)) {
+            if (firebaseUser != null) {
                 viewModel.setFirestoreUser();
                 startMainActivity();
             }
-
-            if (firebaseUser != null && !isEmailAuthentication(firebaseUser)) {
-                viewModel.setFirestoreUser();
-                startMainActivity();
-            }
-
         } else {
             handleSignInError(IdpResponse.fromResultIntent(data));
         }
     }
-
 
     private void handleSignInError(@Nullable IdpResponse response) {
         if (response == null) {
@@ -141,5 +133,11 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        signInActivityResultLauncher.unregister();
     }
 }

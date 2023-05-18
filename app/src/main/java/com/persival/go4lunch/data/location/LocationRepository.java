@@ -28,7 +28,8 @@ public class LocationRepository {
     private final SharedPreferencesRepository sharedPreferencesRepository;
 
     @NonNull
-    private final MutableLiveData<LocationEntity> locationMutableLiveData = new MutableLiveData<>(null);
+    private final MutableLiveData<LocationEntity> locationMutableLiveData = new MutableLiveData<>(new LocationEntity(48.6921, 6.1844));
+
     private LocationCallback callback;
 
     @Inject

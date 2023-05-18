@@ -107,9 +107,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navHeaderBinding = NavigationDrawerHeaderBinding.bind(headerView);
 
         // Observe and display the user data
-        viewModel.getFirestoreUserViewStateLiveData().observe(this, user -> {
-            navHeaderBinding.userName.setText(user.getAvatarName());
-            navHeaderBinding.userEmail.setText(user.getEmail());
+        viewModel.getAuthenticatedUserLiveData().observe(this, user -> {
+            navHeaderBinding.userName.setText(user.getName());
+            navHeaderBinding.userEmail.setText(user.getEmailAddress());
             Glide.with(navHeaderBinding.userImage)
                 .load(user.getAvatarPictureUrl())
                 .placeholder(R.drawable.ic_anon_user_48dp)
@@ -117,8 +117,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .circleCrop()
                 .into(navHeaderBinding.userImage);
         });
-
-
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new MapsFragment()).commit();

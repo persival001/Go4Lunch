@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.persival.go4lunch.data.firestore.AuthenticatedUser;
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.ui.main.settings.SettingsViewState;
 
 import javax.inject.Inject;
 
@@ -24,15 +24,15 @@ public class MainViewModel extends ViewModel {
         this.firestoreRepository = firestoreRepository;
     }
 
-    public LiveData<SettingsViewState> getFirestoreUserViewStateLiveData() {
+    public LiveData<AuthenticatedUser> getAuthenticatedUserLiveData() {
         return Transformations.map(
-            firestoreRepository.getFirestoreUser(),
+            firestoreRepository.getAuthenticatedUser(),
 
-            user -> new SettingsViewState(
-                user.getuId() != null ? user.getuId() : "",
-                user.getAvatarPictureUrl() != null ? user.getAvatarPictureUrl() : "",
-                user.getName() != null ? user.getName() : "",
-                user.getEmailAddress() != null ? user.getEmailAddress() : ""
+            user -> new AuthenticatedUser(
+                user.getuId(),
+                user.getName(),
+                user.getEmailAddress(),
+                user.getAvatarPictureUrl() != null ? user.getAvatarPictureUrl() : ""
             )
         );
     }

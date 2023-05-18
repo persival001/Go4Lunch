@@ -64,8 +64,6 @@ Q.idea/sonarlint/securityhotspotstore/2/a/2a357145b04aeee0545d8bc616c6d89a975ff7
 Q.idea/sonarlint/securityhotspotstore/5/2/52114fdaa426e9b83a3c5df4e11c4f0ebbcd814b,b/c/bc199be1972ff36e1397ae80e13ad04c7fe8bf97
 Å
 Q.idea/sonarlint/securityhotspotstore/5/1/516e730a14e71f02fa73f3acd6dc7cea9a9fe002,1/5/15ff8ba7ba8aa142a4d5588fa03db65ddf2b4f45
-A
-gradle.properties,2/a/2afbb999f001938c88fa43fc2ef52abf0f8213e4
 Å
 Q.idea/sonarlint/securityhotspotstore/e/d/ed67eb178d523a4b3f117dcbe0eda5196367ceec,9/a/9a43762646d6c9d33ccdc2a92292c8078d1078f0
 Å
@@ -2738,22 +2736,12 @@ Q.idea/sonarlint/securityhotspotstore/c/e/ce742702cdea124433bd58afeec853e2883528
 Q.idea/sonarlint/securityhotspotstore/c/c/ccd08ac9c528221d0b79bf7c7d64ef9bae75f91c,5/0/50d07337a0b1a0befc296f010ec44928f4958ea3
 Å
 Q.idea/sonarlint/securityhotspotstore/6/8/6867fbea15207798241aba0de222e63b14281f3d,2/1/21f83414019a28096dd4bc8d8614583d8eed2b25
-|
-Lapp/src/main/java/com/persival/go4lunch/data/model/PlaceDetailsResponse.java,6/4/64187980ec5121a0d57bd42c9e771391ee10554d
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-ä
-Zapp/src/main/java/com/persival/go4lunch/data/shared_prefs/SharedPreferencesRepository.java,4/d/4d6b38395e761d72612040cd9c234e61555b33b0
-ã
-[app/src/main/java/com/persival/go4lunch/data/gps_provider/GpsProviderBroadcastReceiver.java,7/9/79c185e0bf32f308816eff4ddd46d4a6544d65a2
-l
-<app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a
 Ö
 Uapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsViewState.java,9/7/975b5d39f6975a05d80df064789d4b91dfe128b5
 Å
 Qapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsUserViewState.java,5/5/55b074794ac40db1b4a587393d93909c77a5837e
-
-Oapp/src/main/java/com/persival/go4lunch/ui/main/settings/SettingsViewState.java,c/4/c4dda20045dcb240175d4147943aa030fb0938d6
 ~
 Napp/src/main/java/com/persival/go4lunch/ui/main/user_list/UserListAdapter.java,2/b/2b8d9c56d2595d642be330b3547f50709de96662
 Ä

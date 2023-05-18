@@ -2,25 +2,16 @@ package com.persival.go4lunch.data.firestore;
 
 import static android.content.ContentValues.TAG;
 
+import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,68 +22,75 @@ import javax.inject.Singleton;
 @Singleton
 public class FirestoreRepository {
 
+    private static final String USERS = "users";
+
     @Inject
-    FirestoreRepository() {}
+    FirestoreRepository() {
+    }
 
-    public LiveData<User> getFirestoreUser() {
-        MutableLiveData<User> firestoreUserLiveData = new MutableLiveData<>();
+    public LiveData<FirestoreUser> getFirestoreUser() {
+        MutableLiveData<FirestoreUser> firestoreUserLiveData = new MutableLiveData<>();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        db.collection("users").document(uid)
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            User user = document.toObject(User.class);
-
-                            // Update LiveData
-                            firestoreUserLiveData.setValue(user);
-
-                        } else {
-                            Log.d("GETFIRESTORE", "No such document");
-                        }
-                    } else {
-                        Log.d("GETFIRESTORE", "get failed with ", task.getException());
+        if (firebaseUser != null) {
+            FirebaseFirestore.getInstance()
+                .collection(USERS)
+                .document(firebaseUser.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        firestoreUserLiveData.setValue(documentSnapshot.toObject(FirestoreUser.class));
                     }
-                }
-            });
-
+                });
+        }
         return firestoreUserLiveData;
     }
 
-    public void setFirestoreUser(User user) {
+    public void setFirestoreUser(FirestoreUser firestoreUser) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("users")
-            .document(user.getuId())
-            .set(user)
+        db.collection(USERS)
+            .document(firestoreUser.getuId())
+            .set(firestoreUser)
             .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
             .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
     }
 
-    public LiveData<List<User>> getAllUsers() {
-        MutableLiveData<List<User>> usersLiveData = new MutableLiveData<>();
+    public LiveData<List<FirestoreUser>> getAllUsers() {
+        MutableLiveData<List<FirestoreUser>> usersLiveData = new MutableLiveData<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("users")
+        db.collection(USERS)
             .addSnapshotListener((value, e) -> {
                 if (e != null) {
                     Log.w(TAG, "Listen failed.", e);
                     return;
                 }
 
-                List<User> users = new ArrayList<>();
+                List<FirestoreUser> firestoreUsers = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
-                    users.add(doc.toObject(User.class));
+                    firestoreUsers.add(doc.toObject(FirestoreUser.class));
                 }
-                usersLiveData.setValue(users);
+                usersLiveData.setValue(firestoreUsers);
             });
         return usersLiveData;
     }
 
+    public LiveData<AuthenticatedUser> getAuthenticatedUser() {
+        MutableLiveData<AuthenticatedUser> authenticatedUserLiveData = new MutableLiveData<>();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String uid = firebaseUser.getUid();
+            String name = firebaseUser.getDisplayName();
+            String email = firebaseUser.getEmail();
+            Uri photoUri = firebaseUser.getPhotoUrl();
+            String photoUrl = (photoUri != null) ? photoUri.toString() : "";
+            if (name != null && email != null) {
+                AuthenticatedUser authenticatedUser = new AuthenticatedUser(uid, name, email, photoUrl);
+
+                authenticatedUserLiveData.setValue(authenticatedUser);
+            }
+        }
+        return authenticatedUserLiveData;
+    }
 }

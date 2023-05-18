@@ -26,7 +26,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class MapsViewModel extends ViewModel {
     private final LocationRepository locationRepository;
-    private final GooglePlacesRepository googlePlacesRepository;
     private final PermissionChecker permissionChecker;
     private final MutableLiveData<Boolean> hasGpsPermissionLiveData = new MutableLiveData<>();
     private final LiveData<List<NearbyRestaurantsResponse.Place>> nearbyRestaurantsLiveData;
@@ -38,7 +37,6 @@ public class MapsViewModel extends ViewModel {
         @NonNull PermissionChecker permissionChecker
     ) {
         this.locationRepository = locationRepository;
-        this.googlePlacesRepository = googlePlacesRepository;
         this.permissionChecker = permissionChecker;
 
         LiveData<LocationEntity> locationLiveData = locationRepository.getLocationLiveData();
@@ -61,8 +59,7 @@ public class MapsViewModel extends ViewModel {
         return nearbyRestaurantsLiveData;
     }
 
-
-        public boolean hasLocationPermission() {
+    public boolean hasLocationPermission() {
         return permissionChecker.hasLocationPermission();
     }
 
@@ -77,17 +74,6 @@ public class MapsViewModel extends ViewModel {
 
     public void stopLocationRequest() {
         locationRepository.stopLocationRequest();
-    }
-
-    public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants(
-        String location
-    ) {
-        return googlePlacesRepository.getNearbyRestaurants(
-            location,
-            5000,
-            "restaurant",
-            MAPS_API_KEY
-        );
     }
 
     @SuppressLint("MissingPermission")

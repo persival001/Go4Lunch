@@ -1,6 +1,8 @@
 package com.persival.go4lunch.ui.main.settings;
 
-import android.widget.Toast;
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -11,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.data.firestore.User;
+import com.persival.go4lunch.data.firestore.FirestoreUser;
 
 import javax.inject.Inject;
 
@@ -31,13 +33,13 @@ public class SettingsViewModel extends ViewModel {
 
     public LiveData<SettingsViewState> getFirestoreUserViewStateLiveData() {
         return Transformations.map(
-            firestoreRepository.getFirestoreUser(),
+            firestoreRepository.getAuthenticatedUser(),
 
             user -> new SettingsViewState(
-                user.getuId() != null ? user.getuId() : "",
+                user.getuId(),
                 user.getAvatarPictureUrl() != null ? user.getAvatarPictureUrl() : "",
-                user.getName() != null ? user.getName() : "",
-                user.getEmailAddress() != null ? user.getEmailAddress() : ""
+                user.getName(),
+                user.getEmailAddress()
             )
         );
     }
@@ -46,12 +48,28 @@ public class SettingsViewModel extends ViewModel {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String uId = firebaseUser.getUid();
-            String name = username;
-            String eMailAddress = firebaseUser.getEmail();
-            String avatarPictureUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
+            String avatarPictureUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : "";
+            FirestoreUser firestoreUser = new FirestoreUser(uId, username, avatarPictureUrl, false, false);
+            firestoreRepository.setFirestoreUser(firestoreUser);
 
-            User user = new User(uId, name, eMailAddress, avatarPictureUrl);
-            firestoreRepository.setFirestoreUser(user);
+            // Update the auth user profile
+
+            String currentName = firebaseUser.getDisplayName();
+
+            UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
+
+            if (currentName == null || !currentName.equals(username)) {
+                profileUpdatesBuilder.setDisplayName(username);
+            }
+
+            UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();
+
+            firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User profile updated.");
+                    }
+                });
         }
     }
 
@@ -63,16 +81,8 @@ public class SettingsViewModel extends ViewModel {
                 .setDisplayName(username)
                 .build();
 
-            firebaseUser.updateProfile(profileUpdates)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // The user display name has been successfully updated
-                    } else {
-                        // An error occurred while updating the user display name
-                    }
-                });
+            firebaseUser.updateProfile(profileUpdates);
         }
     }
-
 
 }
