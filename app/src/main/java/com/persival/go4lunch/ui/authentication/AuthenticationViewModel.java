@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.data.firestore.FirestoreUser;
+import com.persival.go4lunch.data.firestore.UserDto;
 
 import javax.inject.Inject;
 
@@ -35,8 +35,8 @@ public class AuthenticationViewModel extends ViewModel {
             boolean isAtRestaurant = false;
             boolean isFavoriteRestaurant = false;
 
-            FirestoreUser firestoreUser = new FirestoreUser(uId, name, avatarPictureUrl, isAtRestaurant, isFavoriteRestaurant);
-            firestoreRepository.setFirestoreUser(firestoreUser);
+            UserDto userDto = new UserDto(uId, name, avatarPictureUrl, isAtRestaurant, isFavoriteRestaurant);
+            firestoreRepository.setFirestoreUser(userDto);
         } else {
             Toast.makeText(null, "No user found", Toast.LENGTH_SHORT).show();
         }

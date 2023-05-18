@@ -5,7 +5,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.data.firestore.FirestoreUser;
+import com.persival.go4lunch.data.firestore.UserDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +27,13 @@ public class UserListViewModel extends ViewModel {
         return Transformations.map(firestoreRepository.getAllUsers(), users -> {
             List<UserListViewState> userListViewState = new ArrayList<>();
 
-            for (FirestoreUser firestoreUser : users) {
+            for (UserDto userDto : users) {
                 userListViewState.add(
                     new UserListViewState(
-                        firestoreUser.getuId(),
-                        firestoreUser.getName(),
-                        firestoreUser.getAvatarPictureUrl(),
-                        firestoreUser.getAvatarPictureUrl()
+                        userDto.getId(),
+                        userDto.getName(),
+                        userDto.getAvatarPictureUrl(),
+                        userDto.getAvatarPictureUrl()
                     )
                 );
 

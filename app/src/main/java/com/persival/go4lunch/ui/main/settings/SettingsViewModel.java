@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.data.firestore.FirestoreUser;
+import com.persival.go4lunch.data.firestore.UserDto;
 
 import javax.inject.Inject;
 
@@ -49,8 +49,8 @@ public class SettingsViewModel extends ViewModel {
         if (firebaseUser != null) {
             String uId = firebaseUser.getUid();
             String avatarPictureUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : "";
-            FirestoreUser firestoreUser = new FirestoreUser(uId, username, avatarPictureUrl, false, false);
-            firestoreRepository.setFirestoreUser(firestoreUser);
+            UserDto userDto = new UserDto(uId, username, avatarPictureUrl, false, false);
+            firestoreRepository.setFirestoreUser(userDto);
 
             // Update the auth user profile
 

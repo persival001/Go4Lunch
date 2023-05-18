@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
 import com.persival.go4lunch.data.GooglePlacesApi;
 
 import java.util.concurrent.TimeUnit;
@@ -54,5 +55,11 @@ public class AppModule {
             .build();
 
         return retrofit.create(GooglePlacesApi.class);
+    }
+
+    @Singleton
+    @Provides
+    public static FirebaseAuth provideFirebaseAuth() {
+        return FirebaseAuth.getInstance();
     }
 }

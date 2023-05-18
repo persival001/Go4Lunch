@@ -28,8 +28,8 @@ public class FirestoreRepository {
     FirestoreRepository() {
     }
 
-    public LiveData<FirestoreUser> getFirestoreUser() {
-        MutableLiveData<FirestoreUser> firestoreUserLiveData = new MutableLiveData<>();
+    public LiveData<UserDto> getFirestoreUser() {
+        MutableLiveData<UserDto> firestoreUserLiveData = new MutableLiveData<>();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (firebaseUser != null) {
@@ -39,25 +39,25 @@ public class FirestoreRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        firestoreUserLiveData.setValue(documentSnapshot.toObject(FirestoreUser.class));
+                        firestoreUserLiveData.setValue(documentSnapshot.toObject(UserDto.class));
                     }
                 });
         }
         return firestoreUserLiveData;
     }
 
-    public void setFirestoreUser(FirestoreUser firestoreUser) {
+    public void setFirestoreUser(UserDto userDto) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(USERS)
-            .document(firestoreUser.getuId())
-            .set(firestoreUser)
+            .document(userDto.getId())
+            .set(userDto)
             .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
             .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
     }
 
-    public LiveData<List<FirestoreUser>> getAllUsers() {
-        MutableLiveData<List<FirestoreUser>> usersLiveData = new MutableLiveData<>();
+    public LiveData<List<UserDto>> getAllUsers() {
+        MutableLiveData<List<UserDto>> usersLiveData = new MutableLiveData<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(USERS)
@@ -67,11 +67,11 @@ public class FirestoreRepository {
                     return;
                 }
 
-                List<FirestoreUser> firestoreUsers = new ArrayList<>();
+                List<UserDto> userDtos = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
-                    firestoreUsers.add(doc.toObject(FirestoreUser.class));
+                    userDtos.add(doc.toObject(UserDto.class));
                 }
-                usersLiveData.setValue(firestoreUsers);
+                usersLiveData.setValue(userDtos);
             });
         return usersLiveData;
     }
