@@ -2740,8 +2740,6 @@ Q.idea/sonarlint/securityhotspotstore/6/8/6867fbea15207798241aba0de222e63b14281f
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
 Ö
 Uapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsViewState.java,9/7/975b5d39f6975a05d80df064789d4b91dfe128b5
-Å
-Qapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsUserViewState.java,5/5/55b074794ac40db1b4a587393d93909c77a5837e
 Ä
 Papp/src/main/java/com/persival/go4lunch/ui/main/user_list/UserListViewState.java,b/4/b4f2e8265b5065fa2652cbb2ec91f619e0bc2e90
 ~

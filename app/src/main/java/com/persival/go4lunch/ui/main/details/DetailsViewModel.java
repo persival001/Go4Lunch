@@ -51,7 +51,6 @@ public class DetailsViewModel extends ViewModel {
             isRestaurantChosen.setValue(!isRestaurantChosen.getValue());
         }
         if (restaurantDetail != null) {
-            // Supposant que vous ayez une méthode setChosen dans DetailsViewState
             //restaurantDetail.setChosen(isRestaurantChosen.getValue());
         }
     }
@@ -72,7 +71,7 @@ public class DetailsViewModel extends ViewModel {
                 restaurantDetail = new DetailsViewState(
                     restaurant.getId() != null ? restaurant.getId() : "",
                     getPictureUrl(restaurant.getPhotos()) != null ? getPictureUrl(restaurant.getPhotos()) : "",
-                    restaurant.getName() != null ? restaurant.getName() : "",
+                    getFormattedName(restaurant.getName()),
                     getRating(restaurant.getRating()),
                     restaurant.getAddress() != null ? restaurant.getAddress() : "",
                     restaurant.getPhoneNumber() != null ? restaurant.getPhoneNumber() : "",
@@ -100,6 +99,33 @@ public class DetailsViewModel extends ViewModel {
             return rating * 3F / 5F;
         } else {
             return 0F;
+        }
+    }
+
+    private String toTitleCase(String input) {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
+    }
+
+    private String getFormattedName(String name) {
+        if (name != null) {
+            String lowercaseName = name.toLowerCase();
+            return toTitleCase(lowercaseName);
+        } else {
+            return "";
         }
     }
 

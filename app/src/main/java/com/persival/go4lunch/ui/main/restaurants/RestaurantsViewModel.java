@@ -4,14 +4,12 @@ import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.location.LocationEntity;
 import com.persival.go4lunch.data.location.LocationRepository;
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
-import com.persival.go4lunch.data.permission_checker.PermissionChecker;
 import com.persival.go4lunch.data.places.GooglePlacesRepository;
 
 import java.util.ArrayList;
@@ -58,26 +56,24 @@ public class RestaurantsViewModel extends ViewModel {
                 places -> {
                     List<RestaurantsViewState> restaurantsList = new ArrayList<>();
                     for (NearbyRestaurantsResponse.Place restaurant : places) {
-                        if (isValidRestaurant(restaurant)) {
-                            restaurantsList.add(
-                                new RestaurantsViewState(
-                                    restaurant.getId() != null ? restaurant.getId() : "",
-                                    restaurant.getName() != null ? restaurant.getName() : "",
-                                    restaurant.getAddress() != null ? restaurant.getAddress() : "",
-                                    getOpeningTime(restaurant.getOpeningHours()),
-                                    getHaversineDistance(
-                                        restaurant.getLatitude(),
-                                        restaurant.getLongitude(),
-                                        location
-                                    ),
-                                    "(2)",
-                                    getRating(restaurant.getRating()),
-                                    getPictureUrl(restaurant.getPhotos()) != null ? getPictureUrl(restaurant.getPhotos()) : ""
-                                )
-                            );
-                        }
-                    }
 
+                        restaurantsList.add(
+                            new RestaurantsViewState(
+                                restaurant.getId() != null ? restaurant.getId() : "",
+                                getFormattedName(restaurant.getName()),
+                                restaurant.getAddress() != null ? restaurant.getAddress() : "",
+                                getOpeningTime(restaurant.getOpeningHours()),
+                                getHaversineDistance(
+                                    restaurant.getLatitude(),
+                                    restaurant.getLongitude(),
+                                    location
+                                ),
+                                "(2)",
+                                getRating(restaurant.getRating()),
+                                getPictureUrl(restaurant.getPhotos()) != null ? getPictureUrl(restaurant.getPhotos()) : ""
+                            )
+                        );
+                    }
                     return restaurantsList;
                 }
             )
@@ -116,6 +112,35 @@ public class RestaurantsViewModel extends ViewModel {
         }
     }
 
+    // Convert a string to title case like "Restaurant Name"
+    private String toTitleCase(String input) {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
+    }
+
+    // Get a formatted name
+    private String getFormattedName(String name) {
+        if (name != null) {
+            String lowercaseName = name.toLowerCase();
+            return toTitleCase(lowercaseName);
+        } else {
+            return "";
+        }
+    }
+
     // Get a photo reference if it exists and convert it to a picture url
     public String getPictureUrl(List<NearbyRestaurantsResponse.Photo> photos) {
         if (photos != null && !photos.isEmpty()) {
@@ -142,19 +167,6 @@ public class RestaurantsViewModel extends ViewModel {
         double distance = R * c;
 
         return String.format(Locale.getDefault(), "%.0f", distance) + " m";
-    }
-
-    // Verify that the restaurant has all the necessary information
-    private boolean isValidRestaurant(NearbyRestaurantsResponse.Place restaurant) {
-        return restaurant.getId() != null &&
-            restaurant.getName() != null &&
-            restaurant.getAddress() != null &&
-            restaurant.getOpeningHours() != null &&
-            restaurant.getLatitude() != 0 &&
-            restaurant.getLongitude() != 0 &&
-            restaurant.getRating() != null &&
-            restaurant.getPhotos() != null &&
-            !restaurant.getPhotos().isEmpty();
     }
 
     private boolean getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {

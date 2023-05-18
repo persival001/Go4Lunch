@@ -65,7 +65,7 @@ public class DetailsFragment extends Fragment {
             Glide.with(binding.detailsPicture)
                 .load(restaurantDetail.getPictureUrl())
                 .placeholder(R.drawable.logoresto)
-                .error(R.drawable.logoresto)
+                .error(R.drawable.no_restaurant_picture)
                 .into(binding.detailsPicture);
             binding.detailsName.setText(restaurantDetail.getName());
             binding.detailsAddress.setText(restaurantDetail.getAddress());

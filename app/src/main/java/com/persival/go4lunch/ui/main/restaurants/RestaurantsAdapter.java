@@ -66,7 +66,7 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
             Glide.with(itemView)
                 .load(item.getPictureUrl())
                 .placeholder(R.drawable.logoresto)
-                .error(R.drawable.logoresto)
+                .error(R.drawable.no_restaurant_picture)
                 .into(restaurantPicture);
 
             restaurantName.setText(item.getName());
@@ -83,7 +83,13 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
             }
             restaurantDistance.setText(item.getDistance());
             restaurantParticipants.setText(item.getParticipants());
-            restaurantStars.setRating(item.getRating());
+            if (item.getRating() == 0F) {
+                restaurantStars.setVisibility(View.GONE);
+            } else {
+                restaurantStars.setVisibility(View.VISIBLE);
+                restaurantStars.setRating(item.getRating());
+            }
+
         }
     }
 
