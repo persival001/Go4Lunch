@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,8 +43,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAuthenticationBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+
 
         viewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
 
@@ -87,7 +85,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     // Show Snack Bar with a message
     private void showSnackBar(String message) {
-        Snackbar.make(binding.authenticationLayout, message, Snackbar.LENGTH_SHORT).show();
+        // Snackbar.make(binding.authenticationLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
     // Method that handles response after SignIn Activity close

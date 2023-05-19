@@ -12,6 +12,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.Priority;
 import com.persival.go4lunch.data.shared_prefs.SharedPreferencesRepository;
 
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ import javax.inject.Singleton;
 @Singleton
 public class LocationRepository {
     private static final int LOCATION_REQUEST_INTERVAL_MS = 10_000;
-    private static final float SMALLEST_DISPLACEMENT_THRESHOLD_METER = 25;
+    private static final int SMALLEST_DISPLACEMENT_THRESHOLD_METER = 25;
 
     @NonNull
     private final FusedLocationProviderClient fusedLocationProviderClient;
@@ -90,12 +91,15 @@ public class LocationRepository {
             };
         }
 
+        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, LOCATION_REQUEST_INTERVAL_MS)
+            .setMinUpdateIntervalMillis(SMALLEST_DISPLACEMENT_THRESHOLD_METER)
+            .setMinUpdateDistanceMeters(LOCATION_REQUEST_INTERVAL_MS)
+            .build();
+
         fusedLocationProviderClient.removeLocationUpdates(callback);
+
         fusedLocationProviderClient.requestLocationUpdates(
-            LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setSmallestDisplacement(SMALLEST_DISPLACEMENT_THRESHOLD_METER)
-                .setInterval(LOCATION_REQUEST_INTERVAL_MS),
+            locationRequest,
             callback,
             Looper.getMainLooper()
         );
