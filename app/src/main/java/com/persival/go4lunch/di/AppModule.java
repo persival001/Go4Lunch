@@ -1,4 +1,4 @@
-package com.persival.go4lunch.injection;
+package com.persival.go4lunch.di;
 
 import android.app.Application;
 

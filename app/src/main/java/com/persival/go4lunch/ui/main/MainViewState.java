@@ -1,10 +1,10 @@
-package com.persival.go4lunch.ui.main.settings;
+package com.persival.go4lunch.ui.main;
 
 import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public class SettingsViewState {
+public class MainViewState {
 
     @NonNull
     private final String id;
@@ -15,7 +15,7 @@ public class SettingsViewState {
     @NonNull
     private final String avatarPictureUrl;
 
-    public SettingsViewState(
+    public MainViewState(
         @NonNull String id,
         @NonNull String avatarName,
         @NonNull String email,
@@ -38,7 +38,7 @@ public class SettingsViewState {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        SettingsViewState that = (SettingsViewState) o;
+        MainViewState that = (MainViewState) o;
         return id.equals(that.id) &&
             avatarName.equals(that.avatarName) &&
             email.equals(that.email) &&

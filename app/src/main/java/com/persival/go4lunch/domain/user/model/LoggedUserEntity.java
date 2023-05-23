@@ -10,16 +10,20 @@ public class LoggedUserEntity {
     private final String id;
     @NonNull
     private final String name;
+    @NonNull
+    private final String emailAddress;
     @Nullable
     private final String avatarPictureUrl;
 
     public LoggedUserEntity(
         @NonNull String id,
         @NonNull String name,
+        @NonNull String emailAddress,
         @Nullable String avatarPictureUrl
     ) {
         this.id = id;
         this.name = name;
+        this.emailAddress = emailAddress;
         this.avatarPictureUrl = avatarPictureUrl;
     }
 
@@ -33,22 +37,32 @@ public class LoggedUserEntity {
         return name;
     }
 
+    @NonNull
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
     @Nullable
     public String getAvatarPictureUrl() {
         return avatarPictureUrl;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LoggedUserEntity that = (LoggedUserEntity) o;
-        return id.equals(that.id) && name.equals(that.name) && Objects.equals(avatarPictureUrl, that.avatarPictureUrl);
+    public int hashCode() {
+        return Objects.hash(id, name, emailAddress, avatarPictureUrl);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, name, avatarPictureUrl);
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        LoggedUserEntity that = (LoggedUserEntity) o;
+        return id.equals(that.id) &&
+            name.equals(that.name) &&
+            emailAddress.equals(that.emailAddress) &&
+            Objects.equals(avatarPictureUrl, that.avatarPictureUrl);
     }
 
     @NonNull
@@ -57,6 +71,7 @@ public class LoggedUserEntity {
         return "UserEntity{" +
             "id='" + id + '\'' +
             ", name='" + name + '\'' +
+            ", emailAddress='" + emailAddress + '\'' +
             ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
             '}';
     }

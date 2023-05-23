@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Observe and display the user data
         viewModel.getAuthenticatedUserLiveData().observe(this, user -> {
-            navHeaderBinding.userName.setText(user.getName());
-            navHeaderBinding.userEmail.setText(user.getEmailAddress());
+            navHeaderBinding.userName.setText(user.getAvatarName());
+            navHeaderBinding.userEmail.setText(user.getEmail());
             Glide.with(navHeaderBinding.userImage)
                 .load(user.getAvatarPictureUrl())
                 .placeholder(R.drawable.ic_anon_user_48dp)

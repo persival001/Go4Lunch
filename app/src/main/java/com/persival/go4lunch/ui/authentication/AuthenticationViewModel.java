@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.data.firestore.UserDto;
+import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
+import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import javax.inject.Inject;
 
@@ -18,25 +19,25 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class AuthenticationViewModel extends ViewModel {
 
     private final FirestoreRepository firestoreRepository;
+    private final GetLoggedUserUseCase getLoggedUserUseCase;
+
 
     @Inject
     public AuthenticationViewModel(
-        @NonNull final FirestoreRepository firestoreRepository
-    ) {
+        @NonNull final FirestoreRepository firestoreRepository,
+        GetLoggedUserUseCase getLoggedUserUseCase) {
         this.firestoreRepository = firestoreRepository;
+        this.getLoggedUserUseCase = getLoggedUserUseCase;
+    }
+
+    public LoggedUserEntity getLoggedUser() {
+        return getLoggedUserUseCase.invoke();
     }
 
     public void setFirestoreUser() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
-            String uId = firebaseUser.getUid();
-            String name = firebaseUser.getDisplayName();
-            String avatarPictureUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : null;
-            boolean isAtRestaurant = false;
-            boolean isFavoriteRestaurant = false;
-
-            UserDto userDto = new UserDto(uId, name, avatarPictureUrl, isAtRestaurant, isFavoriteRestaurant);
-            firestoreRepository.setFirestoreUser(userDto);
+            firestoreRepository.setFirestoreUser(getLoggedUser());
         } else {
             Toast.makeText(null, "No user found", Toast.LENGTH_SHORT).show();
         }

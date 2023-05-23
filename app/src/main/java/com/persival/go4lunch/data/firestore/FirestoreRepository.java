@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +47,12 @@ public class FirestoreRepository {
         return firestoreUserLiveData;
     }
 
-    public void setFirestoreUser(UserDto userDto) {
+    public void setFirestoreUser(LoggedUserEntity loggedUserEntity) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(USERS)
-            .document(userDto.getId())
-            .set(userDto)
+            .document(loggedUserEntity.getId())
+            .set(loggedUserEntity)
             .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
             .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
     }
@@ -76,19 +77,19 @@ public class FirestoreRepository {
         return usersLiveData;
     }
 
-    public LiveData<AuthenticatedUser> getAuthenticatedUser() {
-        MutableLiveData<AuthenticatedUser> authenticatedUserLiveData = new MutableLiveData<>();
+    public LiveData<LoggedUserEntity> getAuthenticatedUser() {
+        MutableLiveData<LoggedUserEntity> authenticatedUserLiveData = new MutableLiveData<>();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
-            String uid = firebaseUser.getUid();
+            String id = firebaseUser.getUid();
             String name = firebaseUser.getDisplayName();
             String email = firebaseUser.getEmail();
             Uri photoUri = firebaseUser.getPhotoUrl();
             String photoUrl = (photoUri != null) ? photoUri.toString() : "";
             if (name != null && email != null) {
-                AuthenticatedUser authenticatedUser = new AuthenticatedUser(uid, name, email, photoUrl);
+                LoggedUserEntity loggedUserEntity = new LoggedUserEntity(id, name, email, photoUrl);
 
-                authenticatedUserLiveData.setValue(authenticatedUser);
+                authenticatedUserLiveData.setValue(loggedUserEntity);
             }
         }
         return authenticatedUserLiveData;

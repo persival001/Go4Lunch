@@ -14,8 +14,6 @@ public class UserDto {
     private final String avatarPictureUrl;
     @Nullable
     private final Boolean isAtRestaurant;
-    @Nullable
-    private final Boolean isFavoriteRestaurant;
 
     // Empty constructor needed for Firestore deserialization
     public UserDto() {
@@ -23,12 +21,11 @@ public class UserDto {
         name = null;
         avatarPictureUrl = null;
         isAtRestaurant = null;
-        isFavoriteRestaurant = null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, avatarPictureUrl, isAtRestaurant, isFavoriteRestaurant);
+        return Objects.hash(id, name, avatarPictureUrl, isAtRestaurant);
     }
 
     @Override
@@ -41,8 +38,7 @@ public class UserDto {
         return Objects.equals(id, userDto.id)
             && Objects.equals(name, userDto.name)
             && Objects.equals(avatarPictureUrl, userDto.avatarPictureUrl)
-            && Objects.equals(isAtRestaurant, userDto.isAtRestaurant)
-            && Objects.equals(isFavoriteRestaurant, userDto.isFavoriteRestaurant);
+            && Objects.equals(isAtRestaurant, userDto.isAtRestaurant);
     }
 
     @NonNull
@@ -53,7 +49,6 @@ public class UserDto {
             ", name='" + name + '\'' +
             ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
             ", isAtRestaurant=" + isAtRestaurant +
-            ", isFavoriteRestaurant=" + isFavoriteRestaurant +
             '}';
     }
 
@@ -75,11 +70,6 @@ public class UserDto {
     @Nullable
     public Boolean getAtRestaurant() {
         return isAtRestaurant;
-    }
-
-    @Nullable
-    public Boolean getFavoriteRestaurant() {
-        return isFavoriteRestaurant;
     }
 }
 

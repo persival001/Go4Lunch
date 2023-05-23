@@ -1,9 +1,8 @@
 package com.persival.go4lunch.data;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.Manifest;
 import android.content.pm.PackageManager;
 
 import androidx.core.app.ActivityCompat;
@@ -16,7 +15,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PermissionRepository {
 
-    private MutableLiveData<Boolean> locationPermissionLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> locationPermissionLiveData = new MutableLiveData<>();
 
     private final Application context;
 
