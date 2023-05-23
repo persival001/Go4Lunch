@@ -1,6 +1,7 @@
 package com.persival.go4lunch.ui.main;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -12,14 +13,14 @@ public class MainViewState {
     private final String avatarName;
     @NonNull
     private final String email;
-    @NonNull
+    @Nullable
     private final String avatarPictureUrl;
 
     public MainViewState(
         @NonNull String id,
         @NonNull String avatarName,
         @NonNull String email,
-        @NonNull String avatarPictureUrl
+        @Nullable String avatarPictureUrl
     ) {
         this.id = id;
         this.avatarName = avatarName;
@@ -34,15 +35,10 @@ public class MainViewState {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         MainViewState that = (MainViewState) o;
-        return id.equals(that.id) &&
-            avatarName.equals(that.avatarName) &&
-            email.equals(that.email) &&
-            avatarPictureUrl.equals(that.avatarPictureUrl);
+        return id.equals(that.id) && avatarName.equals(that.avatarName) && email.equals(that.email) && Objects.equals(avatarPictureUrl, that.avatarPictureUrl);
     }
 
     @NonNull
@@ -71,7 +67,7 @@ public class MainViewState {
         return email;
     }
 
-    @NonNull
+    @Nullable
     public String getAvatarPictureUrl() {
         return avatarPictureUrl;
     }

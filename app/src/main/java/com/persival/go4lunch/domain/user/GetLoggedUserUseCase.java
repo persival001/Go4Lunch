@@ -22,7 +22,7 @@ public class GetLoggedUserUseCase {
     public LoggedUserEntity invoke() {
         FirebaseUser firebaseAuthUser = firebaseAuth.getCurrentUser();
 
-        if (firebaseAuthUser == null || firebaseAuthUser.getDisplayName() == null) {
+        if (firebaseAuthUser == null || firebaseAuthUser.getDisplayName() == null || firebaseAuthUser.getEmail() == null) {
             return null;
         } else {
             return new LoggedUserEntity(

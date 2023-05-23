@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.firestore.FirestoreRepository;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
@@ -16,19 +15,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class MainViewModel extends ViewModel {
 
-    private final FirestoreRepository firestoreRepository;
-    private final GetLoggedUserUseCase getLoggedUserUseCase;
+    private final MutableLiveData<MainViewState> mainViewStateLiveData = new MutableLiveData<>();
 
     @Inject
-    public MainViewModel(
-        @NonNull final FirestoreRepository firestoreRepository,
-        @NonNull final GetLoggedUserUseCase getLoggedUserUseCase) {
-        this.firestoreRepository = firestoreRepository;
-        this.getLoggedUserUseCase = getLoggedUserUseCase;
-    }
-
-    public LiveData<MainViewState> getAuthenticatedUserLiveData() {
-        MutableLiveData<MainViewState> mainViewStateLiveData = new MutableLiveData<>();
+    public MainViewModel(@NonNull final GetLoggedUserUseCase getLoggedUserUseCase) {
         LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
 
         if (loggedUserEntity != null) {
@@ -36,12 +26,13 @@ public class MainViewModel extends ViewModel {
                 loggedUserEntity.getId(),
                 loggedUserEntity.getName(),
                 loggedUserEntity.getEmailAddress(),
-                loggedUserEntity.getAvatarPictureUrl() != null ? loggedUserEntity.getAvatarPictureUrl() : ""
+                loggedUserEntity.getAvatarPictureUrl()
             );
             mainViewStateLiveData.setValue(mainViewState);
         }
-
-        return mainViewStateLiveData;
     }
 
+    public LiveData<MainViewState> getAuthenticatedUserLiveData() {
+        return mainViewStateLiveData;
+    }
 }

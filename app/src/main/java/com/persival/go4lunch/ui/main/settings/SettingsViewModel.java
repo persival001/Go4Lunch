@@ -34,6 +34,7 @@ public class SettingsViewModel extends ViewModel {
         this.getLoggedUserUseCase = getLoggedUserUseCase;
     }
 
+    // TODO Persival
     public LiveData<SettingsViewState> getAuthenticatedUserLiveData() {
         MutableLiveData<SettingsViewState> settingsViewStateLiveData = new MutableLiveData<>();
         LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
@@ -51,12 +52,13 @@ public class SettingsViewModel extends ViewModel {
         return settingsViewStateLiveData;
     }
 
-    public LoggedUserEntity getLoggedUser() {
+    private LoggedUserEntity getLoggedUser() {
         return getLoggedUserUseCase.invoke();
     }
 
     public void setFirestoreUser(String username) {
 
+        // TODO Persival
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Update the auth user profile

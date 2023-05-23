@@ -34,7 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private DrawerLayout drawerLayout;
+    private  ActivityMainBinding binding;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -55,14 +55,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
         }
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -70,14 +70,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        NavigationDrawerHeaderBinding navHeaderBinding;
-        ActivityMainBinding binding;
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        drawerLayout = binding.drawerLayout;
 
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = getSelectedFragment(item.getItemId());
@@ -92,19 +88,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.open_nav,
-            R.string.close_nav);
-        drawerLayout.addDrawerListener(toggle);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.open_nav,
+            R.string.close_nav
+        );
+        binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        MainViewModel viewModel;
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         // Inflate the header view at runtime
         View headerView = navigationView.getHeaderView(0);
 
         // Perform binding on the header view
-        navHeaderBinding = NavigationDrawerHeaderBinding.bind(headerView);
+        NavigationDrawerHeaderBinding navHeaderBinding = NavigationDrawerHeaderBinding.bind(headerView);
 
         // Observe and display the user data
         viewModel.getAuthenticatedUserLiveData().observe(this, user -> {
