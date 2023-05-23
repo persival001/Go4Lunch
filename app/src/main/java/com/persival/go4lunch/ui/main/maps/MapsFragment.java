@@ -87,6 +87,7 @@ public class MapsFragment extends Fragment {
                 }
             }
         });
+
     }
 
     @SuppressLint("MissingPermission")
@@ -113,5 +114,44 @@ public class MapsFragment extends Fragment {
         super.onStop();
         mapsViewModel.stopLocationRequest();
     }
+
+    /*public void searchRestaurant() {
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String location = s.toString();
+                if (location.length() < 3) {
+                    // If less than 3 characters have been entered, do not perform search
+                    return;
+                }
+                // Use a Geocoder to get the latitude and longitude from the location string
+                Geocoder geocoder = new Geocoder(getContext());
+                List<Address> addresses;
+                try {
+                    addresses = geocoder.getFromLocationName(location, 1);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address address = addresses.get(0);
+                        // Create a LatLng object from the Address
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        // Move the camera to the position
+                        if (googleMap != null) {
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+    }*/
 }
 

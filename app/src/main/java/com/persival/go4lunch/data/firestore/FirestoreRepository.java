@@ -2,7 +2,6 @@ package com.persival.go4lunch.data.firestore;
 
 import static android.content.ContentValues.TAG;
 
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -29,8 +28,8 @@ public class FirestoreRepository {
     FirestoreRepository() {
     }
 
-    public LiveData<UserDto> getFirestoreUser() {
-        MutableLiveData<UserDto> firestoreUserLiveData = new MutableLiveData<>();
+    public LiveData<LoggedUserEntity> getFirestoreUser() {
+        MutableLiveData<LoggedUserEntity> firestoreUserLiveData = new MutableLiveData<>();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (firebaseUser != null) {
@@ -40,7 +39,7 @@ public class FirestoreRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        firestoreUserLiveData.setValue(documentSnapshot.toObject(UserDto.class));
+                        firestoreUserLiveData.setValue(documentSnapshot.toObject(LoggedUserEntity.class));
                     }
                 });
         }
@@ -57,8 +56,8 @@ public class FirestoreRepository {
             .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
     }
 
-    public LiveData<List<UserDto>> getAllUsers() {
-        MutableLiveData<List<UserDto>> usersLiveData = new MutableLiveData<>();
+    public LiveData<List<LoggedUserEntity>> getAllUsers() {
+        MutableLiveData<List<LoggedUserEntity>> usersLiveData = new MutableLiveData<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(USERS)
@@ -68,30 +67,12 @@ public class FirestoreRepository {
                     return;
                 }
 
-                List<UserDto> userDtos = new ArrayList<>();
+                List<LoggedUserEntity> loggedUserEntity = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
-                    userDtos.add(doc.toObject(UserDto.class));
+                    loggedUserEntity.add(doc.toObject(LoggedUserEntity.class));
                 }
-                usersLiveData.setValue(userDtos);
+                usersLiveData.setValue(loggedUserEntity);
             });
         return usersLiveData;
-    }
-
-    public LiveData<LoggedUserEntity> getAuthenticatedUser() {
-        MutableLiveData<LoggedUserEntity> authenticatedUserLiveData = new MutableLiveData<>();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            String id = firebaseUser.getUid();
-            String name = firebaseUser.getDisplayName();
-            String email = firebaseUser.getEmail();
-            Uri photoUri = firebaseUser.getPhotoUrl();
-            String photoUrl = (photoUri != null) ? photoUri.toString() : "";
-            if (name != null && email != null) {
-                LoggedUserEntity loggedUserEntity = new LoggedUserEntity(id, name, email, photoUrl);
-
-                authenticatedUserLiveData.setValue(loggedUserEntity);
-            }
-        }
-        return authenticatedUserLiveData;
     }
 }

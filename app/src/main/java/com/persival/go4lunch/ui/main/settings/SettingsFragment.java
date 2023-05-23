@@ -80,7 +80,7 @@ public class SettingsFragment extends Fragment {
 
         setupDoneButtonOnEditText(binding.usernameEditText);
 
-        viewModel.getFirestoreUserViewStateLiveData().observe(getViewLifecycleOwner(), user -> {
+        viewModel.getAuthenticatedUserLiveData().observe(getViewLifecycleOwner(), user -> {
             binding.usernameEditText.setText(user.getAvatarName());
             binding.emailTextView.setText(user.getEmail());
             Glide.with(binding.profileImageButton)

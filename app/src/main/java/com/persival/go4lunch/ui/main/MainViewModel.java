@@ -2,11 +2,12 @@ package com.persival.go4lunch.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
+import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import javax.inject.Inject;
 
@@ -27,15 +28,20 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<MainViewState> getAuthenticatedUserLiveData() {
-        return Transformations.map(
-            firestoreRepository.getAuthenticatedUser(),
+        MutableLiveData<MainViewState> mainViewStateLiveData = new MutableLiveData<>();
+        LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
 
-            mainViewState -> new MainViewState(
-                mainViewState.getId(),
-                mainViewState.getName(),
-                mainViewState.getEmailAddress(),
-                mainViewState.getAvatarPictureUrl() != null ? mainViewState.getAvatarPictureUrl() : ""
-            )
-        );
+        if (loggedUserEntity != null) {
+            MainViewState mainViewState = new MainViewState(
+                loggedUserEntity.getId(),
+                loggedUserEntity.getName(),
+                loggedUserEntity.getEmailAddress(),
+                loggedUserEntity.getAvatarPictureUrl() != null ? loggedUserEntity.getAvatarPictureUrl() : ""
+            );
+            mainViewStateLiveData.setValue(mainViewState);
+        }
+
+        return mainViewStateLiveData;
     }
+
 }

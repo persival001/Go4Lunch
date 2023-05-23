@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,17 +34,21 @@ public class SettingsViewModel extends ViewModel {
         this.getLoggedUserUseCase = getLoggedUserUseCase;
     }
 
-    public LiveData<SettingsViewState> getFirestoreUserViewStateLiveData() {
-        return Transformations.map(
-            firestoreRepository.getAuthenticatedUser(),
+    public LiveData<SettingsViewState> getAuthenticatedUserLiveData() {
+        MutableLiveData<SettingsViewState> settingsViewStateLiveData = new MutableLiveData<>();
+        LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
 
-            user -> new SettingsViewState(
-                user.getId(),
-                user.getName(),
-                user.getEmailAddress(),
-                user.getAvatarPictureUrl() != null ? user.getAvatarPictureUrl() : ""
-            )
-        );
+        if (loggedUserEntity != null) {
+            SettingsViewState settingsViewState = new SettingsViewState(
+                loggedUserEntity.getId(),
+                loggedUserEntity.getName(),
+                loggedUserEntity.getEmailAddress(),
+                loggedUserEntity.getAvatarPictureUrl() != null ? loggedUserEntity.getAvatarPictureUrl() : ""
+            );
+            settingsViewStateLiveData.setValue(settingsViewState);
+        }
+
+        return settingsViewStateLiveData;
     }
 
     public LoggedUserEntity getLoggedUser() {

@@ -2758,8 +2758,6 @@ y
 Iapp/src/main/java/com/persival/go4lunch/data/location/LocationEntity.java,a/e/ae5b5d521b0650c71fdc92014d23491b10dcee3b
 A
 gradle.properties,2/a/2afbb999f001938c88fa43fc2ef52abf0f8213e4
-Ä
-Papp/src/main/java/com/persival/go4lunch/ui/main/user_list/UserListViewModel.java,f/4/f4829dabe17b869159579c2fd23ceba7446f1a20
 }
 Mapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsViewModel.java,5/e/5ebfe3a1a688b9bdcf6bd82f429486adc8ac9502
 Å

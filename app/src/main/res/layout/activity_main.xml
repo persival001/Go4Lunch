@@ -25,7 +25,7 @@
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/default_margin"
                 android:background="@color/quantum_white_100"
@@ -67,8 +67,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/default_large_margin"
-            android:src="@drawable/baseline_lunch_dining_24"
-            android:contentDescription="@string/illustrative_picture" />
+            android:contentDescription="@string/illustrative_picture"
+            android:src="@drawable/baseline_lunch_dining_24" />
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
