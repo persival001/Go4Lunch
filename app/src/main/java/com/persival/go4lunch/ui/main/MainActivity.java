@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -34,7 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private  ActivityMainBinding binding;
+    private ActivityMainBinding binding;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -75,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = getSelectedFragment(item.getItemId());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, selectedFragment).commit();
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setSupportActionBar(binding.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-
 
         NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
@@ -97,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         // Inflate the header view at runtime
         View headerView = navigationView.getHeaderView(0);
@@ -117,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .circleCrop()
                 .into(navHeaderBinding.userImage);
         });
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new MapsFragment()).commit();

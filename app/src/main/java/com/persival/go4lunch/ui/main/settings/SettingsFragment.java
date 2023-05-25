@@ -119,7 +119,7 @@ public class SettingsFragment extends Fragment {
                 Toast.makeText(getContext()
                     , getString(R.string.username_updated)
                     , Toast.LENGTH_SHORT).show();
-                viewModel.setFirestoreUser(username);
+                //viewModel.setFirestoreUser(username);
             }
         });
 

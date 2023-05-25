@@ -47,7 +47,7 @@ public class UserListFragment extends Fragment {
         UserListAdapter adapter = new UserListAdapter();
         recyclerView.setAdapter(adapter);
 
-        viewModel.populateUserListLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
+        //viewModel.populateUserListLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 
     @Override

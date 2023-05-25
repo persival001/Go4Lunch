@@ -11,7 +11,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +22,14 @@ import javax.inject.Singleton;
 public class FirestoreRepository {
 
     private static final String USERS = "users";
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Inject
     FirestoreRepository() {
     }
 
-    public LiveData<LoggedUserEntity> getFirestoreUser() {
-        MutableLiveData<LoggedUserEntity> firestoreUserLiveData = new MutableLiveData<>();
+    public LiveData<UserDto> getFirebaseUser() {
+        MutableLiveData<UserDto> firestoreUserLiveData = new MutableLiveData<>();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (firebaseUser != null) {
@@ -39,27 +39,23 @@ public class FirestoreRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        firestoreUserLiveData.setValue(documentSnapshot.toObject(LoggedUserEntity.class));
+                        firestoreUserLiveData.setValue(documentSnapshot.toObject(UserDto.class));
                     }
                 });
         }
         return firestoreUserLiveData;
     }
 
-    public void setFirestoreUser(LoggedUserEntity loggedUserEntity) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    public void setFirestoreUser(LoggedUserDto loggedUserDto) {
         db.collection(USERS)
-            .document(loggedUserEntity.getId())
-            .set(loggedUserEntity)
+            .document(loggedUserDto.getId())
+            .set(loggedUserDto)
             .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
             .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
     }
 
-    public LiveData<List<LoggedUserEntity>> getAllUsers() {
-        MutableLiveData<List<LoggedUserEntity>> usersLiveData = new MutableLiveData<>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    public LiveData<List<LoggedUserDto>> getAllUsers() {
+        MutableLiveData<List<LoggedUserDto>> usersLiveData = new MutableLiveData<>();
         db.collection(USERS)
             .addSnapshotListener((value, e) -> {
                 if (e != null) {
@@ -67,11 +63,11 @@ public class FirestoreRepository {
                     return;
                 }
 
-                List<LoggedUserEntity> loggedUserEntity = new ArrayList<>();
+                List<LoggedUserDto> loggedUserDto = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
-                    loggedUserEntity.add(doc.toObject(LoggedUserEntity.class));
+                    loggedUserDto.add(doc.toObject(LoggedUserDto.class));
                 }
-                usersLiveData.setValue(loggedUserEntity);
+                usersLiveData.setValue(loggedUserDto);
             });
         return usersLiveData;
     }

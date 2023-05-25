@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
-public class UserDto {
+public class LoggedUserDto {
     @Nullable
     private final String id;
     @Nullable
@@ -14,18 +14,21 @@ public class UserDto {
     private final String emailAddress;
     @Nullable
     private final String avatarPictureUrl;
+    @Nullable
+    private final String idOfTheChosenRestaurant;
 
     // Empty constructor needed for Firestore deserialization
-    public UserDto() {
+    public LoggedUserDto() {
         id = null;
         name = null;
         emailAddress = null;
         avatarPictureUrl = null;
+        idOfTheChosenRestaurant = null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, emailAddress, avatarPictureUrl);
+        return Objects.hash(id, name, emailAddress, avatarPictureUrl, idOfTheChosenRestaurant);
     }
 
     @Override
@@ -34,11 +37,12 @@ public class UserDto {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(id, userDto.id)
-            && Objects.equals(name, userDto.name)
-            && Objects.equals(emailAddress, userDto.emailAddress)
-            && Objects.equals(avatarPictureUrl, userDto.avatarPictureUrl);
+        LoggedUserDto user = (LoggedUserDto) o;
+        return Objects.equals(id, user.id)
+            && Objects.equals(name, user.name)
+            && Objects.equals(emailAddress, user.emailAddress)
+            && Objects.equals(avatarPictureUrl, user.avatarPictureUrl)
+            && Objects.equals(idOfTheChosenRestaurant, user.idOfTheChosenRestaurant);
     }
 
     @NonNull
@@ -49,20 +53,21 @@ public class UserDto {
             ", name='" + name + '\'' +
             ", emailAddress='" + emailAddress + '\'' +
             ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
+            ", idOfTheChosenRestaurant=" + idOfTheChosenRestaurant +
             '}';
     }
 
-    @Nullable
+    @NonNull
     public String getId() {
         return id;
     }
 
-    @Nullable
+    @NonNull
     public String getName() {
         return name;
     }
 
-    @Nullable
+    @NonNull
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -71,6 +76,12 @@ public class UserDto {
     public String getAvatarPictureUrl() {
         return avatarPictureUrl;
     }
+
+    @Nullable
+    public String getIdOfTheChosenRestaurant() {
+        return idOfTheChosenRestaurant;
+    }
+
 }
 
 

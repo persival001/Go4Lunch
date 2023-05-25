@@ -1,14 +1,8 @@
 package com.persival.go4lunch.ui.main.user_list;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,7 +17,7 @@ public class UserListViewModel extends ViewModel {
         this.firestoreRepository = firestoreRepository;
     }
 
-    public LiveData<List<UserListViewState>> populateUserListLiveData() {
+    /*public LiveData<List<UserListViewState>> populateUserListLiveData() {
         return Transformations.map(firestoreRepository.getAllUsers(), users -> {
             List<UserListViewState> userListViewState = new ArrayList<>();
 
@@ -40,7 +34,7 @@ public class UserListViewModel extends ViewModel {
 
             return userListViewState;
         });
-    }
+    }*/
 
 
 }

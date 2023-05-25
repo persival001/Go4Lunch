@@ -1,9 +1,5 @@
 package com.persival.go4lunch.ui.main.settings;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -25,6 +21,7 @@ public class SettingsViewModel extends ViewModel {
 
     private final FirestoreRepository firestoreRepository;
     private final GetLoggedUserUseCase getLoggedUserUseCase;
+    private final MutableLiveData<SettingsViewState> settingsViewStateLiveData = new MutableLiveData<>();
 
     @Inject
     public SettingsViewModel(
@@ -32,11 +29,7 @@ public class SettingsViewModel extends ViewModel {
         GetLoggedUserUseCase getLoggedUserUseCase) {
         this.firestoreRepository = firestoreRepository;
         this.getLoggedUserUseCase = getLoggedUserUseCase;
-    }
 
-    // TODO Persival
-    public LiveData<SettingsViewState> getAuthenticatedUserLiveData() {
-        MutableLiveData<SettingsViewState> settingsViewStateLiveData = new MutableLiveData<>();
         LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
 
         if (loggedUserEntity != null) {
@@ -44,19 +37,17 @@ public class SettingsViewModel extends ViewModel {
                 loggedUserEntity.getId(),
                 loggedUserEntity.getName(),
                 loggedUserEntity.getEmailAddress(),
-                loggedUserEntity.getAvatarPictureUrl() != null ? loggedUserEntity.getAvatarPictureUrl() : ""
+                loggedUserEntity.getAvatarPictureUrl()
             );
             settingsViewStateLiveData.setValue(settingsViewState);
         }
+    }
 
+    public LiveData<SettingsViewState> getAuthenticatedUserLiveData() {
         return settingsViewStateLiveData;
     }
 
-    private LoggedUserEntity getLoggedUser() {
-        return getLoggedUserUseCase.invoke();
-    }
-
-    public void setFirestoreUser(String username) {
+    /*public void setFirestoreUser(String username) {
 
         // TODO Persival
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -78,7 +69,7 @@ public class SettingsViewModel extends ViewModel {
                     Log.d(TAG, "User profile updated.");
                 }
             });
-    }
+    }*/
 
     public void updateUserProfile(String username) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

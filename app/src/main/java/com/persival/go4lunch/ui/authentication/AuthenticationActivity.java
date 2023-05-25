@@ -29,12 +29,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AuthenticationActivity extends AppCompatActivity {
 
-    private ActivityAuthenticationBinding binding;
-    private AuthenticationViewModel viewModel;
     private final ActivityResultLauncher<Intent> signInActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
         result -> handleResponseAfterSignIn(result.getResultCode(), result.getData())
     );
+    private ActivityAuthenticationBinding binding;
+    private AuthenticationViewModel viewModel;
 
     public static Intent navigate(Context context) {
         return new Intent(context, AuthenticationActivity.class);
@@ -93,7 +93,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             if (firebaseUser != null) {
-                viewModel.setFirestoreUser();
+                //viewModel.setFirestoreUser();
                 startMainActivity();
             }
         } else {
