@@ -48,33 +48,35 @@ public class SettingsViewModel extends ViewModel {
     }
 
     /*public void setFirestoreUser(String username) {
-
-        // TODO Persival
+        LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Update the auth user profile
-        String currentName = firebaseUser.getDisplayName();
-        UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
+        if (loggedUserEntity != null) {
+            String currentName = loggedUserEntity.getName();
+            UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
 
-        if (currentName == null || !currentName.equals(username)) {
-            profileUpdatesBuilder.setDisplayName(username);
+            if (!currentName.equals(username)) {
+                profileUpdatesBuilder.setDisplayName(username);
+            }
+
+            UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();
+
+            firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        firestoreRepository.setFirestoreUser(LoggedUserDto);
+                        Log.d(TAG, "User profile updated.");
+                    }
+                });
         }
-
-        UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();
-
-        firebaseUser.updateProfile(profileUpdates)
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    firestoreRepository.setFirestoreUser(getLoggedUser());
-                    Log.d(TAG, "User profile updated.");
-                }
-            });
     }*/
 
     public void updateUserProfile(String username) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
 
-        if (firebaseUser != null) {
+        if (loggedUserEntity != null) {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(username)
                 .build();

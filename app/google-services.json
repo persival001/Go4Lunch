@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "1083303450833-i02me6tp5kv8o97tju76ebp1om5eajft.apps.googleusercontent.com",
+          "client_id": "1083303450833-g9b0nqriebpp7f707gsnt4eoen43qs4s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.persival.go4lunch",
+            "certificate_hash": "7187a68b26cfe705c41dfa1f9ad04029c2dd8f1d"
+          }
+        },
+        {
+          "client_id": "1083303450833-jdiboirj4pqm702fqi4btlrd26tf44d0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

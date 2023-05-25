@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -116,12 +117,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(navHeaderBinding.userImage);
         });
 
+        setSearchView();
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new MapsFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_your_lunch);
         }
     }
+
+    private void setSearchView() {
+        SearchView searchView = binding.searchView;
+
+        searchView.setOnSearchClickListener(v -> toggleActionBarDisplay(false));
+        searchView.setOnCloseListener(() -> {
+            toggleActionBarDisplay(true);
+            return false;
+        });
+
+        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                searchView.setIconified(true);
+                searchView.onActionViewCollapsed();
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Toast.makeText(MainActivity.this, newText, Toast.LENGTH_SHORT).show();
+                if (newText.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+    }
+
+    private void toggleActionBarDisplay(boolean display) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(display);
+        }
+    }
+
 
     private Fragment getSelectedFragment(int itemId) {
         if (itemId == R.id.item_2) {

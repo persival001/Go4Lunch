@@ -30,8 +30,6 @@ w
 G.idea/sonarlint/issuestore/f/0/f07866736216be0ee2aba49e392191aeae700a35,b/f/bfb9453d49af9bc40f5f7a5f034be3c7ef8fa6bf
 Å
 Q.idea/sonarlint/securityhotspotstore/f/0/f07866736216be0ee2aba49e392191aeae700a35,2/5/25f6469773b9f3ebb994178c1114a60412389f58
-H
-app/google-services.json,f/d/fd8d34b142d02ec743a8efefefd2c097961666e9
 Å
 Q.idea/sonarlint/securityhotspotstore/8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e,1/f/1fe398aa86b382486ed27d0a69bf92f68bd5edaa
 w
@@ -70,8 +68,6 @@ Tapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsFragment
 Lapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsFragment.java,b/0/b07a592196743df1d9be2756ae5aca559713857c
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-
-Oapp/src/main/java/com/persival/go4lunch/ui/main/settings/SettingsViewState.java,c/4/c4dda20045dcb240175d4147943aa030fb0938d6
 w
 Gapp/src/main/java/com/persival/go4lunch/ui/main/maps/MapsViewModel.java,0/2/02efc5685c6493f84bf2d93365c5b6c67dcae0c8
 ~
@@ -94,7 +90,5 @@ Oapp/src/main/java/com/persival/go4lunch/data/places/GooglePlacesRepository.java
 Zapp/src/main/java/com/persival/go4lunch/data/shared_prefs/SharedPreferencesRepository.java,4/d/4d6b38395e761d72612040cd9c234e61555b33b0
 v
 Fapp/src/main/java/com/persival/go4lunch/data/PermissionRepository.java,9/e/9eec3b49d1775e0c286c470ea6802cc6311f3fce
-i
-9app/src/main/java/com/persival/go4lunch/di/AppModule.java,1/7/17492851d034e20c7cfab78a0423cccce159c0c4
 y
 Iapp/src/main/java/com/persival/go4lunch/domain/user/model/UserEntity.java,8/f/8ff9e987eb53902c8a5c19c17c2d193167dd9efb
