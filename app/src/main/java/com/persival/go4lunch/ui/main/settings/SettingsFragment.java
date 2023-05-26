@@ -115,11 +115,10 @@ public class SettingsFragment extends Fragment {
                 binding.usernameEditText.setError(getString(R.string.username_error));
                 binding.usernameEditText.requestFocus();
             } else {
-                viewModel.updateUserProfile(username);
+                viewModel.setFirestoreUser(username);
                 Toast.makeText(getContext()
                     , getString(R.string.username_updated)
                     , Toast.LENGTH_SHORT).show();
-                //viewModel.setFirestoreUser(username);
             }
         });
 

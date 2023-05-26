@@ -39,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:autofillHints=""
+            android:gravity="center"
             android:hint="@string/text_input_username"
             android:inputType="textPersonName"
             android:textSize="@dimen/default_text_size"

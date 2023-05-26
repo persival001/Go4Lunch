@@ -5,6 +5,7 @@ import android.app.Application;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.persival.go4lunch.data.GooglePlacesApi;
 
 import java.util.concurrent.TimeUnit;
@@ -61,5 +62,11 @@ public class AppModule {
     @Provides
     public static FirebaseAuth provideFirebaseAuth() {
         return FirebaseAuth.getInstance();
+    }
+
+    @Singleton
+    @Provides
+    public static FirebaseFirestore provideFirestoreDb() {
+        return FirebaseFirestore.getInstance();
     }
 }

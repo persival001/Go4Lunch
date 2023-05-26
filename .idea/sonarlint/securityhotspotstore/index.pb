@@ -56,8 +56,6 @@ A
 Mapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsViewModel.java,5/e/5ebfe3a1a688b9bdcf6bd82f429486adc8ac9502
 Å
 Qapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsUserViewState.java,5/5/55b074794ac40db1b4a587393d93909c77a5837e
-Ö
-Uapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsViewModel.java,1/1/118bc4445839bec5cabf1774df4ee89a3efb66fe
 q
 Aapp/src/main/java/com/persival/go4lunch/data/GooglePlacesApi.java,6/d/6d66c344c7414f49245fc39780dc40b2c23648c7
 É
@@ -70,8 +68,6 @@ Lapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsFragment.java,b
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
 w
 Gapp/src/main/java/com/persival/go4lunch/ui/main/maps/MapsViewModel.java,0/2/02efc5685c6493f84bf2d93365c5b6c67dcae0c8
-~
-Napp/src/main/java/com/persival/go4lunch/domain/user/SaveLoggedUserUseCase.java,e/b/eb1a9655b5a94b9aba6f6e710e51b519e94fb4fe
 l
 <app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a
 v
@@ -92,3 +88,25 @@ v
 Fapp/src/main/java/com/persival/go4lunch/data/PermissionRepository.java,9/e/9eec3b49d1775e0c286c470ea6802cc6311f3fce
 y
 Iapp/src/main/java/com/persival/go4lunch/domain/user/model/UserEntity.java,8/f/8ff9e987eb53902c8a5c19c17c2d193167dd9efb
+|
+Lapp/src/main/java/com/persival/go4lunch/data/model/PlaceDetailsResponse.java,6/4/64187980ec5121a0d57bd42c9e771391ee10554d
+Ä
+Papp/src/main/java/com/persival/go4lunch/ui/main/user_list/UserListViewState.java,b/4/b4f2e8265b5065fa2652cbb2ec91f619e0bc2e90
+y
+Iapp/src/main/java/com/persival/go4lunch/data/location/LocationEntity.java,a/e/ae5b5d521b0650c71fdc92014d23491b10dcee3b
+r
+Bapp/src/main/java/com/persival/go4lunch/ui/main/MainViewState.java,2/b/2b4b5520ab52413fc281a174abed445f76f7368b
+É
+Sapp/src/main/java/com/persival/go4lunch/domain/restaurant/GetRestaurantUseCase.java,5/3/535fc94af2c8790f825563b1e464882356946d76
+Ö
+Uapp/src/main/java/com/persival/go4lunch/ui/authentication/AuthenticationActivity.java,e/9/e9c2a22286fe30706675ac516d2c4b1302f2714a
+Ö
+Uapp/src/main/java/com/persival/go4lunch/domain/restaurant/model/RestaurantEntity.java,3/a/3a2d3ddacdbfe74f4fea24969c00df7c4b854367
+>
+app/.gitignore,5/1/51e1c5d383dfaa35e0e7e5873a0a99355a86880f
+
+Oapp/src/main/java/com/persival/go4lunch/ui/main/settings/SettingsViewState.java,c/4/c4dda20045dcb240175d4147943aa030fb0938d6
+Ü
+Vapp/src/main/java/com/persival/go4lunch/ui/authentication/AuthenticationViewModel.java,1/5/15ed00c83efc594d292638acd4aa39ef1598c5c9
+H
+app/google-services.json,f/d/fd8d34b142d02ec743a8efefefd2c097961666e9
