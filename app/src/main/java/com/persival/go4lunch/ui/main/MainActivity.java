@@ -77,18 +77,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
+        // Set up the bottom navigation bar and handle item selection
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = getSelectedFragment(item.getItemId());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, selectedFragment).commit();
             return true;
         });
 
+        // Set the toolbar and disable its title
         setSupportActionBar(binding.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
+        // Set up the navigation drawer
         NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Set up the action bar drawer toggle
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
             this,
             binding.drawerLayout,
@@ -99,13 +103,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Inflate the header view at runtime
+        // Inflate the header view of the navigation drawer at runtime
         View headerView = navigationView.getHeaderView(0);
-
-        // Perform binding on the header view
         NavigationDrawerHeaderBinding navHeaderBinding = NavigationDrawerHeaderBinding.bind(headerView);
 
-        // Observe and display the user data
+        // Observe the user data from the ViewModel and display it in the navigation drawer header
         viewModel.getAuthenticatedUserLiveData().observe(this, user -> {
             navHeaderBinding.userName.setText(user.getAvatarName());
             navHeaderBinding.userEmail.setText(user.getEmail());
@@ -117,31 +119,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(navHeaderBinding.userImage);
         });
 
-        setSearchView();
-
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new MapsFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_your_lunch);
-        }
-    }
-
-    private void setSearchView() {
+        // Set up the SearchView
         SearchView searchView = binding.searchView;
-
-        searchView.setOnSearchClickListener(v -> toggleActionBarDisplay(false));
-        searchView.setOnCloseListener(() -> {
-            toggleActionBarDisplay(true);
-            return false;
-        });
-
+        // Handle when the SearchView loses focus
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 searchView.setIconified(true);
                 searchView.onActionViewCollapsed();
             }
         });
-
+        // Handle changes to the SearchView's text
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -157,15 +144,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
             }
         });
-    }
 
-    private void toggleActionBarDisplay(boolean display) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(display);
+        // If there's no saved instance state, load the MapsFragment into the fragment container view
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new MapsFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_your_lunch);
         }
     }
-
-
+    
     private Fragment getSelectedFragment(int itemId) {
         if (itemId == R.id.item_2) {
             return RestaurantsFragment.newInstance();
