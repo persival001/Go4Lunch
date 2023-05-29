@@ -14,4 +14,8 @@ public interface UserRepository {
 
     @Nullable
     LiveData<List<WorkmateEntity>> getWorkmatesLiveData();
+
+    void setNewUserName(
+        String newUserName
+    );
 }

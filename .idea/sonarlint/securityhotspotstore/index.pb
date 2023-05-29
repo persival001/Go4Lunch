@@ -62,8 +62,6 @@ Sapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsAdapter.
 Tapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsFragment.java,5/8/586033551dd91949fdcc19202d01d31bbf21b0cd
 |
 Lapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsFragment.java,b/0/b07a592196743df1d9be2756ae5aca559713857c
-<
-build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
 w
 Gapp/src/main/java/com/persival/go4lunch/ui/main/maps/MapsViewModel.java,0/2/02efc5685c6493f84bf2d93365c5b6c67dcae0c8
 v
@@ -110,7 +108,5 @@ q
 Aapp/src/main/java/com/persival/go4lunch/ui/main/MainActivity.java,2/6/26c7da9a254d4d3e02c14eaab97596e37c223edd
 r
 Bapp/src/main/java/com/persival/go4lunch/ui/main/MainViewModel.java,5/2/521eab3f761765e1a22c70fb1c921aa55afd30d8
-
-Oapp/src/main/java/com/persival/go4lunch/domain/user/model/LoggedUserEntity.java,6/6/6684745cdb43201204539d2e9bbd343b4f3f9f14
 
 Qapp/src/main/java/com/persival/go4lunch/data/model/NearbyRestaurantsResponse.java,c/4/c4c2cebba846ae41c24c3a1ccde48058a8ab761a

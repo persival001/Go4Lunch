@@ -1,21 +1,20 @@
 package com.persival.go4lunch.domain.user;
 
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 
 public class SetNewUserNameUseCase {
-    private final FirebaseAuth firebaseAuth;
+    @NonNull
+    private final UserRepository userRepository;
 
     @Inject
-    public SetNewUserNameUseCase(
-        FirebaseAuth firebaseAuth
-    ) {
-        this.firebaseAuth = firebaseAuth;
+    public SetNewUserNameUseCase(@NonNull UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-   /* @Nullable
-    public SetNewUserNameUseCase invoke() {
-    }*/
-
+    public void invoke(String newUserName) {
+        userRepository.setNewUserName(newUserName);
+    }
 }
+

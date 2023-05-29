@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.persival.go4lunch.domain.user.UserRepository;
@@ -36,45 +37,6 @@ public class FirestoreRepository implements UserRepository {
         this.firebaseAuth = firebaseAuth;
         this.firebaseFirestore = firebaseFirestore;
     }
-
-    /*public void setFirestoreUser(String username) {
-        LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (loggedUserEntity != null && firebaseUser != null) {
-            String currentName = loggedUserEntity.getName();
-            UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
-
-            if (!currentName.equals(username)) {
-                profileUpdatesBuilder.setDisplayName(username);
-            }
-
-            UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();
-
-            firebaseUser.updateProfile(profileUpdates)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Update user profile in firestore
-                        firebaseFirestore
-                            .collection(USERS)
-                            .document(loggedUserEntity.getId())
-                            .set(loggedUserEntity)
-                            .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
-                            .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
-
-                        // Update user profile in firebase auth
-                        //TODO Persival
-                        UserProfileChangeRequest usernameUpdate = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(username)
-                            .build();
-
-                        firebaseUser.updateProfile(usernameUpdate);
-                    }
-
-                });
-        }
-    }*/
-
 
     public LiveData<UserDto> getFirebaseUser() {
         MutableLiveData<UserDto> firestoreUserLiveData = new MutableLiveData<>();
@@ -109,32 +71,6 @@ public class FirestoreRepository implements UserRepository {
         }
     }
 
-    /*@Override
-    public LiveData<List<WorkmateEntity>> getWorkmatesLiveData() {
-        MutableLiveData<List<WorkmateEntity>> workmatesLiveData = new MutableLiveData<>();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
-        if (firebaseUser != null) {
-            firebaseFirestore
-                .collection(USERS)
-                .document(firebaseUser.getUid())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        UserDto userDto = documentSnapshot.toObject(UserDto.class);
-                        WorkmateEntity workmateEntity = new WorkmateEntity(
-                            userDto.getId(),
-                            userDto.getName(),
-                            userDto.getEmailAddress(),
-                            userDto.getAvatarPictureUrl()
-                        );
-                        workmatesLiveData.setValue(Collections.singletonList(workmateEntity));
-                    }
-                });
-        }
-        return workmatesLiveData;
-    }*/
-
     @Override
     public LiveData<List<WorkmateEntity>> getWorkmatesLiveData() {
         MutableLiveData<List<WorkmateEntity>> workmatesLiveData = new MutableLiveData<>();
@@ -164,6 +100,68 @@ public class FirestoreRepository implements UserRepository {
         return workmatesLiveData;
     }
 
+    /*@Override
+    public LiveData<List<WorkmateEntity>> getWorkmatesLiveData() {
+        MutableLiveData<List<WorkmateEntity>> workmatesLiveData = new MutableLiveData<>();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            firebaseFirestore
+                .collection(USERS)
+                .document(firebaseUser.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        UserDto userDto = documentSnapshot.toObject(UserDto.class);
+                        WorkmateEntity workmateEntity = new WorkmateEntity(
+                            userDto.getId(),
+                            userDto.getName(),
+                            userDto.getEmailAddress(),
+                            userDto.getAvatarPictureUrl()
+                        );
+                        workmatesLiveData.setValue(Collections.singletonList(workmateEntity));
+                    }
+                });
+        }
+        return workmatesLiveData;
+    }*/
+
+    public void setNewUserName(String username) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (getLoggedUser() != null && firebaseUser != null) {
+            String currentName = getLoggedUser().getName();
+            UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
+
+            if (!currentName.equals(username)) {
+                profileUpdatesBuilder.setDisplayName(username);
+            }
+
+            UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();
+
+            firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Update user profile in firestore
+                        firebaseFirestore
+                            .collection(USERS)
+                            .document(getLoggedUser().getId())
+                            .set(getLoggedUser())
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
+                            .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
+
+                        // Update user profile in firebase auth
+                        //TODO Persival
+                        UserProfileChangeRequest usernameUpdate = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(username)
+                            .build();
+
+                        firebaseUser.updateProfile(usernameUpdate);
+                    }
+
+                });
+        }
+    }
 
     public LiveData<List<LoggedUserDto>> getAllUsers() {
         MutableLiveData<List<LoggedUserDto>> usersLiveData = new MutableLiveData<>();
