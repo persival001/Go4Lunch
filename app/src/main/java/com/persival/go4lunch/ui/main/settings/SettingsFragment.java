@@ -80,7 +80,7 @@ public class SettingsFragment extends Fragment {
 
         setupDoneButtonOnEditText(binding.usernameEditText);
 
-        viewModel.getAuthenticatedUserLiveData().observe(getViewLifecycleOwner(), user -> {
+        viewModel.getLoggedUserLiveData().observe(getViewLifecycleOwner(), user -> {
             binding.usernameEditText.setText(user.getAvatarName());
             binding.emailTextView.setText(user.getEmail());
             Glide.with(binding.profileImageButton)
@@ -115,7 +115,7 @@ public class SettingsFragment extends Fragment {
                 binding.usernameEditText.setError(getString(R.string.username_error));
                 binding.usernameEditText.requestFocus();
             } else {
-                viewModel.setFirestoreUser(username);
+                //viewModel.setFirestoreUser(username);
                 Toast.makeText(getContext()
                     , getString(R.string.username_updated)
                     , Toast.LENGTH_SHORT).show();

@@ -8,42 +8,36 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
+import com.persival.go4lunch.domain.user.UserRepository;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
-import com.persival.go4lunch.domain.workmate.GetWorkmateUseCase;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class FirestoreRepository implements GetWorkmateUseCase.WorkmateRepository {
+public class FirestoreRepository implements UserRepository {
 
     private static final String USERS = "users";
     private static final String TAG = "FirestoreRepository";
     private final FirebaseFirestore firebaseFirestore;
     private final FirebaseAuth firebaseAuth;
-    private final GetLoggedUserUseCase getLoggedUserUseCase;
 
     @Inject
     public FirestoreRepository(
         @NonNull FirebaseAuth firebaseAuth,
-        @NonNull FirebaseFirestore firebaseFirestore,
-        @NonNull GetLoggedUserUseCase getLoggedUserUseCase
+        @NonNull FirebaseFirestore firebaseFirestore
     ) {
         this.firebaseAuth = firebaseAuth;
         this.firebaseFirestore = firebaseFirestore;
-        this.getLoggedUserUseCase = getLoggedUserUseCase;
     }
 
-    public void setFirestoreUser(String username) {
+    /*public void setFirestoreUser(String username) {
         LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -69,6 +63,7 @@ public class FirestoreRepository implements GetWorkmateUseCase.WorkmateRepositor
                             .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
 
                         // Update user profile in firebase auth
+                        //TODO Persival
                         UserProfileChangeRequest usernameUpdate = new UserProfileChangeRequest.Builder()
                             .setDisplayName(username)
                             .build();
@@ -78,7 +73,97 @@ public class FirestoreRepository implements GetWorkmateUseCase.WorkmateRepositor
 
                 });
         }
+    }*/
+
+
+    public LiveData<UserDto> getFirebaseUser() {
+        MutableLiveData<UserDto> firestoreUserLiveData = new MutableLiveData<>();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            firebaseFirestore  // Replaced FirebaseFirestore.getInstance()
+                .collection(USERS)
+                .document(firebaseUser.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        firestoreUserLiveData.setValue(documentSnapshot.toObject(UserDto.class));
+                    }
+                });
+        }
+        return firestoreUserLiveData;
     }
+
+    public LoggedUserEntity getLoggedUser() {
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser == null || firebaseUser.getDisplayName() == null || firebaseUser.getEmail() == null) {
+            return null;
+        } else {
+            return new LoggedUserEntity(
+                firebaseUser.getUid(),
+                firebaseUser.getDisplayName(),
+                firebaseUser.getEmail(),
+                firebaseUser.getPhotoUrl() == null ? null : firebaseUser.getPhotoUrl().toString()
+            );
+        }
+    }
+
+    /*@Override
+    public LiveData<List<WorkmateEntity>> getWorkmatesLiveData() {
+        MutableLiveData<List<WorkmateEntity>> workmatesLiveData = new MutableLiveData<>();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            firebaseFirestore
+                .collection(USERS)
+                .document(firebaseUser.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        UserDto userDto = documentSnapshot.toObject(UserDto.class);
+                        WorkmateEntity workmateEntity = new WorkmateEntity(
+                            userDto.getId(),
+                            userDto.getName(),
+                            userDto.getEmailAddress(),
+                            userDto.getAvatarPictureUrl()
+                        );
+                        workmatesLiveData.setValue(Collections.singletonList(workmateEntity));
+                    }
+                });
+        }
+        return workmatesLiveData;
+    }*/
+
+    @Override
+    public LiveData<List<WorkmateEntity>> getWorkmatesLiveData() {
+        MutableLiveData<List<WorkmateEntity>> workmatesLiveData = new MutableLiveData<>();
+        firebaseFirestore
+            .collection(USERS)
+            .addSnapshotListener((value, e) -> {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                List<WorkmateEntity> workmates = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : value) {
+                    UserDto userDto = doc.toObject(UserDto.class);
+
+                    WorkmateEntity workmateEntity = new WorkmateEntity(
+                        userDto.getId(),
+                        userDto.getName(),
+                        userDto.getEmailAddress(),
+                        userDto.getAvatarPictureUrl()
+                    );
+
+                    workmates.add(workmateEntity);
+                }
+                workmatesLiveData.setValue(workmates);
+            });
+        return workmatesLiveData;
+    }
+
 
     public LiveData<List<LoggedUserDto>> getAllUsers() {
         MutableLiveData<List<LoggedUserDto>> usersLiveData = new MutableLiveData<>();
@@ -99,52 +184,4 @@ public class FirestoreRepository implements GetWorkmateUseCase.WorkmateRepositor
         return usersLiveData;
     }
 
-    @Override
-    public LiveData<List<WorkmateEntity>> getWorkmatesLiveData() {
-        MutableLiveData<List<WorkmateEntity>> workmatesLiveData = new MutableLiveData<>();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
-        if (firebaseUser != null) {
-            firebaseFirestore
-                .collection(USERS)
-                .document(firebaseUser.getUid())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        UserDto userDto = documentSnapshot.toObject(UserDto.class);
-                        WorkmateEntity workmateEntity = mapUserDtoToWorkmateEntity(userDto);
-                        workmatesLiveData.setValue(Collections.singletonList(workmateEntity));
-                    }
-                });
-        }
-        return workmatesLiveData;
-    }
-
-    private WorkmateEntity mapUserDtoToWorkmateEntity(UserDto userDto) {
-        return new WorkmateEntity(
-            userDto.getId(),
-            userDto.getName(),
-            userDto.getEmailAddress(),
-            userDto.getAvatarPictureUrl()
-        );
-    }
-
-
-    public LiveData<UserDto> getFirebaseUser() {
-        MutableLiveData<UserDto> firestoreUserLiveData = new MutableLiveData<>();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
-        if (firebaseUser != null) {
-            firebaseFirestore  // Replaced FirebaseFirestore.getInstance()
-                .collection(USERS)
-                .document(firebaseUser.getUid())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        firestoreUserLiveData.setValue(documentSnapshot.toObject(UserDto.class));
-                    }
-                });
-        }
-        return firestoreUserLiveData;
-    }
 }

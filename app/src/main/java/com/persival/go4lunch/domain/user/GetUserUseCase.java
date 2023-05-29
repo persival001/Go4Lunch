@@ -35,9 +35,4 @@ public class GetUserUseCase {
             placeId
         );
     }
-
-    public interface RestaurantRepository {
-        @Nullable
-        String getPlaceIdUserIsGoingTo();
-    }
 }

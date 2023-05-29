@@ -1,7 +1,7 @@
 package com.persival.go4lunch.di;
 
 import com.persival.go4lunch.data.firestore.FirestoreRepository;
-import com.persival.go4lunch.domain.workmate.GetWorkmateUseCase;
+import com.persival.go4lunch.domain.user.UserRepository;
 
 import javax.inject.Singleton;
 
@@ -16,5 +16,5 @@ public abstract class AppBindsModule {
 
     @Singleton
     @Binds
-    public abstract GetWorkmateUseCase.WorkmateRepository bindWorkmateRepository(FirestoreRepository implementation);
+    public abstract UserRepository bindUserRepository(FirestoreRepository implementation);
 }
