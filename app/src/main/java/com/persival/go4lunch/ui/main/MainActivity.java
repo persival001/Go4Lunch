@@ -88,10 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(binding.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-        // Set up the navigation drawer
-        NavigationView navigationView = binding.navView;
-        navigationView.setNavigationItemSelectedListener(this);
-
         // Set up the action bar drawer toggle
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
             this,
@@ -103,12 +99,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Set up the navigation drawer
+        NavigationView navigationView = binding.navView;
+        navigationView.setNavigationItemSelectedListener(this);
         // Inflate the header view of the navigation drawer at runtime
         View headerView = navigationView.getHeaderView(0);
         NavigationDrawerHeaderBinding navHeaderBinding = NavigationDrawerHeaderBinding.bind(headerView);
 
         // Observe the user data from the ViewModel and display it in the navigation drawer header
-        viewModel.getAuthenticatedUserLiveData().observe(this, user -> {
+        viewModel.getAuthenticatedUserLiveData().observe(MainActivity.this, user -> {
             navHeaderBinding.userName.setText(user.getAvatarName());
             navHeaderBinding.userEmail.setText(user.getEmail());
             Glide.with(navHeaderBinding.userImage)

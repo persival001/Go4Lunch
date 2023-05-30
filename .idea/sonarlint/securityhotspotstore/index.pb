@@ -58,8 +58,6 @@ q
 Aapp/src/main/java/com/persival/go4lunch/data/GooglePlacesApi.java,6/d/6d66c344c7414f49245fc39780dc40b2c23648c7
 ƒ
 Sapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsAdapter.java,6/8/6867fbea15207798241aba0de222e63b14281f3d
-|
-Lapp/src/main/java/com/persival/go4lunch/ui/main/details/DetailsFragment.java,b/0/b07a592196743df1d9be2756ae5aca559713857c
 @
 app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
 P
@@ -70,8 +68,6 @@ Vapp/src/main/java/com/persival/go4lunch/data/permission_checker/PermissionCheck
 Zapp/src/main/java/com/persival/go4lunch/data/shared_prefs/SharedPreferencesRepository.java,4/d/4d6b38395e761d72612040cd9c234e61555b33b0
 v
 Fapp/src/main/java/com/persival/go4lunch/data/PermissionRepository.java,9/e/9eec3b49d1775e0c286c470ea6802cc6311f3fce
-y
-Iapp/src/main/java/com/persival/go4lunch/domain/user/model/UserEntity.java,8/f/8ff9e987eb53902c8a5c19c17c2d193167dd9efb
 |
 Lapp/src/main/java/com/persival/go4lunch/data/model/PlaceDetailsResponse.java,6/4/64187980ec5121a0d57bd42c9e771391ee10554d
 y
@@ -92,8 +88,6 @@ H
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
 l
 <app/src/main/java/com/persival/go4lunch/MainApplication.java,d/c/dc52a21764e8d36c9f8a7bd9f552f14d59875b2a
-r
-Bapp/src/main/java/com/persival/go4lunch/ui/main/MainViewModel.java,5/2/521eab3f761765e1a22c70fb1c921aa55afd30d8
 i
 9app/src/main/java/com/persival/go4lunch/di/AppModule.java,1/7/17492851d034e20c7cfab78a0423cccce159c0c4
 
@@ -104,15 +98,11 @@ Qapp/src/main/java/com/persival/go4lunch/ui/main/workmates/WorkmatesViewState.ja
 Oapp/src/main/java/com/persival/go4lunch/ui/main/workmates/WorkmatesAdapter.java,c/5/c5889ee5ef9188dc08ad84d7f52e160246849f20
 €
 Papp/src/main/java/com/persival/go4lunch/ui/main/workmates/WorkmatesFragment.java,0/6/06899f503edf5efcf721f977083fa2f48cf1e0e9
-
-Oapp/src/main/java/com/persival/go4lunch/domain/workmate/GetWorkmateUseCase.java,8/5/859338b0b5db364fd406392b333ecea12f941d88
-~
-Napp/src/main/java/com/persival/go4lunch/domain/user/SetNewUserNameUseCase.java,8/8/8896ad52660c4ecabcf313701902babf4f687468
-w
-Gapp/src/main/java/com/persival/go4lunch/domain/user/GetUserUseCase.java,8/a/8ab488b7c1dafcf497906c881ee32d06d157d1bd
 n
 >app/src/main/java/com/persival/go4lunch/di/AppBindsModule.java,d/e/def2c6739b834424ba7072bc81047a0cc6b85af2
-}
-Mapp/src/main/java/com/persival/go4lunch/domain/user/GetLoggedUserUseCase.java,d/a/daf12ea79f2b5b5d1d424be2d6e9e83ac917454f
 v
 Fapp/src/main/java/com/persival/go4lunch/ui/main/maps/MapsFragment.java,f/6/f6b872cf8697fc4f0c32ee05be3a5e04f760c723
+w
+Gapp/src/main/java/com/persival/go4lunch/ui/main/maps/MapsViewModel.java,0/2/02efc5685c6493f84bf2d93365c5b6c67dcae0c8
+}
+Mapp/src/main/java/com/persival/go4lunch/data/location/LocationRepository.java,c/2/c20681449c4e3fffbd5de75fd3aa021fe82dbe7c

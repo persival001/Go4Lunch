@@ -113,33 +113,28 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     // Convert a string to title case like "Restaurant Name"
-    private String toTitleCase(String input) {
-        StringBuilder titleCase = new StringBuilder();
-        boolean nextTitleCase = true;
-
-        for (char c : input.toCharArray()) {
-            if (Character.isSpaceChar(c)) {
-                nextTitleCase = true;
-            } else if (nextTitleCase) {
-                c = Character.toTitleCase(c);
-                nextTitleCase = false;
-            }
-
-            titleCase.append(c);
-        }
-
-        return titleCase.toString();
-    }
-
-    // Get a formatted name
     private String getFormattedName(String name) {
         if (name != null) {
-            String lowercaseName = name.toLowerCase();
-            return toTitleCase(lowercaseName);
+            StringBuilder titleCase = new StringBuilder();
+            boolean nextTitleCase = true;
+
+            for (char c : name.toLowerCase().toCharArray()) {
+                if (Character.isSpaceChar(c)) {
+                    nextTitleCase = true;
+                } else if (nextTitleCase) {
+                    c = Character.toTitleCase(c);
+                    nextTitleCase = false;
+                }
+
+                titleCase.append(c);
+            }
+
+            return titleCase.toString();
         } else {
             return "";
         }
     }
+
 
     // Get a photo reference if it exists and convert it to a picture url
     public String getPictureUrl(List<NearbyRestaurantsResponse.Photo> photos) {

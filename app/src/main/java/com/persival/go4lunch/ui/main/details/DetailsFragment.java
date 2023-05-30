@@ -66,6 +66,7 @@ public class DetailsFragment extends Fragment {
                 .load(restaurantDetail.getPictureUrl())
                 .placeholder(R.drawable.logoresto)
                 .error(R.drawable.no_restaurant_picture)
+                .centerCrop()
                 .into(binding.detailsPicture);
             binding.detailsName.setText(restaurantDetail.getName());
             binding.detailsAddress.setText(restaurantDetail.getAddress());
