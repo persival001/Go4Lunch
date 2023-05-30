@@ -29,7 +29,7 @@ public class LocationRepository {
     private final SharedPreferencesRepository sharedPreferencesRepository;
 
     @NonNull
-    private final MutableLiveData<LocationEntity> locationMutableLiveData = new MutableLiveData<>(new LocationEntity(48.6921, 6.1844));
+    private final MutableLiveData<LocationEntity> locationMutableLiveData = new MutableLiveData<>();
 
     private LocationCallback callback;
 
@@ -58,11 +58,11 @@ public class LocationRepository {
                         // Get last known location
                         LocationEntity savedLocation = sharedPreferencesRepository.getLocation();
 
-                        // If not found, then set to Nancy
+                        // If not found, then set to Paris
                         if (savedLocation == null) {
                             savedLocation = new LocationEntity(
-                                48.6921,
-                                6.1844
+                                48.8566,
+                                2.3522
                             );
                         }
 

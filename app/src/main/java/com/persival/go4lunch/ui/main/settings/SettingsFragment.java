@@ -26,7 +26,6 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -93,20 +92,13 @@ public class SettingsFragment extends Fragment {
 
         binding.profileImageButton.setOnClickListener(v -> openFileChooser());
 
-        binding.deleteButton.setOnClickListener(v -> firebaseUser.delete()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(getContext()
-                        , getString(R.string.deleted_account)
-                        , Toast.LENGTH_SHORT).show();
-                    deleteUserDataFromFirestore();
-                    startActivity(AuthenticationActivity.navigate(requireContext()));
-                } else {
-                    Toast.makeText(getContext()
-                        , getString(R.string.network_error)
-                        , Toast.LENGTH_SHORT).show();
-                }
-            }));
+        binding.deleteButton.setOnClickListener(v -> {
+            viewModel.deleteAccount();
+            Toast.makeText(getContext()
+                , getString(R.string.deleted_account)
+                , Toast.LENGTH_SHORT).show();
+            startActivity(AuthenticationActivity.navigate(requireContext()));
+        });
 
         binding.updateButton.setOnClickListener(v -> {
             String username = binding.usernameEditText.getText().toString();
@@ -168,20 +160,6 @@ public class SettingsFragment extends Fragment {
             }
             return false;
         });
-    }
-
-    private void deleteUserDataFromFirestore() {
-        DocumentReference userDocRef = FirebaseFirestore.getInstance().collection("users")
-            .document(firebaseUser.getUid());
-
-        // Delete document user of Firestore
-        userDocRef.delete()
-            .addOnSuccessListener(aVoid -> {
-                // Delete user from Firebase Auth
-            })
-            .addOnFailureListener(e -> Toast.makeText(getContext()
-                , getString(R.string.network_error)
-                , Toast.LENGTH_SHORT).show());
     }
 
     private void uploadImageToFirebaseStorage(Uri imageUri) {

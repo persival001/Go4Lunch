@@ -18,4 +18,6 @@ public interface UserRepository {
     void setNewUserName(
         String newUserName
     );
+
+    void deleteAccount();
 }

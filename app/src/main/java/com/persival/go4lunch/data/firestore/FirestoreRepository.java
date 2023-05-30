@@ -156,6 +156,20 @@ public class FirestoreRepository implements UserRepository {
         }
     }
 
+    public void deleteAccount() {
+        FirebaseUser firebaseUser = getFirebaseUser();
+
+        if (firebaseUser != null) {
+            firebaseUser.delete();
+            firebaseFirestore.collection(USERS)
+                .document(firebaseUser.getUid())
+                .delete()
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Firestore User successfully deleted!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Firestore Error deleting user", e));
+            FirebaseAuth.getInstance().signOut();
+        }
+    }
+
     public void setNewUserNameInFirebaseAuth(String username) {
         FirebaseUser firebaseUser = getFirebaseUser();
 
