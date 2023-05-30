@@ -1,10 +1,10 @@
-package com.persival.go4lunch.ui.main.user_list;
+package com.persival.go4lunch.ui.main.workmates;
 
 import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public class UserListViewState {
+public class WorkmatesViewState {
 
     @NonNull
     private final String uId;
@@ -18,7 +18,7 @@ public class UserListViewState {
     @NonNull
     private final String avatarPictureUrl;
 
-    public UserListViewState(
+    public WorkmatesViewState(
         @NonNull final String uId,
         @NonNull final String name,
         @NonNull final String emailAddress,
@@ -59,9 +59,9 @@ public class UserListViewState {
     public boolean equals(final Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof UserListViewState))
+        if (!(o instanceof WorkmatesViewState))
             return false;
-        final UserListViewState that = (UserListViewState) o;
+        final WorkmatesViewState that = (WorkmatesViewState) o;
         return Objects.equals(getuId(), that.getuId()) &&
             Objects.equals(getName(), that.getName()) &&
             Objects.equals(getEmailAddress(), that.getEmailAddress()) &&

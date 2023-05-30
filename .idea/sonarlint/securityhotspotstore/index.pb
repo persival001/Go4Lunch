@@ -104,9 +104,5 @@ H
 app/google-services.json,f/d/fd8d34b142d02ec743a8efefefd2c097961666e9
 Ö
 Uapp/src/main/java/com/persival/go4lunch/ui/main/restaurants/RestaurantsViewModel.java,1/1/118bc4445839bec5cabf1774df4ee89a3efb66fe
-q
-Aapp/src/main/java/com/persival/go4lunch/ui/main/MainActivity.java,2/6/26c7da9a254d4d3e02c14eaab97596e37c223edd
-r
-Bapp/src/main/java/com/persival/go4lunch/ui/main/MainViewModel.java,5/2/521eab3f761765e1a22c70fb1c921aa55afd30d8
 Å
 Qapp/src/main/java/com/persival/go4lunch/data/model/NearbyRestaurantsResponse.java,c/4/c4c2cebba846ae41c24c3a1ccde48058a8ab761a

@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.user_list;
+package com.persival.go4lunch.ui.main.workmates;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +15,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.persival.go4lunch.R;
+
 import java.util.Objects;
 
-public class UserListAdapter extends ListAdapter<UserListViewState, UserListAdapter.ViewHolder> {
+public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesAdapter.ViewHolder> {
 
-    public UserListAdapter() {
+    public WorkmatesAdapter() {
         super(new UserListAdapterDiffCallback());
     }
 
@@ -46,7 +47,7 @@ public class UserListAdapter extends ListAdapter<UserListViewState, UserListAdap
             avatarPicture = itemView.findViewById(R.id.avatar_picture);
         }
 
-        public void bind(UserListViewState item) {
+        public void bind(WorkmatesViewState item) {
             Glide.with(itemView)
                 .load(item.getAvatarPictureUrl())
                 .apply(RequestOptions.bitmapTransform(new CircleCrop()))
@@ -59,14 +60,14 @@ public class UserListAdapter extends ListAdapter<UserListViewState, UserListAdap
         }
     }
 
-    private static class UserListAdapterDiffCallback extends DiffUtil.ItemCallback<UserListViewState> {
+    private static class UserListAdapterDiffCallback extends DiffUtil.ItemCallback<WorkmatesViewState> {
         @Override
-        public boolean areItemsTheSame(@NonNull UserListViewState oldItem, @NonNull UserListViewState newItem) {
+        public boolean areItemsTheSame(@NonNull WorkmatesViewState oldItem, @NonNull WorkmatesViewState newItem) {
             return Objects.equals(oldItem.getuId(), newItem.getuId());
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull UserListViewState oldItem, @NonNull UserListViewState newItem) {
+        public boolean areContentsTheSame(@NonNull WorkmatesViewState oldItem, @NonNull WorkmatesViewState newItem) {
             return oldItem.equals(newItem);
         }
     }

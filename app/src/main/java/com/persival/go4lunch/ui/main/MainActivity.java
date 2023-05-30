@@ -25,7 +25,7 @@ import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
 import com.persival.go4lunch.ui.main.maps.MapsFragment;
 import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 import com.persival.go4lunch.ui.main.settings.SettingsFragment;
-import com.persival.go4lunch.ui.main.user_list.UserListFragment;
+import com.persival.go4lunch.ui.main.workmates.WorkmatesFragment;
 
 import java.util.Objects;
 
@@ -151,12 +151,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_your_lunch);
         }
     }
-    
+
     private Fragment getSelectedFragment(int itemId) {
         if (itemId == R.id.item_2) {
             return RestaurantsFragment.newInstance();
         } else if (itemId == R.id.item_3) {
-            return UserListFragment.newInstance();
+            return WorkmatesFragment.newInstance();
         } else {
             return MapsFragment.newInstance();
         }

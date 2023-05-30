@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.user_list;
+package com.persival.go4lunch.ui.main.workmates;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -16,23 +16,23 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
-public class UserListViewModel extends ViewModel {
+public class WorkmatesViewModel extends ViewModel {
     private final LiveData<List<WorkmateEntity>> workmatesLiveData;
 
     @Inject
-    public UserListViewModel(
+    public WorkmatesViewModel(
         @NonNull GetWorkmateUseCase getWorkmateUseCase
     ) {
         this.workmatesLiveData = getWorkmateUseCase.invoke();
     }
 
-    public LiveData<List<UserListViewState>> populateUserListLiveData() {
+    public LiveData<List<WorkmatesViewState>> populateUserListLiveData() {
         return Transformations.map(workmatesLiveData, users -> {
-            List<UserListViewState> userListViewState = new ArrayList<>();
+            List<WorkmatesViewState> workmatesViewState = new ArrayList<>();
 
             for (WorkmateEntity workmateEntity : users) {
-                userListViewState.add(
-                    new UserListViewState(
+                workmatesViewState.add(
+                    new WorkmatesViewState(
                         workmateEntity.getId(),
                         workmateEntity.getUsername(),
                         workmateEntity.getEmail(),
@@ -41,7 +41,7 @@ public class UserListViewModel extends ViewModel {
                 );
             }
 
-            return userListViewState;
+            return workmatesViewState;
         });
     }
 }

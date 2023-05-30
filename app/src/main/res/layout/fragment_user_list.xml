@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundRecyclerView"
-    tools:context=".ui.main.user_list.UserListFragment">
+    tools:context=".ui.main.workmates.WorkmatesFragment">
 
     <ProgressBar
         android:id="@+id/user_list_progressBar"
@@ -17,9 +17,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_list_recycler_view"
-        tools:listitem="@layout/item_user_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_user_list" />
 
 
 </FrameLayout>

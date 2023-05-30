@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.user_list;
+package com.persival.go4lunch.ui.main.workmates;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -18,12 +18,12 @@ import com.persival.go4lunch.databinding.FragmentUserListBinding;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class UserListFragment extends Fragment {
+public class WorkmatesFragment extends Fragment {
 
     private FragmentUserListBinding binding;
 
-    public static UserListFragment newInstance() {
-        return new UserListFragment();
+    public static WorkmatesFragment newInstance() {
+        return new WorkmatesFragment();
     }
 
     @Override
@@ -39,12 +39,12 @@ public class UserListFragment extends Fragment {
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        UserListViewModel viewModel;
-        viewModel = new ViewModelProvider(this).get(UserListViewModel.class);
+        WorkmatesViewModel viewModel;
+        viewModel = new ViewModelProvider(this).get(WorkmatesViewModel.class);
 
         RecyclerView recyclerView = binding.userListRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        UserListAdapter adapter = new UserListAdapter();
+        WorkmatesAdapter adapter = new WorkmatesAdapter();
         recyclerView.setAdapter(adapter);
 
         viewModel.populateUserListLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
