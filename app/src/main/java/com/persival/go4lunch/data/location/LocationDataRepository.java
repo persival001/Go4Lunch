@@ -14,14 +14,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.Priority;
 import com.persival.go4lunch.data.shared_prefs.SharedPreferencesRepository;
+import com.persival.go4lunch.domain.location.LocationRepository;
+import com.persival.go4lunch.domain.location.model.LocationEntity;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class LocationRepository {
-    private static final int LOCATION_REQUEST_INTERVAL_MS = 10_000;
-    private static final int SMALLEST_DISPLACEMENT_THRESHOLD_METER = 25;
+public class LocationDataRepository implements LocationRepository {
+    private static final int SMALLEST_DISPLACEMENT_THRESHOLD_METER = 250;
 
     @NonNull
     private final FusedLocationProviderClient fusedLocationProviderClient;
@@ -34,7 +35,7 @@ public class LocationRepository {
     private LocationCallback callback;
 
     @Inject
-    public LocationRepository(
+    public LocationDataRepository(
         @NonNull FusedLocationProviderClient fusedLocationProviderClient,
         @NonNull SharedPreferencesRepository sharedPreferencesRepository
     ) {
@@ -42,6 +43,7 @@ public class LocationRepository {
         this.sharedPreferencesRepository = sharedPreferencesRepository;
     }
 
+    @Override
     public LiveData<LocationEntity> getLocationLiveData() {
         return locationMutableLiveData;
     }
@@ -91,9 +93,8 @@ public class LocationRepository {
             };
         }
 
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, LOCATION_REQUEST_INTERVAL_MS)
-            .setMinUpdateIntervalMillis(SMALLEST_DISPLACEMENT_THRESHOLD_METER)
-            .setMinUpdateDistanceMeters(LOCATION_REQUEST_INTERVAL_MS)
+        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY)
+            .setMinUpdateDistanceMeters(SMALLEST_DISPLACEMENT_THRESHOLD_METER)
             .build();
 
         fusedLocationProviderClient.removeLocationUpdates(callback);

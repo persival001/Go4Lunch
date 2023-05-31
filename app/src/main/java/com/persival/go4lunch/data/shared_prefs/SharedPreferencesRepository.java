@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 
-import com.persival.go4lunch.data.location.LocationEntity;
+import com.persival.go4lunch.domain.location.model.LocationEntity;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

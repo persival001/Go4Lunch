@@ -14,10 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
-public class GetWorkmateUseCase {
+public class GetWorkmatesUseCase {
 
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
@@ -25,7 +23,7 @@ public class GetWorkmateUseCase {
     private final UserRepository userRepository;
 
     @Inject
-    public GetWorkmateUseCase(
+    public GetWorkmatesUseCase(
         @NonNull GetLoggedUserUseCase getLoggedUserUseCase,
         @NonNull UserRepository userRepository
     ) {
@@ -40,16 +38,26 @@ public class GetWorkmateUseCase {
             return new MutableLiveData<>(null);
         } else {
             return Transformations.map(userRepository.getWorkmatesLiveData(), workmateEntities -> {
-                List<WorkmateEntity> filteredWorkmateEntities = new ArrayList<>(workmateEntities.size());
+                List<WorkmateEntity> reorderedWorkmateEntities = new ArrayList<>(workmateEntities);
+                WorkmateEntity currentUserEntity = null;
 
+                // Find the currentUserEntity in the list and remove it.
                 for (WorkmateEntity workmateEntity : workmateEntities) {
-                    if (!currentUser.getId().equals(workmateEntity.getId())) {
-                        filteredWorkmateEntities.add(workmateEntity);
+                    if (currentUser.getId().equals(workmateEntity.getId())) {
+                        currentUserEntity = workmateEntity;
+                        reorderedWorkmateEntities.remove(workmateEntity);
+                        break;
                     }
                 }
 
-                return filteredWorkmateEntities;
+                // If the currentUserEntity was found, add it at the beginning of the list.
+                if (currentUserEntity != null) {
+                    reorderedWorkmateEntities.add(0, currentUserEntity);
+                }
+
+                return reorderedWorkmateEntities;
             });
         }
     }
+
 }

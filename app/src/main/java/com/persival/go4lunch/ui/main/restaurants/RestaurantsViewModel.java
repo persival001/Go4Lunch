@@ -7,10 +7,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.location.LocationEntity;
-import com.persival.go4lunch.data.location.LocationRepository;
+import com.persival.go4lunch.data.location.LocationDataRepository;
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.data.places.GooglePlacesRepository;
+import com.persival.go4lunch.domain.location.model.LocationEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,18 +25,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class RestaurantsViewModel extends ViewModel {
 
     @NonNull
-    private final LocationRepository locationRepository;
+    private final LocationDataRepository locationDataRepository;
 
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
 
     @Inject
     public RestaurantsViewModel(
         @NonNull GooglePlacesRepository googlePlacesRepository,
-        @NonNull LocationRepository locationRepository
+        @NonNull LocationDataRepository locationDataRepository
     ) {
-        this.locationRepository = locationRepository;
+        this.locationDataRepository = locationDataRepository;
 
-        LiveData<LocationEntity> locationLiveData = locationRepository.getLocationLiveData();
+        LiveData<LocationEntity> locationLiveData = locationDataRepository.getLocationLiveData();
 
         LiveData<String> locationAsString = Transformations.map(
             locationLiveData,
@@ -169,7 +169,7 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     public void stopLocationRequest() {
-        locationRepository.stopLocationRequest();
+        locationDataRepository.stopLocationRequest();
     }
 
 }

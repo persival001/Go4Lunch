@@ -2,6 +2,7 @@ package com.persival.go4lunch.ui.main.maps;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.persival.go4lunch.R;
@@ -30,6 +32,9 @@ public class MapsFragment extends Fragment {
     private static final int REQUEST_LOCATION_PERMISSION_CODE = 1000;
     private MapsViewModel mapsViewModel;
     private GoogleMap googleMap;
+    private LatLng lastCameraPosition;
+    private float lastZoomLevel;
+
 
     public static MapsFragment newInstance() {
         return new MapsFragment();
@@ -47,6 +52,23 @@ public class MapsFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(map -> {
                 googleMap = map;
+
+                googleMap.setOnMarkerClickListener(marker -> {
+                    lastCameraPosition = googleMap.getCameraPosition().target;
+                    lastZoomLevel = googleMap.getCameraPosition().zoom;
+
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 18));
+                    marker.showInfoWindow();
+
+                    return true;
+                });
+
+                googleMap.setOnMapClickListener(latLng -> {
+                    if (lastCameraPosition != null) {
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastCameraPosition, lastZoomLevel));
+                    }
+                });
+
             });
         }
 
@@ -63,7 +85,7 @@ public class MapsFragment extends Fragment {
         mapsViewModel.getLocationLiveData().observe(getViewLifecycleOwner(), location -> {
             if (location != null && googleMap != null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
             }
         });
 
@@ -85,8 +107,25 @@ public class MapsFragment extends Fragment {
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                     );
                 }
+
+                // Add a circle around the user location
+                mapsViewModel.getLocationLiveData().observe(getViewLifecycleOwner(), location -> {
+                    if (location != null) {
+                        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                        CircleOptions circleOptions = new CircleOptions()
+                            .center(userLocation)
+                            .radius(5000)
+                            .strokeColor(Color.BLUE)
+                            .fillColor(0x110000FF);
+
+                        googleMap.addCircle(circleOptions);
+                    }
+                });
+
             }
         });
+
 
     }
 
@@ -115,43 +154,5 @@ public class MapsFragment extends Fragment {
         mapsViewModel.stopLocationRequest();
     }
 
-    /*public void searchRestaurant() {
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String location = s.toString();
-                if (location.length() < 3) {
-                    // If less than 3 characters have been entered, do not perform search
-                    return;
-                }
-                // Use a Geocoder to get the latitude and longitude from the location string
-                Geocoder geocoder = new Geocoder(getContext());
-                List<Address> addresses;
-                try {
-                    addresses = geocoder.getFromLocationName(location, 1);
-                    if (addresses != null && !addresses.isEmpty()) {
-                        Address address = addresses.get(0);
-                        // Create a LatLng object from the Address
-                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                        // Move the camera to the position
-                        if (googleMap != null) {
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-    }*/
 }
 

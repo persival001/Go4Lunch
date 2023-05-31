@@ -1,6 +1,4 @@
-package com.persival.go4lunch.data.location;
-
-import androidx.annotation.NonNull;
+package com.persival.go4lunch.domain.location.model;
 
 import java.util.Objects;
 
@@ -36,7 +34,6 @@ public class LocationEntity {
         return Double.compare(that.latitude, latitude) == 0 && Double.compare(that.longitude, longitude) == 0;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "LocationEntity{" +

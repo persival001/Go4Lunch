@@ -11,11 +11,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.location.LocationEntity;
-import com.persival.go4lunch.data.location.LocationRepository;
+import com.persival.go4lunch.data.location.LocationDataRepository;
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.data.permission_checker.PermissionChecker;
 import com.persival.go4lunch.data.places.GooglePlacesRepository;
+import com.persival.go4lunch.domain.location.model.LocationEntity;
 
 import java.util.List;
 
@@ -25,21 +25,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class MapsViewModel extends ViewModel {
-    private final LocationRepository locationRepository;
+    private final LocationDataRepository locationDataRepository;
     private final PermissionChecker permissionChecker;
     private final MutableLiveData<Boolean> hasGpsPermissionLiveData = new MutableLiveData<>();
     private final LiveData<List<NearbyRestaurantsResponse.Place>> nearbyRestaurantsLiveData;
 
     @Inject
     public MapsViewModel(
-        @NonNull LocationRepository locationRepository,
+        @NonNull LocationDataRepository locationDataRepository,
         @NonNull GooglePlacesRepository googlePlacesRepository,
         @NonNull PermissionChecker permissionChecker
     ) {
-        this.locationRepository = locationRepository;
+        this.locationDataRepository = locationDataRepository;
         this.permissionChecker = permissionChecker;
 
-        LiveData<LocationEntity> locationLiveData = locationRepository.getLocationLiveData();
+        LiveData<LocationEntity> locationLiveData = locationDataRepository.getLocationLiveData();
 
         nearbyRestaurantsLiveData = Transformations.switchMap(
             locationLiveData,
@@ -64,16 +64,16 @@ public class MapsViewModel extends ViewModel {
     }
 
     public LiveData<LocationEntity> getLocationLiveData() {
-        return locationRepository.getLocationLiveData();
+        return locationDataRepository.getLocationLiveData();
     }
 
     @RequiresPermission(anyOf = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"})
     public void startLocationRequest() {
-        locationRepository.startLocationRequest();
+        locationDataRepository.startLocationRequest();
     }
 
     public void stopLocationRequest() {
-        locationRepository.stopLocationRequest();
+        locationDataRepository.stopLocationRequest();
     }
 
     @SuppressLint("MissingPermission")
@@ -82,9 +82,9 @@ public class MapsViewModel extends ViewModel {
         hasGpsPermissionLiveData.setValue(hasGpsPermission);
 
         if (hasGpsPermission) {
-            locationRepository.startLocationRequest();
+            locationDataRepository.startLocationRequest();
         } else {
-            locationRepository.stopLocationRequest();
+            locationDataRepository.stopLocationRequest();
         }
     }
 }
