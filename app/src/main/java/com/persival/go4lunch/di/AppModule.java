@@ -16,6 +16,7 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -39,7 +40,7 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public static GooglePlacesApi provideGooglePlacesApi() {
+    public static GooglePlacesApi provideGooglePlacesApi(Application application) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
@@ -47,6 +48,7 @@ public class AppModule {
             .addInterceptor(loggingInterceptor)
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
+            .cache(new Cache(application.getCacheDir(), 1_024 * 1_024))
             .build();
 
         Retrofit retrofit = new Retrofit.Builder()

@@ -1,5 +1,6 @@
 package com.persival.go4lunch.domain.user;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface UserRepository {
 
-    @Nullable
+    @NonNull
     LiveData<List<WorkmateEntity>> getWorkmatesLiveData();
 
     void setNewUserName(

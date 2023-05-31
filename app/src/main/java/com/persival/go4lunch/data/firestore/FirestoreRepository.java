@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -38,6 +40,7 @@ public class FirestoreRepository implements UserRepository {
         this.firebaseFirestore = firebaseFirestore;
     }
 
+    @NonNull
     @Override
     public LiveData<List<WorkmateEntity>> getWorkmatesLiveData() {
         MutableLiveData<List<WorkmateEntity>> workmatesLiveData = new MutableLiveData<>();
@@ -58,14 +61,16 @@ public class FirestoreRepository implements UserRepository {
                 for (QueryDocumentSnapshot doc : value) {
                     UserDto userDto = doc.toObject(UserDto.class);
 
-                    WorkmateEntity workmateEntity = new WorkmateEntity(
-                        userDto.getId(),
-                        userDto.getName(),
-                        userDto.getEmailAddress(),
-                        userDto.getAvatarPictureUrl()
-                    );
+                    if (userDto.getId() != null &&  userDto.getName() != null&&  userDto.getEmailAddress() != null) {
+                        WorkmateEntity workmateEntity = new WorkmateEntity(
+                            userDto.getId(),
+                            userDto.getName(),
+                            userDto.getEmailAddress(),
+                            userDto.getAvatarPictureUrl()
+                        );
 
-                    workmates.add(workmateEntity);
+                        workmates.add(workmateEntity);
+                    }
                 }
                 workmatesLiveData.setValue(workmates);
             });
@@ -101,18 +106,28 @@ public class FirestoreRepository implements UserRepository {
     public void deleteAccount() {
 
         if (getFirebaseUser() != null) {
-            getFirebaseUser().delete();
             firebaseFirestore.collection(USERS)
                 .document(getFirebaseUser().getUid())
                 .delete()
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Firestore User successfully deleted!"))
-                .addOnFailureListener(e -> Log.w(TAG, "Firestore Error deleting user", e));
-            FirebaseAuth.getInstance().signOut();
+                .addOnFailureListener(e -> Log.w(TAG, "Firestore Error deleting user", e))
+                .addOnCompleteListener(deleteFromFirestoreTask -> {
+                    if (deleteFromFirestoreTask.isSuccessful()) {
+                        getFirebaseUser().delete().addOnCompleteListener(deleteFromFirebaseTask -> {
+                            if (deleteFromFirebaseTask.isSuccessful()) {
+                                FirebaseAuth.getInstance().signOut(); // TODO Persival inject
+                            } else {
+                                // TODO Persival
+                            }
+                        });
+                    } else {
+                        // TODO Persival
+                    }
+                });
         }
     }
 
     public FirebaseUser getFirebaseUser() {
         return firebaseAuth.getCurrentUser();
     }
-
 }

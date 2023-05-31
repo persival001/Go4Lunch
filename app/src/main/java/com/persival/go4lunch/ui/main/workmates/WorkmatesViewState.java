@@ -1,9 +1,11 @@
 package com.persival.go4lunch.ui.main.workmates;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
+// TODO Persival un bon coup de katana s'impose!
 public class WorkmatesViewState {
 
     @NonNull
@@ -15,14 +17,14 @@ public class WorkmatesViewState {
     @NonNull
     private final String emailAddress;
 
-    @NonNull
+    @Nullable
     private final String avatarPictureUrl;
 
     public WorkmatesViewState(
         @NonNull final String uId,
         @NonNull final String name,
         @NonNull final String emailAddress,
-        @NonNull final String avatarPictureUrl
+        @Nullable final String avatarPictureUrl
     ) {
         this.uId = uId;
         this.name = name;
@@ -45,7 +47,7 @@ public class WorkmatesViewState {
         return emailAddress;
     }
 
-    @NonNull
+    @Nullable
     public String getAvatarPictureUrl() {
         return avatarPictureUrl;
     }
@@ -68,6 +70,7 @@ public class WorkmatesViewState {
             Objects.equals(getAvatarPictureUrl(), that.getAvatarPictureUrl());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "UserListViewState{" +

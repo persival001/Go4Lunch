@@ -47,7 +47,7 @@ public class WorkmatesFragment extends Fragment {
         WorkmatesAdapter adapter = new WorkmatesAdapter();
         recyclerView.setAdapter(adapter);
 
-        viewModel.populateUserListLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
+        viewModel.getViewStateLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 
     @Override
