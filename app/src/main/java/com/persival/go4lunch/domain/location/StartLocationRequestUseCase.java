@@ -1,28 +1,24 @@
 package com.persival.go4lunch.domain.location;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
+import androidx.annotation.RequiresPermission;
 
 import com.persival.go4lunch.data.location.LocationDataRepository;
-import com.persival.go4lunch.domain.location.model.LocationEntity;
 
 import javax.inject.Inject;
 
-public class GetLocationUseCase {
-
+public class StartLocationRequestUseCase {
     @NonNull
     private final LocationRepository locationRepository;
 
     @Inject
-    public GetLocationUseCase(
+    public StartLocationRequestUseCase(
         @NonNull LocationDataRepository locationDataRepository) {
         this.locationRepository = locationDataRepository;
     }
 
-    public LiveData<LocationEntity> invoke() {
-        return locationRepository.getLocationLiveData();
+    @RequiresPermission(anyOf = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"})
+    public void invoke() {
+        locationRepository.startLocationRequest();
     }
-
 }
-
-

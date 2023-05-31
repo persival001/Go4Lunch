@@ -7,7 +7,6 @@ import androidx.collection.LruCache;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.persival.go4lunch.data.GooglePlacesApi;
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.data.model.PlaceDetailsResponse;
 

@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -61,7 +59,7 @@ public class FirestoreRepository implements UserRepository {
                 for (QueryDocumentSnapshot doc : value) {
                     UserDto userDto = doc.toObject(UserDto.class);
 
-                    if (userDto.getId() != null &&  userDto.getName() != null&&  userDto.getEmailAddress() != null) {
+                    if (userDto.getId() != null && userDto.getName() != null && userDto.getEmailAddress() != null) {
                         WorkmateEntity workmateEntity = new WorkmateEntity(
                             userDto.getId(),
                             userDto.getName(),
@@ -104,18 +102,18 @@ public class FirestoreRepository implements UserRepository {
 
 
     public void deleteAccount() {
-
-        if (getFirebaseUser() != null) {
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
             firebaseFirestore.collection(USERS)
-                .document(getFirebaseUser().getUid())
+                .document(firebaseUser.getUid())
                 .delete()
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Firestore User successfully deleted!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Firestore Error deleting user", e))
                 .addOnCompleteListener(deleteFromFirestoreTask -> {
                     if (deleteFromFirestoreTask.isSuccessful()) {
-                        getFirebaseUser().delete().addOnCompleteListener(deleteFromFirebaseTask -> {
+                        firebaseUser.delete().addOnCompleteListener(deleteFromFirebaseTask -> {
                             if (deleteFromFirebaseTask.isSuccessful()) {
-                                FirebaseAuth.getInstance().signOut(); // TODO Persival inject
+                                firebaseAuth.signOut();
                             } else {
                                 // TODO Persival
                             }

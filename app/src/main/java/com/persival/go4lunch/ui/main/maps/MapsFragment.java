@@ -35,7 +35,6 @@ public class MapsFragment extends Fragment {
     private LatLng lastCameraPosition;
     private float lastZoomLevel;
 
-
     public static MapsFragment newInstance() {
         return new MapsFragment();
     }
@@ -146,12 +145,6 @@ public class MapsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mapsViewModel.refresh();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapsViewModel.stopLocationRequest();
     }
 
 }

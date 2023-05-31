@@ -1,4 +1,4 @@
-package com.persival.go4lunch.data;
+package com.persival.go4lunch.data.permissions;
 
 import android.Manifest;
 import android.app.Activity;

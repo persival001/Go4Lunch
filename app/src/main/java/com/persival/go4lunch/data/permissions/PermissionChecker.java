@@ -1,4 +1,4 @@
-package com.persival.go4lunch.data.permission_checker;
+package com.persival.go4lunch.data.permissions;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;

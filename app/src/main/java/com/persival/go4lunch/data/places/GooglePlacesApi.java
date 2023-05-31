@@ -1,4 +1,4 @@
-package com.persival.go4lunch.data;
+package com.persival.go4lunch.data.places;
 
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.data.model.PlaceDetailsResponse;

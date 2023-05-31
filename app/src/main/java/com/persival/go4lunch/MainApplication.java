@@ -7,7 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.persival.go4lunch.data.PermissionRepository;
+import com.persival.go4lunch.data.location.LocationDataRepository;
+import com.persival.go4lunch.data.permissions.PermissionRepository;
 
 import javax.inject.Inject;
 
@@ -20,6 +21,7 @@ public class MainApplication extends Application implements Application.Activity
 
     @Inject
     PermissionRepository permissionRepository;
+    LocationDataRepository locationDataRepository;
 
     @Override
     public void onCreate() {
@@ -52,7 +54,7 @@ public class MainApplication extends Application implements Application.Activity
 
     @Override
     public void onActivityStopped(@NonNull Activity activity) {
-
+        locationDataRepository.stopLocationRequest();
     }
 
     @Override
