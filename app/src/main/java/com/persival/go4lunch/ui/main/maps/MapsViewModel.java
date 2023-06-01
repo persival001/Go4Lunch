@@ -3,19 +3,20 @@ package com.persival.go4lunch.ui.main.maps;
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresPermission;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
-import com.persival.go4lunch.data.permissions.PermissionChecker;
 import com.persival.go4lunch.data.places.GooglePlacesRepository;
+import com.persival.go4lunch.domain.location.GetLocationPermissionUseCase;
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
-import com.persival.go4lunch.domain.location.RefreshLocationUseCase;
+import com.persival.go4lunch.domain.location.HasLocationPermissionUseCase;
+import com.persival.go4lunch.domain.location.RefreshLocationPermissionUseCase;
+import com.persival.go4lunch.domain.location.RequestLocationPermissionUseCase;
 import com.persival.go4lunch.domain.location.StartLocationRequestUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
 
@@ -29,23 +30,29 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class MapsViewModel extends ViewModel {
     private final GetLocationUseCase getLocationUseCase;
     private final StartLocationRequestUseCase startLocationRequestUseCase;
-    private final RefreshLocationUseCase refreshLocationUseCase;
-    private final PermissionChecker permissionChecker;
-    private final MutableLiveData<Boolean> hasGpsPermissionLiveData = new MutableLiveData<>();
+    private final RefreshLocationPermissionUseCase refreshLocationPermissionUseCase;
+    private final GetLocationPermissionUseCase getLocationPermissionUseCase;
+    private final RequestLocationPermissionUseCase requestLocationPermissionUseCase;
+    private final HasLocationPermissionUseCase hasLocationPermissionUseCase;
+
     private final LiveData<List<NearbyRestaurantsResponse.Place>> nearbyRestaurantsLiveData;
 
     @Inject
     public MapsViewModel(
         @NonNull GetLocationUseCase getLocationUseCase,
         @NonNull StartLocationRequestUseCase startLocationRequestUseCase,
-        @NonNull RefreshLocationUseCase refreshLocationUseCase,
-        @NonNull GooglePlacesRepository googlePlacesRepository,
-        @NonNull PermissionChecker permissionChecker
+        @NonNull RefreshLocationPermissionUseCase refreshLocationPermissionUseCase,
+        @NonNull GetLocationPermissionUseCase getLocationPermissionUseCase,
+        @NonNull RequestLocationPermissionUseCase requestLocationPermissionUseCase,
+        @NonNull HasLocationPermissionUseCase hasLocationPermissionUseCase,
+        @NonNull GooglePlacesRepository googlePlacesRepository
     ) {
         this.getLocationUseCase = getLocationUseCase;
         this.startLocationRequestUseCase = startLocationRequestUseCase;
-        this.refreshLocationUseCase = refreshLocationUseCase;
-        this.permissionChecker = permissionChecker;
+        this.refreshLocationPermissionUseCase = refreshLocationPermissionUseCase;
+        this.getLocationPermissionUseCase = getLocationPermissionUseCase;
+        this.requestLocationPermissionUseCase = requestLocationPermissionUseCase;
+        this.hasLocationPermissionUseCase = hasLocationPermissionUseCase;
 
         LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
 
@@ -63,27 +70,35 @@ public class MapsViewModel extends ViewModel {
         );
     }
 
-    public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants() {
-        return nearbyRestaurantsLiveData;
+    public LiveData<Boolean> getLocationPermission() {
+        return getLocationPermissionUseCase.invoke();
     }
 
     public boolean hasLocationPermission() {
-        return permissionChecker.hasLocationPermission();
+        return hasLocationPermissionUseCase.invoke();
+    }
+
+    public void refreshLocationPermission() {
+        refreshLocationPermissionUseCase.invoke();
+    }
+
+    @SuppressLint("MissingPermission")
+    public void startLocation() {
+        startLocationRequestUseCase.invoke();
+    }
+
+    public void requestLocationPermission(Activity activity, int requestCode) {
+        requestLocationPermissionUseCase.invoke(activity, requestCode);
+    }
+
+    public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants() {
+        return nearbyRestaurantsLiveData;
     }
 
     public LiveData<LocationEntity> getLocationLiveData() {
         return getLocationUseCase.invoke();
     }
 
-    @RequiresPermission(anyOf = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"})
-    public void startLocationRequest() {
-        startLocationRequestUseCase.invoke();
-    }
-
-    @SuppressLint("MissingPermission")
-    public void refresh() {
-        refreshLocationUseCase.invoke();
-    }
 }
 
 

@@ -1,7 +1,5 @@
 package com.persival.go4lunch.ui.main.maps;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -80,6 +77,14 @@ public class MapsFragment extends Fragment {
 
         mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
 
+        mapsViewModel.getLocationPermission().observe(getViewLifecycleOwner(), hasPermission -> {
+            if (hasPermission) {
+                mapsViewModel.startLocation();
+            } else {
+                // Do something when permission is not granted
+            }
+        });
+
         // Observe the location live data for refreshing the map
         mapsViewModel.getLocationLiveData().observe(getViewLifecycleOwner(), location -> {
             if (location != null && googleMap != null) {
@@ -128,23 +133,17 @@ public class MapsFragment extends Fragment {
 
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onStart() {
         super.onStart();
-        if (mapsViewModel.hasLocationPermission()) {
-            mapsViewModel.startLocationRequest();
-        } else {
-            ActivityCompat.requestPermissions(requireActivity()
-                , new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-                , REQUEST_LOCATION_PERMISSION_CODE);
-        }
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapsViewModel.refresh();
+        // Refresh location permission
+        mapsViewModel.refreshLocationPermission();
+
+        // If location permission is not granted, request it
+        if (!mapsViewModel.hasLocationPermission()) {
+            mapsViewModel.requestLocationPermission(requireActivity(), REQUEST_LOCATION_PERMISSION_CODE);
+        }
     }
 
 }

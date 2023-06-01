@@ -115,15 +115,16 @@ public class FirestoreRepository implements UserRepository {
                             if (deleteFromFirebaseTask.isSuccessful()) {
                                 firebaseAuth.signOut();
                             } else {
-                                // TODO Persival
+                                Log.e(TAG, "Firebase Auth: Error deleting user", deleteFromFirebaseTask.getException());
                             }
                         });
                     } else {
-                        // TODO Persival
+                        Log.e(TAG, "Firestore: Error deleting user", deleteFromFirestoreTask.getException());
                     }
                 });
         }
     }
+
 
     public FirebaseUser getFirebaseUser() {
         return firebaseAuth.getCurrentUser();
