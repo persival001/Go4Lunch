@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
+import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 import com.persival.go4lunch.ui.main.details.DetailsFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -44,6 +45,15 @@ public class RestaurantsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         viewModel = new ViewModelProvider(this).get(RestaurantsViewModel.class);
+
+        viewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
+            if (!gps) {
+                new GpsDialogFragment().show(
+                    requireActivity().getSupportFragmentManager(),
+                    "GpsDialogFragment"
+                );
+            }
+        });
 
         viewModel.getLocationPermission().observe(getViewLifecycleOwner(), hasPermission -> {
             if (hasPermission) {

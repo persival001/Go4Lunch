@@ -79,7 +79,6 @@
     <string name="enable_gps">Enable gps</string>
     <string name="open_location_settings">Open location settings</string>
     <string name="cancel">Cancel</string>
-    <string name="gps_d_sactiv">GPS désactivé</string>
     <string name="annuler">Annuler</string>
     <string name="activer">Activer</string>
     <string name="gps_desactivated">Gps is off</string>
