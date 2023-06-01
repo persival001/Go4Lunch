@@ -1,5 +1,6 @@
 package com.persival.go4lunch.ui.main.restaurants;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class RestaurantsFragment extends Fragment {
-
+    private static final int REQUEST_LOCATION_PERMISSION_CODE = 1000;
     private FragmentRestaurantsBinding binding;
     private RestaurantsViewModel viewModel;
 
@@ -43,6 +45,18 @@ public class RestaurantsFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(RestaurantsViewModel.class);
 
+        viewModel.getLocationPermission().observe(getViewLifecycleOwner(), hasPermission -> {
+            if (hasPermission) {
+                viewModel.startLocation();
+            } else {
+                ActivityCompat.requestPermissions(
+                    requireActivity()
+                    , new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
+                    , REQUEST_LOCATION_PERMISSION_CODE
+                );
+            }
+        });
+
         // Bind the RecyclerView and set the adapter
         RecyclerView recyclerView = binding.restaurantsRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -60,9 +74,19 @@ public class RestaurantsFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        viewModel.stopLocationRequest();
+    public void onStart() {
+        super.onStart();
+        // Refresh location permission
+        viewModel.refreshLocationPermission();
+
+        // If location permission is not granted, request it
+        if (!viewModel.hasLocationPermission()) {
+            ActivityCompat.requestPermissions(
+                requireActivity()
+                , new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
+                , REQUEST_LOCATION_PERMISSION_CODE
+            );
+        }
     }
 
     @Override

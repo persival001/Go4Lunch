@@ -4,9 +4,10 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,7 +23,7 @@ import javax.inject.Singleton;
 public class PermissionRepository implements GpsPermissionRepository {
 
     private final MutableLiveData<Boolean> locationPermissionLiveData = new MutableLiveData<>();
-
+    private final MutableLiveData<Boolean> isGpsActivatedLiveData = new MutableLiveData<>();
     private final Application context;
 
     @Inject
@@ -30,17 +31,17 @@ public class PermissionRepository implements GpsPermissionRepository {
         this.context = context;
     }
 
-
-    public LiveData<Boolean> getLocationPermission() {
-        return locationPermissionLiveData;
-    }
-
     @Override
     public void refreshLocationPermission() {
+        refreshGpsActivation();
         boolean hasPermission = ActivityCompat.checkSelfPermission(
             context, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED;
         locationPermissionLiveData.setValue(hasPermission);
+    }
+
+    public LiveData<Boolean> getLocationPermission() {
+        return locationPermissionLiveData;
     }
 
     @Override
@@ -48,8 +49,19 @@ public class PermissionRepository implements GpsPermissionRepository {
         return ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
     }
 
-    public void requestLocationPermission(Activity activity, int requestCode) {
-        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, requestCode);
+    public LiveData<Boolean> isGpsActivated() {
+        return isGpsActivatedLiveData;
+    }
+
+    public void refreshGpsActivation() {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        if (locationManager != null) {
+            boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            isGpsActivatedLiveData.setValue(isGPSEnabled);
+        } else {
+            isGpsActivatedLiveData.setValue(false);
+        }
     }
 
 }

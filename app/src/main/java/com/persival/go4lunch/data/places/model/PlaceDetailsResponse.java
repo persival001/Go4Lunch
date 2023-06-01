@@ -1,4 +1,4 @@
-package com.persival.go4lunch.data.model;
+package com.persival.go4lunch.data.places.model;
 
 import androidx.annotation.Nullable;
 

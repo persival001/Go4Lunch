@@ -7,8 +7,9 @@ import androidx.collection.LruCache;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
-import com.persival.go4lunch.data.model.PlaceDetailsResponse;
+import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.data.places.model.PlaceDetailsResponse;
+import com.persival.go4lunch.domain.restaurant.PlacesRepository;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Singleton
-public class GooglePlacesRepository {
+public class GooglePlacesRepository implements PlacesRepository {
 
     private final GooglePlacesApi googlePlacesApi;
     private final LruCache<String, NearbyRestaurantsResponse.Place> placeDetailCache = new LruCache<>(512);

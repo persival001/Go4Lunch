@@ -1,7 +1,7 @@
 package com.persival.go4lunch.data.places;
 
-import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
-import com.persival.go4lunch.data.model.PlaceDetailsResponse;
+import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.data.places.model.PlaceDetailsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

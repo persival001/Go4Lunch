@@ -2,15 +2,22 @@ package com.persival.go4lunch.ui.main.restaurants;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.location.LocationDataRepository;
-import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
-import com.persival.go4lunch.data.places.GooglePlacesRepository;
+import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.domain.location.GetLocationPermissionUseCase;
+import com.persival.go4lunch.domain.location.GetLocationUseCase;
+import com.persival.go4lunch.domain.location.HasLocationPermissionUseCase;
+import com.persival.go4lunch.domain.location.IsGpsActivatedUseCase;
+import com.persival.go4lunch.domain.location.RefreshLocationPermissionUseCase;
+import com.persival.go4lunch.domain.location.StartLocationRequestUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
+import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,80 +30,115 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class RestaurantsViewModel extends ViewModel {
-
-    @NonNull
-    private final LocationDataRepository locationDataRepository;
-
+    private final GetLocationUseCase getLocationUseCase;
+    private final StartLocationRequestUseCase startLocationRequestUseCase;
+    private final RefreshLocationPermissionUseCase refreshLocationPermissionUseCase;
+    private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
+    private final GetLocationPermissionUseCase getLocationPermissionUseCase;
+    private final HasLocationPermissionUseCase hasLocationPermissionUseCase;
+    private final IsGpsActivatedUseCase isGpsActivatedUseCase;
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
 
     @Inject
     public RestaurantsViewModel(
-        @NonNull GooglePlacesRepository googlePlacesRepository,
-        @NonNull LocationDataRepository locationDataRepository
+        @NonNull GetLocationUseCase getLocationUseCase,
+        @NonNull StartLocationRequestUseCase startLocationRequestUseCase,
+        @NonNull RefreshLocationPermissionUseCase refreshLocationPermissionUseCase,
+        @NonNull GetLocationPermissionUseCase getLocationPermissionUseCase,
+        @NonNull HasLocationPermissionUseCase hasLocationPermissionUseCase,
+        @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
+        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
     ) {
-        this.locationDataRepository = locationDataRepository;
+        this.getLocationUseCase = getLocationUseCase;
+        this.startLocationRequestUseCase = startLocationRequestUseCase;
+        this.refreshLocationPermissionUseCase = refreshLocationPermissionUseCase;
+        this.getLocationPermissionUseCase = getLocationPermissionUseCase;
+        this.hasLocationPermissionUseCase = hasLocationPermissionUseCase;
+        this.isGpsActivatedUseCase = isGpsActivatedUseCase;
+        this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
+        this.restaurantsLiveData = setupRestaurantsLiveData();
+    }
 
-        LiveData<LocationEntity> locationLiveData = locationDataRepository.getLocationLiveData();
+    private LiveData<List<RestaurantsViewState>> setupRestaurantsLiveData() {
+        LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
+        LiveData<String> locationAsString = transformLocationToString(locationLiveData);
+        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData = transformUnsortedRestaurantsLiveData(locationAsString);
+        return sortRestaurantsLiveData(unsortedRestaurantsLiveData);
+    }
 
-        LiveData<String> locationAsString = Transformations.map(
+    private LiveData<String> transformLocationToString(
+        LiveData<LocationEntity> locationLiveData
+    ) {
+        return Transformations.map(
             locationLiveData,
             location -> location.getLatitude() + "," + location.getLongitude()
         );
+    }
 
-
-        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData = Transformations.switchMap(
+    private LiveData<List<RestaurantsViewState>> transformUnsortedRestaurantsLiveData(
+        LiveData<String> locationAsString
+    ) {
+        return Transformations.switchMap(
             locationAsString,
-            location -> Transformations.map(
-                googlePlacesRepository.getNearbyRestaurants(
-                    location,
-                    5000,
-                    "restaurant",
-                    MAPS_API_KEY
-                ),
-                places -> {
-                    List<RestaurantsViewState> restaurantsList = new ArrayList<>();
-                    for (NearbyRestaurantsResponse.Place restaurant : places) {
-
-                        restaurantsList.add(
-                            new RestaurantsViewState(
-                                restaurant.getId() != null ? restaurant.getId() : "",
-                                getFormattedName(restaurant.getName()),
-                                restaurant.getAddress() != null ? restaurant.getAddress() : "",
-                                getOpeningTime(restaurant.getOpeningHours()),
-                                getHaversineDistance(
-                                    restaurant.getLatitude(),
-                                    restaurant.getLongitude(),
-                                    location
-                                ),
-                                "(2)",
-                                getRating(restaurant.getRating()),
-                                getPictureUrl(restaurant.getPhotos()) != null ? getPictureUrl(restaurant.getPhotos()) : ""
-                            )
-                        );
-                    }
-                    return restaurantsList;
-                }
+            locationStr -> Transformations.map(
+                getNearbyRestaurantsUseCase.invoke(),
+                places -> transformPlacesToRestaurantViewStates(locationStr, places)
             )
         );
+    }
 
-        restaurantsLiveData = Transformations.map(unsortedRestaurantsLiveData, restaurantsList -> {
-            if (restaurantsList == null) {
-                return null;
+    private List<RestaurantsViewState> transformPlacesToRestaurantViewStates(
+        String locationStr,
+        List<NearbyRestaurantsResponse.Place> places
+    ) {
+        List<RestaurantsViewState> restaurantsList = new ArrayList<>();
+        for (NearbyRestaurantsResponse.Place restaurant : places) {
+            if (restaurant.getId() != null &&
+                restaurant.getName() != null &&
+                restaurant.getAddress() != null
+            ) {
+                restaurantsList.add(
+                    new RestaurantsViewState(
+                        restaurant.getId(),
+                        getFormattedName(restaurant.getName()),
+                        restaurant.getAddress(),
+                        getOpeningTime(restaurant.getOpeningHours()),
+                        getHaversineDistance(
+                            restaurant.getLatitude(),
+                            restaurant.getLongitude(),
+                            locationStr
+                        ),
+                        "(2)",
+                        getRating(restaurant.getRating()),
+                        getPictureUrl(restaurant.getPhotos())
+                    )
+                );
             }
+        }
+        return restaurantsList;
+    }
 
-            List<RestaurantsViewState> sortedRestaurantsList = new ArrayList<>(restaurantsList);
-            Collections.sort(sortedRestaurantsList, (r1, r2) -> {
-                String distance1Str = r1.getDistance().replaceAll("\\s+m", "");
-                String distance2Str = r2.getDistance().replaceAll("\\s+m", "");
+    private LiveData<List<RestaurantsViewState>> sortRestaurantsLiveData(
+        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData
+    ) {
+        return Transformations.map(unsortedRestaurantsLiveData, this::sortRestaurantViewStates);
+    }
 
-                double distance1 = Double.parseDouble(distance1Str);
-                double distance2 = Double.parseDouble(distance2Str);
+    private List<RestaurantsViewState> sortRestaurantViewStates(List<RestaurantsViewState> restaurantsList) {
+        if (restaurantsList == null) {
+            return null;
+        }
+        List<RestaurantsViewState> sortedRestaurantsList = new ArrayList<>(restaurantsList);
+        Collections.sort(sortedRestaurantsList, (r1, r2) -> {
+            String distance1Str = r1.getDistance().replaceAll("\\s+m", "");
+            String distance2Str = r2.getDistance().replaceAll("\\s+m", "");
 
-                return Double.compare(distance1, distance2);
-            });
+            double distance1 = Double.parseDouble(distance1Str);
+            double distance2 = Double.parseDouble(distance2Str);
 
-            return sortedRestaurantsList;
+            return Double.compare(distance1, distance2);
         });
+        return sortedRestaurantsList;
     }
 
     public LiveData<List<RestaurantsViewState>> getSortedRestaurantsLiveData() {
@@ -168,8 +210,29 @@ public class RestaurantsViewModel extends ViewModel {
         return openingHours != null && openingHours.isOpenNow();
     }
 
-    public void stopLocationRequest() {
-        locationDataRepository.stopLocationRequest();
+    public LiveData<Boolean> getLocationPermission() {
+        return getLocationPermissionUseCase.invoke();
+    }
+
+    public boolean hasLocationPermission() {
+        return hasLocationPermissionUseCase.invoke();
+    }
+
+    public void refreshLocationPermission() {
+        refreshLocationPermissionUseCase.invoke();
+    }
+
+    @SuppressLint("MissingPermission")
+    public void startLocation() {
+        startLocationRequestUseCase.invoke();
+    }
+
+    public LiveData<LocationEntity> getLocationLiveData() {
+        return getLocationUseCase.invoke();
+    }
+
+    public LiveData<Boolean> isGpsActivatedLiveData() {
+        return isGpsActivatedUseCase.invoke();
     }
 
 }

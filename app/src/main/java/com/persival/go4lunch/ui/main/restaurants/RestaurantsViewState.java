@@ -9,21 +9,15 @@ public class RestaurantsViewState {
     private final String id;
     @NonNull
     private final String name;
-
     @NonNull
     private final String typeOfCuisineAndAddress;
-
     @NonNull
     private final Boolean openingTime;
-
     @NonNull
     private final String distance;
-
     @NonNull
     private final String participants;
-
     private final float rating;
-
     @NonNull
     private final String pictureUrl;
 

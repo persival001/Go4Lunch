@@ -1,25 +1,26 @@
 package com.persival.go4lunch.ui.main.maps;
 
-import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
-import com.persival.go4lunch.data.places.GooglePlacesRepository;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.location.GetLocationPermissionUseCase;
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.location.HasLocationPermissionUseCase;
+import com.persival.go4lunch.domain.location.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.location.RefreshLocationPermissionUseCase;
-import com.persival.go4lunch.domain.location.RequestLocationPermissionUseCase;
 import com.persival.go4lunch.domain.location.StartLocationRequestUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
+import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,10 +33,9 @@ public class MapsViewModel extends ViewModel {
     private final StartLocationRequestUseCase startLocationRequestUseCase;
     private final RefreshLocationPermissionUseCase refreshLocationPermissionUseCase;
     private final GetLocationPermissionUseCase getLocationPermissionUseCase;
-    private final RequestLocationPermissionUseCase requestLocationPermissionUseCase;
     private final HasLocationPermissionUseCase hasLocationPermissionUseCase;
-
-    private final LiveData<List<NearbyRestaurantsResponse.Place>> nearbyRestaurantsLiveData;
+    private final IsGpsActivatedUseCase isGpsActivatedUseCase;
+    private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
 
     @Inject
     public MapsViewModel(
@@ -43,31 +43,17 @@ public class MapsViewModel extends ViewModel {
         @NonNull StartLocationRequestUseCase startLocationRequestUseCase,
         @NonNull RefreshLocationPermissionUseCase refreshLocationPermissionUseCase,
         @NonNull GetLocationPermissionUseCase getLocationPermissionUseCase,
-        @NonNull RequestLocationPermissionUseCase requestLocationPermissionUseCase,
         @NonNull HasLocationPermissionUseCase hasLocationPermissionUseCase,
-        @NonNull GooglePlacesRepository googlePlacesRepository
+        @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
+        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
     ) {
         this.getLocationUseCase = getLocationUseCase;
         this.startLocationRequestUseCase = startLocationRequestUseCase;
         this.refreshLocationPermissionUseCase = refreshLocationPermissionUseCase;
         this.getLocationPermissionUseCase = getLocationPermissionUseCase;
-        this.requestLocationPermissionUseCase = requestLocationPermissionUseCase;
         this.hasLocationPermissionUseCase = hasLocationPermissionUseCase;
-
-        LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
-
-        nearbyRestaurantsLiveData = Transformations.switchMap(
-            locationLiveData,
-            location -> {
-                String locationAsString = location.getLatitude() + "," + location.getLongitude();
-                return googlePlacesRepository.getNearbyRestaurants(
-                    locationAsString,
-                    5000,
-                    "restaurant",
-                    MAPS_API_KEY
-                );
-            }
-        );
+        this.isGpsActivatedUseCase = isGpsActivatedUseCase;
+        this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
     }
 
     public LiveData<Boolean> getLocationPermission() {
@@ -87,16 +73,37 @@ public class MapsViewModel extends ViewModel {
         startLocationRequestUseCase.invoke();
     }
 
-    public void requestLocationPermission(Activity activity, int requestCode) {
-        requestLocationPermissionUseCase.invoke(activity, requestCode);
+    public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants() {
+        return getNearbyRestaurantsUseCase.invoke(
+        );
     }
 
-    public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants() {
-        return nearbyRestaurantsLiveData;
+    public LiveData<List<MarkerOptions>> getMarkerOptions() {
+        return Transformations.map(getNearbyRestaurants(), places -> {
+            List<MarkerOptions> markerOptionsList = new ArrayList<>();
+            for (NearbyRestaurantsResponse.Place place : places) {
+                LatLng latLng = new LatLng(
+                    place.getLatitude(),
+                    place.getLongitude()
+                );
+                MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(place.getName())
+                    .snippet(place.getAddress())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                markerOptionsList.add(markerOptions);
+            }
+            return markerOptionsList;
+        });
     }
+
 
     public LiveData<LocationEntity> getLocationLiveData() {
         return getLocationUseCase.invoke();
+    }
+
+    public LiveData<Boolean> isGpsActivatedLiveData() {
+        return isGpsActivatedUseCase.invoke();
     }
 
 }

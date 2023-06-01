@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.data.places.GooglePlacesRepository;
+import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 
 import java.util.ArrayList;
 import java.util.List;

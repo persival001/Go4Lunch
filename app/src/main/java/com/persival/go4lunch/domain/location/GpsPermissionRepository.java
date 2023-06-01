@@ -1,7 +1,5 @@
 package com.persival.go4lunch.domain.location;
 
-import android.app.Activity;
-
 import androidx.lifecycle.LiveData;
 
 public interface GpsPermissionRepository {
@@ -12,5 +10,5 @@ public interface GpsPermissionRepository {
 
     boolean hasLocationPermission();
 
-    void requestLocationPermission(Activity activity, int requestCode);
+    LiveData<Boolean> isGpsActivated();
 }

@@ -1,23 +1,22 @@
 package com.persival.go4lunch.domain.location;
 
-import android.app.Activity;
-
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import javax.inject.Inject;
 
-public class RequestLocationPermissionUseCase {
+public class IsGpsActivatedUseCase {
 
     @NonNull
     private final GpsPermissionRepository gpsPermissionRepository;
 
     @Inject
-    public RequestLocationPermissionUseCase(
+    public IsGpsActivatedUseCase(
         @NonNull GpsPermissionRepository gpsPermissionRepository) {
         this.gpsPermissionRepository = gpsPermissionRepository;
     }
 
-    public void invoke(Activity activity, int requestCode) {
-        gpsPermissionRepository.requestLocationPermission(activity, requestCode);
+    public LiveData<Boolean> invoke() {
+        return gpsPermissionRepository.isGpsActivated();
     }
 }
