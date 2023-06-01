@@ -54,7 +54,6 @@ public class MainApplication extends Application implements Application.Activity
 
     @Override
     public void onActivityStopped(@NonNull Activity activity) {
-        //locationDataRepository.stopLocationRequest();
     }
 
     @Override

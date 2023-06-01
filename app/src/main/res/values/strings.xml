@@ -79,4 +79,16 @@
     <string name="password">Mot de passe</string>
     <string name="username_updated">Votre nom d\'utilisateur a été changé</string>
 
+    <!-- GPS FRAGMENT -->
+    <string name="gps_network_not_enabled">Votre GPS semble être désactivé, voulez-vous l\'activer ?</string>
+    <string name="enable_gps">Activer GPS</string>
+    <string name="open_location_settings">Ouvrir les paramètres de localisation</string>
+    <string name="cancel">Annuler</string>
+    <string name="gps_d_sactiv">GPS désactivé</string>
+    <string name="annuler">Annuler</string>
+    <string name="activer">Activer</string>
+    <string name="gps_desactivated">Gps is off</string>
+    <string name="gps_off">Le GPS est désactivé</string>
+    <string name="please_activate_gps">Pour faire fonctionner cette application avec toutes ses fonctionnalités, nous avons besoin que vous activiez votre Gps avec la localisation précise.
+        \nNe vous inquiètez pas, nous ne stockons aucune de vos données.</string>
 </resources>

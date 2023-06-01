@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.persival.go4lunch.R;
+import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +129,15 @@ public class MapsFragment extends Fragment {
             }
         });
 
+        mapsViewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
+            if (!gps) {
+                new GpsDialogFragment().show(
+                    requireActivity().getSupportFragmentManager(),
+                    "GpsDialogFragment"
+                );
+            }
+        });
+
     }
 
     @Override
@@ -144,6 +154,12 @@ public class MapsFragment extends Fragment {
                 , REQUEST_LOCATION_PERMISSION_CODE
             );
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapsViewModel.stopLocation();
     }
 
 }

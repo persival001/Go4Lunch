@@ -90,6 +90,12 @@ public class RestaurantsFragment extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        viewModel.stopLocation();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

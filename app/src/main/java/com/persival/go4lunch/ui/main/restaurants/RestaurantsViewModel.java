@@ -16,6 +16,7 @@ import com.persival.go4lunch.domain.location.HasLocationPermissionUseCase;
 import com.persival.go4lunch.domain.location.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.location.RefreshLocationPermissionUseCase;
 import com.persival.go4lunch.domain.location.StartLocationRequestUseCase;
+import com.persival.go4lunch.domain.location.StopLocationRequestUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 
@@ -32,6 +33,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class RestaurantsViewModel extends ViewModel {
     private final GetLocationUseCase getLocationUseCase;
     private final StartLocationRequestUseCase startLocationRequestUseCase;
+    private final StopLocationRequestUseCase stopLocationRequestUseCase;
     private final RefreshLocationPermissionUseCase refreshLocationPermissionUseCase;
     private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
     private final GetLocationPermissionUseCase getLocationPermissionUseCase;
@@ -43,6 +45,7 @@ public class RestaurantsViewModel extends ViewModel {
     public RestaurantsViewModel(
         @NonNull GetLocationUseCase getLocationUseCase,
         @NonNull StartLocationRequestUseCase startLocationRequestUseCase,
+        @NonNull StopLocationRequestUseCase stopLocationRequestUseCase,
         @NonNull RefreshLocationPermissionUseCase refreshLocationPermissionUseCase,
         @NonNull GetLocationPermissionUseCase getLocationPermissionUseCase,
         @NonNull HasLocationPermissionUseCase hasLocationPermissionUseCase,
@@ -51,6 +54,7 @@ public class RestaurantsViewModel extends ViewModel {
     ) {
         this.getLocationUseCase = getLocationUseCase;
         this.startLocationRequestUseCase = startLocationRequestUseCase;
+        this.stopLocationRequestUseCase = stopLocationRequestUseCase;
         this.refreshLocationPermissionUseCase = refreshLocationPermissionUseCase;
         this.getLocationPermissionUseCase = getLocationPermissionUseCase;
         this.hasLocationPermissionUseCase = hasLocationPermissionUseCase;
@@ -177,7 +181,6 @@ public class RestaurantsViewModel extends ViewModel {
         }
     }
 
-
     // Get a photo reference if it exists and convert it to a picture url
     public String getPictureUrl(List<NearbyRestaurantsResponse.Photo> photos) {
         if (photos != null && !photos.isEmpty()) {
@@ -225,6 +228,11 @@ public class RestaurantsViewModel extends ViewModel {
     @SuppressLint("MissingPermission")
     public void startLocation() {
         startLocationRequestUseCase.invoke();
+    }
+
+    @SuppressLint("MissingPermission")
+    public void stopLocation() {
+        stopLocationRequestUseCase.invoke();
     }
 
     public LiveData<LocationEntity> getLocationLiveData() {
