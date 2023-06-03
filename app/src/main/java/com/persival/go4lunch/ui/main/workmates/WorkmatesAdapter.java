@@ -49,21 +49,19 @@ public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesA
 
         public void bind(WorkmatesViewState item) {
             Glide.with(itemView)
-                .load(item.getAvatarPictureUrl())
+                .load(item.getWorkmatePictureUrl())
                 .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                 .placeholder(R.drawable.ic_anon_user_48dp)
                 .error(R.drawable.ic_anon_user_48dp)
                 .into(avatarPicture);
-
-
-            avatarName.setText(item.getName());
+            avatarName.setText(item.getWorkmateName());
         }
     }
 
     private static class UserListAdapterDiffCallback extends DiffUtil.ItemCallback<WorkmatesViewState> {
         @Override
         public boolean areItemsTheSame(@NonNull WorkmatesViewState oldItem, @NonNull WorkmatesViewState newItem) {
-            return Objects.equals(oldItem.getuId(), newItem.getuId());
+            return Objects.equals(oldItem.getId(), newItem.getId());
         }
 
         @Override

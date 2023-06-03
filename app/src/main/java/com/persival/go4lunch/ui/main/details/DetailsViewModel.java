@@ -69,15 +69,15 @@ public class DetailsViewModel extends ViewModel {
 
             restaurant -> {
                 restaurantDetail = new DetailsViewState(
-                    restaurant.getId() != null ? restaurant.getId() : "",
-                    getPictureUrl(restaurant.getPhotos()) != null ? getPictureUrl(restaurant.getPhotos()) : "",
+                    restaurant.getId(),
+                    getPictureUrl(restaurant.getPhotos()),
                     getFormattedName(restaurant.getName()),
                     getRating(restaurant.getRating()),
-                    restaurant.getAddress() != null ? restaurant.getAddress() : "",
-                    restaurant.getPhoneNumber() != null ? restaurant.getPhoneNumber() : "",
-                    restaurant.getWebsite() != null ? restaurant.getWebsite() : "",
-                    isRestaurantLiked.getValue() != null && isRestaurantLiked.getValue(),
-                    isRestaurantChosen.getValue() != null && isRestaurantChosen.getValue()
+                    restaurant.getAddress(),
+                    restaurant.getPhoneNumber(),
+                    restaurant.getWebsite(),
+                    isRestaurantLiked.getValue(),
+                    isRestaurantChosen.getValue()
                 );
                 return restaurantDetail;
             }

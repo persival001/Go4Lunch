@@ -4,17 +4,15 @@ import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
-public class LoggedUserDto {
+public class WorkmateDto {
 
-    // Logged user
+    // Workmate
     @Nullable
     private final String id;
     @Nullable
-    private final String name;
+    private final String workmatePictureUrl;
     @Nullable
-    private final String emailAddress;
-    @Nullable
-    private final String avatarPictureUrl;
+    private final String workmateName;
 
     // Associated restaurant
     @Nullable
@@ -24,12 +22,12 @@ public class LoggedUserDto {
     @Nullable
     private final String restaurantAddress;
 
+
     // Empty constructor needed for Firestore deserialization
-    public LoggedUserDto() {
+    public WorkmateDto() {
         id = null;
-        name = null;
-        emailAddress = null;
-        avatarPictureUrl = null;
+        workmatePictureUrl = null;
+        workmateName = null;
         restaurantId = null;
         restaurantName = null;
         restaurantAddress = null;
@@ -37,7 +35,7 @@ public class LoggedUserDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, emailAddress, avatarPictureUrl, restaurantId, restaurantName, restaurantAddress);
+        return Objects.hash(id, workmatePictureUrl, workmateName, restaurantId, restaurantName, restaurantAddress);
     }
 
     @Override
@@ -46,17 +44,21 @@ public class LoggedUserDto {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        LoggedUserDto that = (LoggedUserDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(emailAddress, that.emailAddress) && Objects.equals(avatarPictureUrl, that.avatarPictureUrl) && Objects.equals(restaurantId, that.restaurantId) && Objects.equals(restaurantName, that.restaurantName) && Objects.equals(restaurantAddress, that.restaurantAddress);
+        WorkmateDto that = (WorkmateDto) o;
+        return Objects.equals(id, that.id) &&
+            Objects.equals(workmatePictureUrl, that.workmatePictureUrl) &&
+            Objects.equals(workmateName, that.workmateName) &&
+            Objects.equals(restaurantId, that.restaurantId) &&
+            Objects.equals(restaurantName, that.restaurantName) &&
+            Objects.equals(restaurantAddress, that.restaurantAddress);
     }
 
     @Override
     public String toString() {
-        return "LoggedUserDto{" +
+        return "WorkmateDto{" +
             "id='" + id + '\'' +
-            ", name='" + name + '\'' +
-            ", emailAddress='" + emailAddress + '\'' +
-            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
+            ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
+            ", workmateName='" + workmateName + '\'' +
             ", restaurantId='" + restaurantId + '\'' +
             ", restaurantName='" + restaurantName + '\'' +
             ", restaurantAddress='" + restaurantAddress + '\'' +
@@ -69,18 +71,13 @@ public class LoggedUserDto {
     }
 
     @Nullable
-    public String getName() {
-        return name;
+    public String getWorkmatePictureUrl() {
+        return workmatePictureUrl;
     }
 
     @Nullable
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    @Nullable
-    public String getAvatarPictureUrl() {
-        return avatarPictureUrl;
+    public String getWorkmateName() {
+        return workmateName;
     }
 
     @Nullable

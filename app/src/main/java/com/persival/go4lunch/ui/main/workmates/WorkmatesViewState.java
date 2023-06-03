@@ -1,84 +1,77 @@
 package com.persival.go4lunch.ui.main.workmates;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
-// TODO Persival un bon coup de katana s'impose!
 public class WorkmatesViewState {
 
+    // Workmate
     @NonNull
-    private final String uId;
-
+    private final String id;
     @NonNull
-    private final String name;
-
+    private final String workmatePictureUrl;
     @NonNull
-    private final String emailAddress;
+    private final String workmateName;
 
-    @Nullable
-    private final String avatarPictureUrl;
+    // Associated restaurant
+    @NonNull
+    private final String restaurantName;
 
     public WorkmatesViewState(
-        @NonNull final String uId,
-        @NonNull final String name,
-        @NonNull final String emailAddress,
-        @Nullable final String avatarPictureUrl
+        @NonNull String id,
+        @NonNull String workmatePictureUrl,
+        @NonNull String workmateName,
+        @NonNull String restaurantName
     ) {
-        this.uId = uId;
-        this.name = name;
-        this.emailAddress = emailAddress;
-        this.avatarPictureUrl = avatarPictureUrl;
-    }
-
-    @NonNull
-    public String getuId() {
-        return uId;
-    }
-
-    @NonNull
-    public String getName() {
-        return name;
-    }
-
-    @NonNull
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    @Nullable
-    public String getAvatarPictureUrl() {
-        return avatarPictureUrl;
+        this.id = id;
+        this.workmatePictureUrl = workmatePictureUrl;
+        this.workmateName = workmateName;
+        this.restaurantName = restaurantName;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getuId(), getName(), getEmailAddress(), getAvatarPictureUrl());
+        return Objects.hash(id, workmatePictureUrl, workmateName, restaurantName);
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof WorkmatesViewState))
+        if (o == null || getClass() != o.getClass())
             return false;
-        final WorkmatesViewState that = (WorkmatesViewState) o;
-        return Objects.equals(getuId(), that.getuId()) &&
-            Objects.equals(getName(), that.getName()) &&
-            Objects.equals(getEmailAddress(), that.getEmailAddress()) &&
-            Objects.equals(getAvatarPictureUrl(), that.getAvatarPictureUrl());
+        WorkmatesViewState that = (WorkmatesViewState) o;
+        return id.equals(that.id) && workmatePictureUrl.equals(that.workmatePictureUrl) && workmateName.equals(that.workmateName) && restaurantName.equals(that.restaurantName);
     }
 
-    @NonNull
     @Override
     public String toString() {
-        return "UserListViewState{" +
-            "uId='" + uId + '\'' +
-            ", name='" + name + '\'' +
-            ", emailAddress='" + emailAddress + '\'' +
-            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
+        return "WorkmatesViewState{" +
+            "id='" + id + '\'' +
+            ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
+            ", workmateName='" + workmateName + '\'' +
+            ", restaurantName='" + restaurantName + '\'' +
             '}';
     }
 
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    @NonNull
+    public String getWorkmatePictureUrl() {
+        return workmatePictureUrl;
+    }
+
+    @NonNull
+    public String getWorkmateName() {
+        return workmateName;
+    }
+
+    @NonNull
+    public String getRestaurantName() {
+        return restaurantName;
+    }
 }

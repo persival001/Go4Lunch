@@ -7,48 +7,41 @@ import java.util.Objects;
 
 public class WorkmateEntity {
 
+    // Workmate
     @NonNull
     private final String id;
-
-    @NonNull
-    private final String username;
-
-    @NonNull
-    private final String email;
-
     @Nullable
-    private final String photoUrl;
+    private final String workmatePictureUrl;
+    @NonNull
+    private final String workmateName;
 
-    public WorkmateEntity(@NonNull String id, @NonNull String username, @NonNull String email, @Nullable String photoUrl) {
+    // Associated restaurant
+    @Nullable
+    private final String restaurantId;
+    @Nullable
+    private final String restaurantName;
+    @Nullable
+    private final String restaurantAddress;
+
+    public WorkmateEntity(
+        @NonNull String id,
+        @Nullable String workmatePictureUrl,
+        @NonNull String workmateName,
+        @Nullable String restaurantId,
+        @Nullable String restaurantName,
+        @Nullable String restaurantAddress
+    ) {
         this.id = id;
-        this.username = username;
-        this.email = email;
-        this.photoUrl = photoUrl;
-    }
-
-    @NonNull
-    public String getId() {
-        return id;
-    }
-
-    @NonNull
-    public String getUsername() {
-        return username;
-    }
-
-    @NonNull
-    public String getEmail() {
-        return email;
-    }
-
-    @Nullable
-    public String getPhotoUrl() {
-        return photoUrl;
+        this.workmatePictureUrl = workmatePictureUrl;
+        this.workmateName = workmateName;
+        this.restaurantId = restaurantId;
+        this.restaurantName = restaurantName;
+        this.restaurantAddress = restaurantAddress;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, photoUrl);
+        return Objects.hash(id, workmatePictureUrl, workmateName, restaurantId, restaurantName, restaurantAddress);
     }
 
     @Override
@@ -58,7 +51,12 @@ public class WorkmateEntity {
         if (o == null || getClass() != o.getClass())
             return false;
         WorkmateEntity that = (WorkmateEntity) o;
-        return id.equals(that.id) && username.equals(that.username) && email.equals(that.email) && Objects.equals(photoUrl, that.photoUrl);
+        return id.equals(that.id) &&
+            Objects.equals(workmatePictureUrl, that.workmatePictureUrl) &&
+            workmateName.equals(that.workmateName) &&
+            Objects.equals(restaurantId, that.restaurantId) &&
+            Objects.equals(restaurantName, that.restaurantName) &&
+            Objects.equals(restaurantAddress, that.restaurantAddress);
     }
 
     @NonNull
@@ -66,9 +64,41 @@ public class WorkmateEntity {
     public String toString() {
         return "WorkmateEntity{" +
             "id='" + id + '\'' +
-            ", username='" + username + '\'' +
-            ", email='" + email + '\'' +
-            ", photoUrl='" + photoUrl + '\'' +
+            ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
+            ", workmateName='" + workmateName + '\'' +
+            ", restaurantId='" + restaurantId + '\'' +
+            ", restaurantName='" + restaurantName + '\'' +
+            ", restaurantAddress='" + restaurantAddress + '\'' +
             '}';
+    }
+
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    @Nullable
+    public String getWorkmatePictureUrl() {
+        return workmatePictureUrl;
+    }
+
+    @NonNull
+    public String getWorkmateName() {
+        return workmateName;
+    }
+
+    @Nullable
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    @Nullable
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    @Nullable
+    public String getRestaurantAddress() {
+        return restaurantAddress;
     }
 }

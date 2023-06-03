@@ -16,6 +16,7 @@ import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -57,14 +58,16 @@ public class FirestoreRepository implements UserRepository {
 
                 List<WorkmateEntity> workmates = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
-                    UserDto userDto = doc.toObject(UserDto.class);
+                    WorkmateDto workmateDto = doc.toObject(WorkmateDto.class);
 
-                    if (userDto.getId() != null && userDto.getName() != null && userDto.getEmailAddress() != null) {
+                    if (workmateDto.getId() != null && workmateDto.getWorkmateName() != null) {
                         WorkmateEntity workmateEntity = new WorkmateEntity(
-                            userDto.getId(),
-                            userDto.getName(),
-                            userDto.getEmailAddress(),
-                            userDto.getAvatarPictureUrl()
+                            workmateDto.getId(),
+                            workmateDto.getWorkmatePictureUrl(),
+                            workmateDto.getWorkmateName(),
+                            workmateDto.getRestaurantId(),
+                            workmateDto.getRestaurantName(),
+                            workmateDto.getRestaurantAddress()
                         );
 
                         workmates.add(workmateEntity);
@@ -79,7 +82,7 @@ public class FirestoreRepository implements UserRepository {
         if (getFirebaseUser() != null) {
             UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
 
-            if (!getFirebaseUser().getDisplayName().equals(newUserName)) {
+            if (!Objects.equals(getFirebaseUser().getDisplayName(), newUserName)) {
                 // Update user name in firebase auth
                 profileUpdatesBuilder.setDisplayName(newUserName);
                 UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();

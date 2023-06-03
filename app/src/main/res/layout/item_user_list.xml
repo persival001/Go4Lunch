@@ -30,18 +30,21 @@
 
         <TextView
             android:id="@+id/avatar_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin"
-            android:singleLine="true"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:ellipsize="end"
+            android:lineSpacingExtra="8dp"
+            android:maxLines="2"
             android:textColor="#000000"
             android:textSize="@dimen/default_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/avatar_picture"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Gino is eating at the delicious burger" />
-
+            tools:text="Gino Paolo della famiglia is eating at the delicious burger" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

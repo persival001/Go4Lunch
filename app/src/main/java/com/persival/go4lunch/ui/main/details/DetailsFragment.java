@@ -57,10 +57,12 @@ public class DetailsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
 
+        // Set up RecyclerView
         DetailsAdapter detailsAdapter = new DetailsAdapter();
         binding.detailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.detailsRecyclerView.setAdapter(detailsAdapter);
 
+        // Observe ViewModel LiveData and update UI accordingly
         viewModel.getDetailViewStateLiveData(restaurantId).observe(getViewLifecycleOwner(), restaurantDetail -> {
             Glide.with(binding.detailsPicture)
                 .load(restaurantDetail.getPictureUrl())
@@ -81,29 +83,26 @@ public class DetailsFragment extends Fragment {
                 startActivity(intent);
             });
 
-            binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
-
             binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.chooseThisRestaurant(restaurantDetail));
 
-            viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
-                if (isLiked) {
-                    binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_rate_24));
-                } else {
-                    binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_border_24));
-                }
-            });
+        });
 
-            viewModel.getIsRestaurantChosen().observe(getViewLifecycleOwner(), isChosen -> {
-                if (isChosen) {
-                    binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
-                } else {
-                    binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
-                }
-            });
+        binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
 
-            binding.chooseThisRestaurantButton.setOnClickListener(v -> viewModel.chooseThisRestaurant(restaurantDetail));
+        viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
+            if (isLiked) {
+                binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_rate_24));
+            } else {
+                binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_border_24));
+            }
+        });
 
-
+        viewModel.getIsRestaurantChosen().observe(getViewLifecycleOwner(), isChosen -> {
+            if (isChosen) {
+                binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
+            } else {
+                binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
+            }
         });
 
         viewModel.getUserLiveData().observe(getViewLifecycleOwner(), detailsAdapter::submitList);
@@ -114,6 +113,7 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        // Hide BottomNavigationView and Toolbar when the fragment is visible
         if (getActivity() != null) {
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.GONE);
@@ -125,6 +125,7 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        // Show BottomNavigationView and Toolbar when the fragment is not visible
         if (getActivity() != null) {
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
             bottomNavigationView.setVisibility(View.VISIBLE);
