@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.persival.go4lunch.R;
 
-public class DetailsAdapter extends ListAdapter<DetailsUserViewState, DetailsAdapter.ViewHolder> {
+public class DetailsAdapter extends ListAdapter<DetailsWorkmateViewState, DetailsAdapter.ViewHolder> {
 
     public DetailsAdapter() {
         super(new DetailsAdapterDiffCallback());
@@ -38,15 +38,15 @@ public class DetailsAdapter extends ListAdapter<DetailsUserViewState, DetailsAda
         holder.bind(getItem(position));
     }
 
-    private static class DetailsAdapterDiffCallback extends DiffUtil.ItemCallback<DetailsUserViewState> {
+    private static class DetailsAdapterDiffCallback extends DiffUtil.ItemCallback<DetailsWorkmateViewState> {
         @Override
-        public boolean areItemsTheSame(@NonNull DetailsUserViewState oldItem, @NonNull DetailsUserViewState newItem) {
-            return oldItem.getUid().equals(newItem.getUid());
+        public boolean areItemsTheSame(@NonNull DetailsWorkmateViewState oldItem, @NonNull DetailsWorkmateViewState newItem) {
+            return oldItem.getId().equals(newItem.getId());
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull DetailsUserViewState oldItem, @NonNull DetailsUserViewState newItem) {
-            return oldItem.getUid().equals(newItem.getUid());
+        public boolean areContentsTheSame(@NonNull DetailsWorkmateViewState oldItem, @NonNull DetailsWorkmateViewState newItem) {
+            return oldItem.getId().equals(newItem.getId());
         }
     }
 
@@ -62,14 +62,15 @@ public class DetailsAdapter extends ListAdapter<DetailsUserViewState, DetailsAda
             avatarPicture = itemView.findViewById(R.id.avatar_picture);
         }
 
-        public void bind(DetailsUserViewState item) {
+        public void bind(DetailsWorkmateViewState item) {
             Glide.with(itemView)
-                .load(item.getAvatarPictureUrl())
+                .load(item.getWorkmatePictureUrl())
+                .circleCrop()
                 .placeholder(R.drawable.ic_anon_user_48dp)
                 .error(R.drawable.baseline_error_24)
                 .into(avatarPicture);
 
-            avatarName.setText(item.getName());
+            avatarName.setText(item.getWorkmateName());
         }
     }
 }

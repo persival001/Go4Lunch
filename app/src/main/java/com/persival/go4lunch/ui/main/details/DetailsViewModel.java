@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.data.places.GooglePlacesRepository;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.domain.details.GetWorkmatesListUseCase;
+import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +22,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class DetailsViewModel extends ViewModel {
+    private final GetWorkmatesListUseCase getWorkmatesListUseCase;
     private final GooglePlacesRepository googlePlacesRepository;
-    private final MutableLiveData<List<DetailsUserViewState>> userListLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<DetailsWorkmateViewState>> userListLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isRestaurantLiked;
     private final MutableLiveData<Boolean> isRestaurantChosen;
-    private DetailsViewState restaurantDetail;
+    private DetailsRestaurantViewState restaurantDetail;
 
     @Inject
     public DetailsViewModel(
+        @NonNull GetWorkmatesListUseCase getWorkmatesListUseCase,
         @NonNull final GooglePlacesRepository googlePlacesRepository
     ) {
+        this.getWorkmatesListUseCase = getWorkmatesListUseCase;
         this.googlePlacesRepository = googlePlacesRepository;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
@@ -45,7 +50,7 @@ public class DetailsViewModel extends ViewModel {
         return isRestaurantLiked;
     }
 
-    public void chooseThisRestaurant(DetailsViewState detail) {
+    public void chooseThisRestaurant(DetailsRestaurantViewState detail) {
         this.restaurantDetail = detail;
         if (isRestaurantChosen.getValue() != null) {
             isRestaurantChosen.setValue(!isRestaurantChosen.getValue());
@@ -55,29 +60,38 @@ public class DetailsViewModel extends ViewModel {
         }
     }
 
-    public LiveData<List<DetailsUserViewState>> getUserLiveData() {
-        List<DetailsUserViewState> users = new ArrayList<>();
-        users.add(new DetailsUserViewState("1", "Ginette is eating at Mac Mickey", "https://picsum.photos/200"));
-        users.add(new DetailsUserViewState("2", "Jean is eating at The rest O' rent", "https://picsum.photos/200"));
-        userListLiveData.setValue(users);
-        return userListLiveData;
+    public LiveData<List<DetailsWorkmateViewState>> getWorkmateListLiveData(String restaurantId) {
+        return Transformations.map(
+            getWorkmatesListUseCase.invoke(restaurantId),
+            workmates -> {
+                List<DetailsWorkmateViewState> mappedWorkmates = new ArrayList<>();
+                for (WorkmateEntity workmate : workmates) {
+                    DetailsWorkmateViewState restaurantDetail = new DetailsWorkmateViewState(
+                        workmate.getId(),
+                        workmate.getWorkmatePictureUrl(),
+                        workmate.getWorkmateName()
+                    );
+                    mappedWorkmates.add(restaurantDetail);
+                }
+                return mappedWorkmates;
+            }
+        );
     }
 
-    public LiveData<DetailsViewState> getDetailViewStateLiveData(String restaurantId) {
+
+    public LiveData<DetailsRestaurantViewState> getDetailViewStateLiveData(String restaurantId) {
         return Transformations.map(
             googlePlacesRepository.getRestaurantLiveData(restaurantId, MAPS_API_KEY),
 
             restaurant -> {
-                restaurantDetail = new DetailsViewState(
+                restaurantDetail = new DetailsRestaurantViewState(
                     restaurant.getId(),
                     getPictureUrl(restaurant.getPhotos()),
                     getFormattedName(restaurant.getName()),
                     getRating(restaurant.getRating()),
                     restaurant.getAddress(),
                     restaurant.getPhoneNumber(),
-                    restaurant.getWebsite(),
-                    isRestaurantLiked.getValue(),
-                    isRestaurantChosen.getValue()
+                    restaurant.getWebsite()
                 );
                 return restaurantDetail;
             }

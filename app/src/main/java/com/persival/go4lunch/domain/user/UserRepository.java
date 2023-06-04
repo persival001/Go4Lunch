@@ -17,5 +17,4 @@ public interface UserRepository {
     );
 
     void deleteAccount();
-
 }
