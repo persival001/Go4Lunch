@@ -2,14 +2,17 @@ package com.persival.go4lunch.ui.main.details;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
+import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.places.GooglePlacesRepository;
+import com.persival.go4lunch.R;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.GetWorkmatesListUseCase;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
@@ -22,20 +25,20 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class DetailsViewModel extends ViewModel {
+    private final Application context;
     private final GetWorkmatesListUseCase getWorkmatesListUseCase;
-    private final GooglePlacesRepository googlePlacesRepository;
-    private final MutableLiveData<List<DetailsWorkmateViewState>> userListLiveData = new MutableLiveData<>();
+    private final GetRestaurantDetailsUseCase getRestaurantDetailsUseCase;
     private final MutableLiveData<Boolean> isRestaurantLiked;
     private final MutableLiveData<Boolean> isRestaurantChosen;
-    private DetailsRestaurantViewState restaurantDetail;
 
     @Inject
     public DetailsViewModel(
+        Application context,
         @NonNull GetWorkmatesListUseCase getWorkmatesListUseCase,
-        @NonNull final GooglePlacesRepository googlePlacesRepository
-    ) {
+        GetRestaurantDetailsUseCase getRestaurantDetailsUseCase) {
+        this.context = context;
         this.getWorkmatesListUseCase = getWorkmatesListUseCase;
-        this.googlePlacesRepository = googlePlacesRepository;
+        this.getRestaurantDetailsUseCase = getRestaurantDetailsUseCase;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
         isRestaurantChosen = new MutableLiveData<>();
@@ -50,7 +53,7 @@ public class DetailsViewModel extends ViewModel {
         return isRestaurantLiked;
     }
 
-    public void chooseThisRestaurant(DetailsRestaurantViewState detail) {
+   /* public void chooseThisRestaurant(DetailsRestaurantViewState detail) {
         this.restaurantDetail = detail;
         if (isRestaurantChosen.getValue() != null) {
             isRestaurantChosen.setValue(!isRestaurantChosen.getValue());
@@ -58,7 +61,7 @@ public class DetailsViewModel extends ViewModel {
         if (restaurantDetail != null) {
             //restaurantDetail.setChosen(isRestaurantChosen.getValue());
         }
-    }
+    }*/
 
     public LiveData<List<DetailsWorkmateViewState>> getWorkmateListLiveData(String restaurantId) {
         return Transformations.map(
@@ -69,7 +72,7 @@ public class DetailsViewModel extends ViewModel {
                     DetailsWorkmateViewState restaurantDetail = new DetailsWorkmateViewState(
                         workmate.getId(),
                         workmate.getWorkmatePictureUrl(),
-                        workmate.getWorkmateName()
+                        getWorkmateNameIsJoining(workmate.getWorkmateName())
                     );
                     mappedWorkmates.add(restaurantDetail);
                 }
@@ -81,31 +84,48 @@ public class DetailsViewModel extends ViewModel {
 
     public LiveData<DetailsRestaurantViewState> getDetailViewStateLiveData(String restaurantId) {
         return Transformations.map(
-            googlePlacesRepository.getRestaurantLiveData(restaurantId, MAPS_API_KEY),
-
+            getRestaurantDetailsUseCase.invoke(restaurantId),
             restaurant -> {
-                restaurantDetail = new DetailsRestaurantViewState(
-                    restaurant.getId(),
-                    getPictureUrl(restaurant.getPhotos()),
-                    getFormattedName(restaurant.getName()),
-                    getRating(restaurant.getRating()),
-                    restaurant.getAddress(),
-                    restaurant.getPhoneNumber(),
-                    restaurant.getWebsite()
-                );
-                return restaurantDetail;
+                if (restaurant.getId() != null &&
+                    restaurant.getName() != null &&
+                    restaurant.getAddress() != null &&
+                    restaurant.getPhoneNumber() != null &&
+                    restaurant.getWebsite() != null
+                ) {
+                    return new DetailsRestaurantViewState(
+                        restaurant.getId(),
+                        getPictureUrl(restaurant.getPhotos()),
+                        getFormattedName(restaurant.getName()),
+                        getRating(restaurant.getRating()),
+                        restaurant.getAddress(),
+                        restaurant.getPhoneNumber(),
+                        restaurant.getWebsite()
+                    );
+                } else {
+                    return null;
+                }
             }
         );
     }
 
-    public void toggleLike() {
+
+    // Add "is joining!" after the workmate name
+    private String getWorkmateNameIsJoining(String name) {
+        if (name != null) {
+            return name + context.getString(R.string.is_joining);
+        } else {
+            return "";
+        }
+    }
+
+   /* public void toggleLike() {
         if (isRestaurantLiked.getValue() != null) {
             isRestaurantLiked.setValue(!isRestaurantLiked.getValue());
         }
         if (restaurantDetail != null) {
             //restaurantDetail.setLiked(isRestaurantLiked.getValue());
         }
-    }
+    }*/
 
     // Convert rating from 5 to 3 stars
     private float getRating(Float rating) {
@@ -154,5 +174,3 @@ public class DetailsViewModel extends ViewModel {
         }
     }
 }
-
-

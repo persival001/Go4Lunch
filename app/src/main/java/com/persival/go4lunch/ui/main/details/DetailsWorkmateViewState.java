@@ -1,6 +1,7 @@
 package com.persival.go4lunch.ui.main.details;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -8,14 +9,14 @@ public class DetailsWorkmateViewState {
 
     @NonNull
     private final String id;
-    @NonNull
+    @Nullable
     private final String workmatePictureUrl;
     @NonNull
     private final String workmateName;
 
     public DetailsWorkmateViewState(
         @NonNull String id,
-        @NonNull String workmatePictureUrl,
+        @Nullable String workmatePictureUrl,
         @NonNull String workmateName
     ) {
         this.id = id;
@@ -35,9 +36,12 @@ public class DetailsWorkmateViewState {
         if (o == null || getClass() != o.getClass())
             return false;
         DetailsWorkmateViewState that = (DetailsWorkmateViewState) o;
-        return id.equals(that.id) && workmatePictureUrl.equals(that.workmatePictureUrl) && workmateName.equals(that.workmateName);
+        return id.equals(that.id) &&
+            workmatePictureUrl.equals(that.workmatePictureUrl) &&
+            workmateName.equals(that.workmateName);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "DetailsWorkmateViewState{" +
@@ -52,7 +56,7 @@ public class DetailsWorkmateViewState {
         return id;
     }
 
-    @NonNull
+    @Nullable
     public String getWorkmatePictureUrl() {
         return workmatePictureUrl;
     }

@@ -91,4 +91,5 @@
     <string name="please_activate_gps">Pour faire fonctionner cette application avec toutes ses fonctionnalités, nous avons besoin que vous activiez votre Gps avec la localisation précise.
         \nNe vous inquiètez pas, nous ne stockons aucune de vos données.</string>
     <string name="is_eating_at">" is eating at "</string>
+    <string name="is_joining">" is joining!"</string>
 </resources>

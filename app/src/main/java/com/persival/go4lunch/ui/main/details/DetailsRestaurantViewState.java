@@ -1,13 +1,14 @@
 package com.persival.go4lunch.ui.main.details;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
 public class DetailsRestaurantViewState {
     @NonNull
     private final String id;
-    @NonNull
+    @Nullable
     private final String restaurantPictureUrl;
     @NonNull
     private final String restaurantName;
@@ -21,8 +22,9 @@ public class DetailsRestaurantViewState {
 
     public DetailsRestaurantViewState(
         @NonNull String id,
-        @NonNull String restaurantPictureUrl,
-        @NonNull String restaurantName, Float restaurantRating,
+        @Nullable String restaurantPictureUrl,
+        @NonNull String restaurantName,
+        Float restaurantRating,
         @NonNull String restaurantAddress,
         @NonNull String restaurantPhoneNumber,
         @NonNull String restaurantWebsiteUrl
@@ -48,9 +50,16 @@ public class DetailsRestaurantViewState {
         if (o == null || getClass() != o.getClass())
             return false;
         DetailsRestaurantViewState that = (DetailsRestaurantViewState) o;
-        return id.equals(that.id) && restaurantPictureUrl.equals(that.restaurantPictureUrl) && restaurantName.equals(that.restaurantName) && Objects.equals(restaurantRating, that.restaurantRating) && restaurantAddress.equals(that.restaurantAddress) && restaurantPhoneNumber.equals(that.restaurantPhoneNumber) && restaurantWebsiteUrl.equals(that.restaurantWebsiteUrl);
+        return id.equals(that.id) &&
+            restaurantPictureUrl.equals(that.restaurantPictureUrl) &&
+            restaurantName.equals(that.restaurantName) &&
+            Objects.equals(restaurantRating, that.restaurantRating) &&
+            restaurantAddress.equals(that.restaurantAddress) &&
+            restaurantPhoneNumber.equals(that.restaurantPhoneNumber) &&
+            restaurantWebsiteUrl.equals(that.restaurantWebsiteUrl);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "DetailsViewState{" +
@@ -69,7 +78,7 @@ public class DetailsRestaurantViewState {
         return id;
     }
 
-    @NonNull
+    @Nullable
     public String getRestaurantPictureUrl() {
         return restaurantPictureUrl;
     }

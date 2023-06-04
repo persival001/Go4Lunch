@@ -15,5 +15,9 @@ public interface PlacesRepository {
         String mapsApiKey
     );
 
+    LiveData<NearbyRestaurantsResponse.Place> getRestaurantLiveData(
+        String restaurantId,
+        String apiKey
+    );
 
 }
