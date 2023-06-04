@@ -79,27 +79,25 @@ public class FirestoreRepository implements UserRepository {
     }
 
     public void setNewUserName(String newUserName) {
-        if (getFirebaseUser() != null) {
-            UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
+        UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
 
-            if (!Objects.equals(getFirebaseUser().getDisplayName(), newUserName)) {
-                // Update user name in firebase auth
-                profileUpdatesBuilder.setDisplayName(newUserName);
-                UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();
+        if (!Objects.equals(firebaseAuth.getCurrentUser().getDisplayName(), newUserName)) {
+            // Update user name in firebase auth
+            profileUpdatesBuilder.setDisplayName(newUserName);
+            UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();
 
-                getFirebaseUser().updateProfile(profileUpdates)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // Update user name in firestore
-                            firebaseFirestore
-                                .collection(USERS)
-                                .document(getFirebaseUser().getUid())
-                                .update(NAME, newUserName)
-                                .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
-                                .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
-                        }
-                    });
-            }
+            firebaseAuth.getCurrentUser().updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Update user name in firestore
+                        firebaseFirestore
+                            .collection(USERS)
+                            .document(firebaseAuth.getCurrentUser().getUid())
+                            .update(NAME, newUserName)
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
+                            .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
+                    }
+                });
         }
     }
 
@@ -126,10 +124,5 @@ public class FirestoreRepository implements UserRepository {
                     }
                 });
         }
-    }
-
-
-    public FirebaseUser getFirebaseUser() {
-        return firebaseAuth.getCurrentUser();
     }
 }

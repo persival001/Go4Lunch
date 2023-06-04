@@ -3,6 +3,7 @@ package com.persival.go4lunch.domain.user;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
@@ -11,18 +12,17 @@ import javax.inject.Inject;
 public class GetLoggedUserUseCase {
 
     @NonNull
-    private final UserRepository userRepository;
+    private final FirebaseAuth firebaseAuth;
 
     @Inject
     public GetLoggedUserUseCase(
-        @NonNull UserRepository userRepository
-    ) {
-        this.userRepository = userRepository;
+        @NonNull FirebaseAuth firebaseAuth) {
+        this.firebaseAuth = firebaseAuth;
     }
 
     @Nullable
     public LoggedUserEntity invoke() {
-        FirebaseUser firebaseUser = userRepository.getFirebaseUser();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null || firebaseUser.getDisplayName() == null || firebaseUser.getEmail() == null) {
             return null;
         } else {

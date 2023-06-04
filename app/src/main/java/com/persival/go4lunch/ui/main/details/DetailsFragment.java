@@ -62,7 +62,7 @@ public class DetailsFragment extends Fragment {
         binding.detailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.detailsRecyclerView.setAdapter(detailsAdapter);
 
-        // Observe ViewModel LiveData and update UI accordingly
+        // Update UI with restaurant details
         viewModel.getDetailViewStateLiveData(restaurantId).observe(getViewLifecycleOwner(), restaurantDetail -> {
             Glide.with(binding.detailsPicture)
                 .load(restaurantDetail.getPictureUrl())
@@ -73,35 +73,37 @@ public class DetailsFragment extends Fragment {
             binding.detailsName.setText(restaurantDetail.getName());
             binding.detailsAddress.setText(restaurantDetail.getAddress());
             binding.detailsRatingBar.setRating(restaurantDetail.getRating());
+
+            // Open the restaurant's website
             binding.websiteButton.setOnClickListener(view -> {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurantDetail.getWebsite()));
                 startActivity(intent);
             });
 
+            // Call the restaurant
             binding.callButton.setOnClickListener(view -> {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + restaurantDetail.getPhoneNumber()));
                 startActivity(intent);
             });
 
+            // Choose this restaurant for lunch
             binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.chooseThisRestaurant(restaurantDetail));
-
         });
-
-        binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
-
-        viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
-            if (isLiked) {
-                binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_rate_24));
-            } else {
-                binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_border_24));
-            }
-        });
-
         viewModel.getIsRestaurantChosen().observe(getViewLifecycleOwner(), isChosen -> {
             if (isChosen) {
                 binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
             } else {
                 binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
+            }
+        });
+
+        // Like this restaurant
+        binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
+        viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
+            if (isLiked) {
+                binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_rate_24));
+            } else {
+                binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_border_24));
             }
         });
 
