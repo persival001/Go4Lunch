@@ -25,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -38,8 +37,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class SettingsFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     private FragmentSettingsBinding binding;
 
     public static SettingsFragment newInstance() {

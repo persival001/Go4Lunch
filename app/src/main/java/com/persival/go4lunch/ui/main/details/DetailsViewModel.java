@@ -25,17 +25,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class DetailsViewModel extends ViewModel {
+    @NonNull
     private final Application context;
+    @NonNull
     private final GetWorkmatesListUseCase getWorkmatesListUseCase;
+    @NonNull
     private final GetRestaurantDetailsUseCase getRestaurantDetailsUseCase;
+    @NonNull
     private final MutableLiveData<Boolean> isRestaurantLiked;
+    @NonNull
     private final MutableLiveData<Boolean> isRestaurantChosen;
 
     @Inject
     public DetailsViewModel(
-        Application context,
+        @NonNull Application context,
         @NonNull GetWorkmatesListUseCase getWorkmatesListUseCase,
-        GetRestaurantDetailsUseCase getRestaurantDetailsUseCase) {
+        @NonNull GetRestaurantDetailsUseCase getRestaurantDetailsUseCase) {
         this.context = context;
         this.getWorkmatesListUseCase = getWorkmatesListUseCase;
         this.getRestaurantDetailsUseCase = getRestaurantDetailsUseCase;

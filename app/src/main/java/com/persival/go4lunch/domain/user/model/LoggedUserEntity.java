@@ -27,26 +27,6 @@ public class LoggedUserEntity {
         this.avatarPictureUrl = avatarPictureUrl;
     }
 
-    @NonNull
-    public String getId() {
-        return id;
-    }
-
-    @NonNull
-    public String getName() {
-        return name;
-    }
-
-    @NonNull
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    @Nullable
-    public String getAvatarPictureUrl() {
-        return avatarPictureUrl;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(id, name, emailAddress, avatarPictureUrl);
@@ -68,11 +48,31 @@ public class LoggedUserEntity {
     @NonNull
     @Override
     public String toString() {
-        return "UserEntity{" +
+        return "LoggedUserEntity{" +
             "id='" + id + '\'' +
             ", name='" + name + '\'' +
             ", emailAddress='" + emailAddress + '\'' +
             ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
             '}';
+    }
+
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+
+    @NonNull
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    @Nullable
+    public String getAvatarPictureUrl() {
+        return avatarPictureUrl;
     }
 }

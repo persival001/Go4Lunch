@@ -1,5 +1,6 @@
 package com.persival.go4lunch.ui.main.settings;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -15,16 +16,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class SettingsViewModel extends ViewModel {
-
+    @NonNull
     private final MutableLiveData<SettingsViewState> settingsViewStateLiveData = new MutableLiveData<>();
+    @NonNull
     private final SetNewUserNameUseCase setNewUserNameUseCase;
+    @NonNull
     private final DeleteAccountUseCase deleteAccountUseCase;
 
     @Inject
     public SettingsViewModel(
-        GetLoggedUserUseCase getLoggedUserUseCase,
-        SetNewUserNameUseCase setNewUserNameUseCase,
-        DeleteAccountUseCase deleteAccountUseCase) {
+        @NonNull GetLoggedUserUseCase getLoggedUserUseCase,
+        @NonNull SetNewUserNameUseCase setNewUserNameUseCase,
+        @NonNull DeleteAccountUseCase deleteAccountUseCase) {
         this.setNewUserNameUseCase = setNewUserNameUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
 

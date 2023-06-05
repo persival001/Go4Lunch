@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -78,51 +79,68 @@ public class FirestoreRepository implements UserRepository {
         return workmatesLiveData;
     }
 
+    // ----- Change user name -----
     public void setNewUserName(String newUserName) {
-        UserProfileChangeRequest.Builder profileUpdatesBuilder = new UserProfileChangeRequest.Builder();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        if (!Objects.equals(firebaseAuth.getCurrentUser().getDisplayName(), newUserName)) {
-            // Update user name in firebase auth
-            profileUpdatesBuilder.setDisplayName(newUserName);
-            UserProfileChangeRequest profileUpdates = profileUpdatesBuilder.build();
-
-            firebaseAuth.getCurrentUser().updateProfile(profileUpdates)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Update user name in firestore
-                        firebaseFirestore
-                            .collection(USERS)
-                            .document(firebaseAuth.getCurrentUser().getUid())
-                            .update(NAME, newUserName)
-                            .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
-                            .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
-                    }
-                });
+        if (firebaseUser != null && !Objects.equals(firebaseUser.getDisplayName(), newUserName)) {
+            updateUserNameInFirebaseAuth(firebaseUser, newUserName).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    updateUserNameInFirestore(firebaseUser, newUserName);
+                } else {
+                    Log.e(TAG, "Firebase Auth: Error updating user name", task.getException());
+                }
+            });
         }
     }
 
-
+    // ----- Delete account -----
     public void deleteAccount() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
-            firebaseFirestore.collection(USERS)
-                .document(firebaseUser.getUid())
-                .delete()
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Firestore User successfully deleted!"))
-                .addOnFailureListener(e -> Log.w(TAG, "Firestore Error deleting user", e))
-                .addOnCompleteListener(deleteFromFirestoreTask -> {
-                    if (deleteFromFirestoreTask.isSuccessful()) {
-                        firebaseUser.delete().addOnCompleteListener(deleteFromFirebaseTask -> {
-                            if (deleteFromFirebaseTask.isSuccessful()) {
-                                firebaseAuth.signOut();
-                            } else {
-                                Log.e(TAG, "Firebase Auth: Error deleting user", deleteFromFirebaseTask.getException());
-                            }
-                        });
-                    } else {
-                        Log.e(TAG, "Firestore: Error deleting user", deleteFromFirestoreTask.getException());
-                    }
-                });
+            deleteUserFromFirestore(firebaseUser).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    deleteUserFromFirebaseAuth(firebaseUser);
+                } else {
+                    Log.e(TAG, "Firestore: Error deleting user", task.getException());
+                }
+            });
         }
     }
+
+    private Task<Void> updateUserNameInFirebaseAuth(FirebaseUser firebaseUser, String newUserName) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+            .setDisplayName(newUserName)
+            .build();
+
+        return firebaseUser.updateProfile(profileUpdates);
+    }
+
+    private void updateUserNameInFirestore(FirebaseUser firebaseUser, String newUserName) {
+        firebaseFirestore
+            .collection(USERS)
+            .document(firebaseUser.getUid())
+            .update(NAME, newUserName)
+            .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
+            .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
+    }
+
+    private Task<Void> deleteUserFromFirestore(FirebaseUser firebaseUser) {
+        return firebaseFirestore.collection(USERS)
+            .document(firebaseUser.getUid())
+            .delete()
+            .addOnSuccessListener(aVoid -> Log.d(TAG, "Firestore User successfully deleted!"))
+            .addOnFailureListener(e -> Log.w(TAG, "Firestore Error deleting user", e));
+    }
+
+    private void deleteUserFromFirebaseAuth(FirebaseUser firebaseUser) {
+        firebaseUser.delete().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                firebaseAuth.signOut();
+            } else {
+                Log.e(TAG, "Firebase Auth: Error deleting user", task.getException());
+            }
+        });
+    }
+
 }

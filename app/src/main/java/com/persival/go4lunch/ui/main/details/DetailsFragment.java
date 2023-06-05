@@ -76,7 +76,7 @@ public class DetailsFragment extends Fragment {
             binding.detailsRatingBar.setRating(restaurantDetail.getRestaurantRating());
 
             // Choose this restaurant for lunch
-            binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.chooseThisRestaurant(restaurantDetail));
+            //binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.chooseThisRestaurant(restaurantDetail));
             viewModel.getIsRestaurantChosen().observe(getViewLifecycleOwner(), isChosen -> {
                 if (isChosen) {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
@@ -92,7 +92,7 @@ public class DetailsFragment extends Fragment {
             });
 
             // Like this restaurant
-            binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
+            //binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
             viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
                 if (isLiked) {
                     binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_rate_24));
