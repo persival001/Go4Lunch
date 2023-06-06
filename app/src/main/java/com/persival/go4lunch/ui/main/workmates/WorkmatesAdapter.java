@@ -1,5 +1,6 @@
 package com.persival.go4lunch.ui.main.workmates;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,10 +41,11 @@ public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesA
 
         private final TextView avatarName;
         private final ImageView avatarPicture;
+        private final Context context;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            context = itemView.getContext();
             avatarName = itemView.findViewById(R.id.avatar_name);
             avatarPicture = itemView.findViewById(R.id.avatar_picture);
         }
@@ -54,9 +57,17 @@ public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesA
                 .placeholder(R.drawable.ic_anon_user_48dp)
                 .error(R.drawable.ic_anon_user_48dp)
                 .into(avatarPicture);
+
+            if (item.getWorkmateName().contains(context.getString(R.string.hasnt_decided_yet))) {
+                avatarName.setTextColor(ContextCompat.getColor(context, com.google.android.libraries.places.R.color.quantum_grey500));
+            } else {
+                avatarName.setTextColor(ContextCompat.getColor(context, com.google.android.libraries.places.R.color.quantum_black_text));
+            }
+
             avatarName.setText(item.getWorkmateName());
         }
     }
+
 
     private static class UserListAdapterDiffCallback extends DiffUtil.ItemCallback<WorkmatesViewState> {
         @Override

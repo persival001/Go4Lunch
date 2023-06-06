@@ -27,7 +27,8 @@ public class SettingsViewModel extends ViewModel {
     public SettingsViewModel(
         @NonNull GetLoggedUserUseCase getLoggedUserUseCase,
         @NonNull SetNewUserNameUseCase setNewUserNameUseCase,
-        @NonNull DeleteAccountUseCase deleteAccountUseCase) {
+        @NonNull DeleteAccountUseCase deleteAccountUseCase
+    ) {
         this.setNewUserNameUseCase = setNewUserNameUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
 

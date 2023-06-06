@@ -37,6 +37,39 @@ public class GetWorkmatesUseCase {
         if (currentUser == null) {
             return new MutableLiveData<>(null);
         } else {
+            WorkmateEntity currentWorkmate = mapLoggedUserToWorkmate(currentUser);
+
+            return Transformations.map(userRepository.getWorkmatesLiveData(), workmateEntities -> {
+                List<WorkmateEntity> workmatesWithCurrentUser = new ArrayList<>(workmateEntities);
+                workmatesWithCurrentUser.add(currentWorkmate);
+
+                return workmatesWithCurrentUser;
+            });
+        }
+    }
+
+
+    private WorkmateEntity mapLoggedUserToWorkmate(LoggedUserEntity loggedUser) {
+        if (loggedUser == null) {
+            return null;
+        } else {
+            return new WorkmateEntity(
+                loggedUser.getId(),
+                loggedUser.getAvatarPictureUrl(),
+                loggedUser.getName(),
+                "123456,",
+                null,
+                "123456"
+            );
+        }
+    }
+
+   /* public LiveData<List<WorkmateEntity>> invoke() {
+        LoggedUserEntity currentUser = getLoggedUserUseCase.invoke();
+
+        if (currentUser == null) {
+            return new MutableLiveData<>(null);
+        } else {
             return Transformations.map(userRepository.getWorkmatesLiveData(), workmateEntities -> {
                 List<WorkmateEntity> reorderedWorkmateEntities = new ArrayList<>(workmateEntities);
                 WorkmateEntity currentUserEntity = null;
@@ -58,6 +91,6 @@ public class GetWorkmatesUseCase {
                 return reorderedWorkmateEntities;
             });
         }
-    }
+    }*/
 
 }

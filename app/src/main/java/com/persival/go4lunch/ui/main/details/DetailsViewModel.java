@@ -117,7 +117,7 @@ public class DetailsViewModel extends ViewModel {
     // Add "is joining!" after the workmate name
     private String getWorkmateNameIsJoining(String name) {
         if (name != null) {
-            return name + context.getString(R.string.is_joining);
+            return name + " " + context.getString(R.string.is_joining);
         } else {
             return "";
         }

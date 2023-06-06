@@ -1,6 +1,5 @@
 package com.persival.go4lunch.ui.main.restaurants;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,10 +21,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class RestaurantsFragment extends Fragment {
-    private static final int REQUEST_LOCATION_PERMISSION_CODE = 1000;
-    private FragmentRestaurantsBinding binding;
-    private RestaurantsViewModel viewModel;
 
+    private FragmentRestaurantsBinding binding;
+
+    @NonNull
     public static RestaurantsFragment newInstance() {
         return new RestaurantsFragment();
     }
@@ -44,25 +42,13 @@ public class RestaurantsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        viewModel = new ViewModelProvider(this).get(RestaurantsViewModel.class);
+        RestaurantsViewModel viewModel = new ViewModelProvider(this).get(RestaurantsViewModel.class);
 
         viewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
             if (!gps) {
                 new GpsDialogFragment().show(
                     requireActivity().getSupportFragmentManager(),
                     "GpsDialogFragment"
-                );
-            }
-        });
-
-        viewModel.getLocationPermission().observe(getViewLifecycleOwner(), hasPermission -> {
-            if (hasPermission) {
-                viewModel.startLocation();
-            } else {
-                ActivityCompat.requestPermissions(
-                    requireActivity()
-                    , new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-                    , REQUEST_LOCATION_PERMISSION_CODE
                 );
             }
         });
@@ -84,25 +70,8 @@ public class RestaurantsFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // Refresh location permission
-        viewModel.refreshLocationPermission();
-
-        // If location permission is not granted, request it
-        if (!viewModel.hasLocationPermission()) {
-            ActivityCompat.requestPermissions(
-                requireActivity()
-                , new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-                , REQUEST_LOCATION_PERMISSION_CODE
-            );
-        }
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
-        viewModel.stopLocation();
     }
 
     @Override

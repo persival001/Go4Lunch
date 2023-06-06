@@ -90,6 +90,7 @@
     <string name="gps_off">Le GPS est désactivé</string>
     <string name="please_activate_gps">Pour faire fonctionner cette application avec toutes ses fonctionnalités, nous avons besoin que vous activiez votre Gps avec la localisation précise.
         \nNe vous inquiètez pas, nous ne stockons aucune de vos données.</string>
-    <string name="is_eating_at">" is eating at "</string>
-    <string name="is_joining">" is joining!"</string>
+    <string name="is_eating_at">mange au</string>
+    <string name="is_joining">y va!</string>
+    <string name="hasnt_decided_yet">ne s\'est pas encore décidé</string>
 </resources>

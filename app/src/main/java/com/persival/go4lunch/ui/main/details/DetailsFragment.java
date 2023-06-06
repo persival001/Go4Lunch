@@ -89,7 +89,9 @@ public class DetailsFragment extends Fragment {
             // Call the restaurant
             binding.callButton.setOnClickListener(view -> {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + restaurantDetail.getRestaurantPhoneNumber()));
+                startActivity(intent);
             });
+
 
             // Like this restaurant
             //binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());

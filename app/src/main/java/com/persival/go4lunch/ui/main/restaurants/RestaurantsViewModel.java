@@ -2,8 +2,6 @@ package com.persival.go4lunch.ui.main.restaurants;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
-import android.annotation.SuppressLint;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -211,32 +209,6 @@ public class RestaurantsViewModel extends ViewModel {
 
     private boolean getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {
         return openingHours != null && openingHours.isOpenNow();
-    }
-
-    public LiveData<Boolean> getLocationPermission() {
-        return getLocationPermissionUseCase.invoke();
-    }
-
-    public boolean hasLocationPermission() {
-        return hasLocationPermissionUseCase.invoke();
-    }
-
-    public void refreshLocationPermission() {
-        refreshLocationPermissionUseCase.invoke();
-    }
-
-    @SuppressLint("MissingPermission")
-    public void startLocation() {
-        startLocationRequestUseCase.invoke();
-    }
-
-    @SuppressLint("MissingPermission")
-    public void stopLocation() {
-        stopLocationRequestUseCase.invoke();
-    }
-
-    public LiveData<LocationEntity> getLocationLiveData() {
-        return getLocationUseCase.invoke();
     }
 
     public LiveData<Boolean> isGpsActivatedLiveData() {

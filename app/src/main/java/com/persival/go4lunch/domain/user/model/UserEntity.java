@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 public class UserEntity {
     @NonNull
     private final LoggedUserEntity loggedUserEntity;
-
     @Nullable
     private final String goingToPlaceId;
 
