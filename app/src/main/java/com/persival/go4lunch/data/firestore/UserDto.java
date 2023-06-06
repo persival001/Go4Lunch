@@ -1,10 +1,12 @@
 package com.persival.go4lunch.data.firestore;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
-public class WorkmateDto {
+public class UserDto {
 
     // Workmate
     @Nullable
@@ -13,29 +15,21 @@ public class WorkmateDto {
     private final String workmatePictureUrl;
     @Nullable
     private final String workmateName;
-
-    // Associated restaurant
     @Nullable
-    private final String restaurantId;
-    @Nullable
-    private final String restaurantName;
-    @Nullable
-    private final String restaurantAddress;
+    private final List<String> likedRestaurantsId;
 
 
     // Empty constructor needed for Firestore deserialization
-    public WorkmateDto() {
+    public UserDto() {
         id = null;
         workmatePictureUrl = null;
         workmateName = null;
-        restaurantId = null;
-        restaurantName = null;
-        restaurantAddress = null;
+        likedRestaurantsId = null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, workmatePictureUrl, workmateName, restaurantId, restaurantName, restaurantAddress);
+        return Objects.hash(id, workmatePictureUrl, workmateName, likedRestaurantsId);
     }
 
     @Override
@@ -44,24 +38,21 @@ public class WorkmateDto {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        WorkmateDto that = (WorkmateDto) o;
+        UserDto that = (UserDto) o;
         return Objects.equals(id, that.id) &&
             Objects.equals(workmatePictureUrl, that.workmatePictureUrl) &&
             Objects.equals(workmateName, that.workmateName) &&
-            Objects.equals(restaurantId, that.restaurantId) &&
-            Objects.equals(restaurantName, that.restaurantName) &&
-            Objects.equals(restaurantAddress, that.restaurantAddress);
+            Objects.equals(likedRestaurantsId, that.likedRestaurantsId);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "WorkmateDto{" +
             "id='" + id + '\'' +
             ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
             ", workmateName='" + workmateName + '\'' +
-            ", restaurantId='" + restaurantId + '\'' +
-            ", restaurantName='" + restaurantName + '\'' +
-            ", restaurantAddress='" + restaurantAddress + '\'' +
+            ", restaurantId='" + likedRestaurantsId + '\'' +
             '}';
     }
 
@@ -81,19 +72,10 @@ public class WorkmateDto {
     }
 
     @Nullable
-    public String getRestaurantId() {
-        return restaurantId;
+    public List<String> getLikedRestaurantsId() {
+        return likedRestaurantsId;
     }
 
-    @Nullable
-    public String getRestaurantName() {
-        return restaurantName;
-    }
-
-    @Nullable
-    public String getRestaurantAddress() {
-        return restaurantAddress;
-    }
 }
 
 

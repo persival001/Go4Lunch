@@ -76,8 +76,9 @@ public class DetailsViewModel extends ViewModel {
                 for (WorkmateEntity workmate : workmates) {
                     DetailsWorkmateViewState restaurantDetail = new DetailsWorkmateViewState(
                         workmate.getId(),
-                        workmate.getWorkmatePictureUrl(),
-                        getWorkmateNameIsJoining(workmate.getWorkmateName())
+                        workmate.getPictureUrl(),
+                        //getWorkmateNameIsJoining(workmate.getWorkmateName()
+                        "test"
                     );
                     mappedWorkmates.add(restaurantDetail);
                 }

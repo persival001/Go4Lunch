@@ -53,16 +53,23 @@ public class GetWorkmatesUseCase {
         if (loggedUser == null) {
             return null;
         } else {
+            List<String> restaurantIds = new ArrayList<>();
+            restaurantIds.add("id1");
+            restaurantIds.add("id2");
+            restaurantIds.add("id3");
+            restaurantIds.add("id4");
+            restaurantIds.add("id5");
+
             return new WorkmateEntity(
                 loggedUser.getId(),
                 loggedUser.getAvatarPictureUrl(),
                 loggedUser.getName(),
-                "123456,",
-                null,
-                "123456"
+                restaurantIds
             );
         }
     }
+
+
 
    /* public LiveData<List<WorkmateEntity>> invoke() {
         LoggedUserEntity currentUser = getLoggedUserUseCase.invoke();

@@ -41,7 +41,7 @@ public class GetWorkmatesListUseCase {
             return Transformations.map(workmatesLiveData, workmates -> {
                 List<WorkmateEntity> filteredWorkmates = new ArrayList<>();
                 for (WorkmateEntity workmate : workmates) {
-                    if (restaurantId.equals(workmate.getRestaurantId())) {
+                    if (restaurantId.equals("ChIJ_xgBHcw8lEcRn")) {
                         filteredWorkmates.add(workmate);
                     }
                 }

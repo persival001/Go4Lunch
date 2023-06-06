@@ -10,19 +10,25 @@ public class SetNewUserNameUseCase {
     @NonNull
     private final UserRepository userRepository;
     @NonNull
+    private final LoggedUserRepository loggedUserRepository;
+    @NonNull
     private final FirebaseAuth firebaseAuth;
 
     @Inject
     public SetNewUserNameUseCase(
         @NonNull UserRepository userRepository,
-        @NonNull FirebaseAuth firebaseAuth) {
+        @NonNull LoggedUserRepository loggedUserRepository,
+        @NonNull FirebaseAuth firebaseAuth
+    ) {
         this.userRepository = userRepository;
+        this.loggedUserRepository = loggedUserRepository;
         this.firebaseAuth = firebaseAuth;
     }
 
     public void invoke(String newUserName) {
         if (firebaseAuth.getCurrentUser() != null) {
             userRepository.setNewUserName(newUserName);
+            loggedUserRepository.setNewUserName(newUserName);
         }
     }
 }
