@@ -7,6 +7,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
@@ -40,7 +41,9 @@ public class DetailsViewModel extends ViewModel {
     public DetailsViewModel(
         @NonNull Application context,
         @NonNull GetWorkmatesListUseCase getWorkmatesListUseCase,
-        @NonNull GetRestaurantDetailsUseCase getRestaurantDetailsUseCase) {
+        @NonNull GetRestaurantDetailsUseCase getRestaurantDetailsUseCase,
+        @NonNull SavedStateHandle savedStateHandle
+        ) {
         this.context = context;
         this.getWorkmatesListUseCase = getWorkmatesListUseCase;
         this.getRestaurantDetailsUseCase = getRestaurantDetailsUseCase;
@@ -48,6 +51,12 @@ public class DetailsViewModel extends ViewModel {
         isRestaurantLiked.setValue(false);
         isRestaurantChosen = new MutableLiveData<>();
         isRestaurantChosen.setValue(false);
+
+        String restaurantId = savedStateHandle.get(DetailsFragment.KEY_RESTAURANT_ID);
+
+        if (restaurantId == null) {
+            throw new IllegalStateException("Please use DetailsFragment.newInstance() to launch the Fragment");
+        }
     }
 
     public LiveData<Boolean> getIsRestaurantChosen() {
@@ -68,7 +77,7 @@ public class DetailsViewModel extends ViewModel {
         }
     }*/
 
-    public LiveData<List<DetailsWorkmateViewState>> getWorkmateListLiveData(String restaurantId) {
+    public LiveData<List<DetailsWorkmateViewState>> getWorkmateListLiveData() {
         return Transformations.map(
             getWorkmatesListUseCase.invoke(restaurantId),
             workmates -> {
@@ -87,8 +96,7 @@ public class DetailsViewModel extends ViewModel {
         );
     }
 
-
-    public LiveData<DetailsRestaurantViewState> getDetailViewStateLiveData(String restaurantId) {
+    public LiveData<DetailsRestaurantViewState> getDetailViewStateLiveData() {
         return Transformations.map(
             getRestaurantDetailsUseCase.invoke(restaurantId),
             restaurant -> {
@@ -116,12 +124,8 @@ public class DetailsViewModel extends ViewModel {
 
 
     // Add "is joining!" after the workmate name
-    private String getWorkmateNameIsJoining(String name) {
-        if (name != null) {
-            return name + " " + context.getString(R.string.is_joining);
-        } else {
-            return "";
-        }
+    private String getWorkmateNameIsJoining(@NonNull String name) {
+        return context.getString(R.string.is_joining, name);
     }
 
    /* public void toggleLike() {

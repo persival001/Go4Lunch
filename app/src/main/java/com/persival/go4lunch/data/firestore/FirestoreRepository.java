@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.persival.go4lunch.domain.user.UserRepository;
+import com.persival.go4lunch.domain.user.model.UserEntity;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class FirestoreRepository implements UserRepository {
                             userDto.getId(),
                             userDto.getWorkmatePictureUrl(),
                             userDto.getWorkmateName(),
-                            userDto.getLikedRestaurantsId()
+                            userDto.getLikedRestaurantsId() == null ? new ArrayList<>() : userDto.getLikedRestaurantsId()
                         );
 
                         workmates.add(workmateEntity);
@@ -79,17 +80,13 @@ public class FirestoreRepository implements UserRepository {
     }
 
     // ----- Change user name -----
-    public void setNewUserName(String newUserName) {
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
-        if (firebaseUser != null) {
+    public void setNewUserName(@NonNull String userId, @NonNull String newUserName) {
             firebaseFirestore
                 .collection(USERS)
-                .document(firebaseUser.getUid())
+                .document(userId)
                 .update(NAME, newUserName)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "User successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing user", e));
-        }
     }
 
     // ----- Delete account -----

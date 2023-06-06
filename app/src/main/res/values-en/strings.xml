@@ -85,7 +85,7 @@
     <string name="gps_off">Gps is off</string>
     <string name="please_activate_gps">To make this application work with all its features, we need you to activate your Gps with the precise location.\n\nDon\'t worry, we don\'t store any of your data.</string>
     <string name="is_eating_at">"is eating at "</string>
-    <string name="is_joining">"is joining!"</string>
+    <string name="is_joining">%s is joining!</string>
     <string name="hasnt_decided_yet">hasn\'t decided yet</string>
 
 </resources>

@@ -15,19 +15,39 @@ public class WorkmateEntity {
     private final String pictureUrl;
     @NonNull
     private final String name;
-    @Nullable
+    @NonNull
     private final List<String> likedRestaurantsId;
 
     public WorkmateEntity(
         @NonNull String id,
         @Nullable String pictureUrl,
         @NonNull String name,
-        @Nullable List<String> likedRestaurantsId
+        @NonNull List<String> likedRestaurantsId
     ) {
         this.id = id;
         this.pictureUrl = pictureUrl;
         this.name = name;
         this.likedRestaurantsId = likedRestaurantsId;
+    }
+
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    @Nullable
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+
+    @NonNull
+    public List<String> getLikedRestaurantsId() {
+        return likedRestaurantsId;
     }
 
     @Override
@@ -57,25 +77,5 @@ public class WorkmateEntity {
             ", name='" + name + '\'' +
             ", likedRestaurantId=" + likedRestaurantsId +
             '}';
-    }
-
-    @NonNull
-    public String getId() {
-        return id;
-    }
-
-    @Nullable
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    @NonNull
-    public String getName() {
-        return name;
-    }
-
-    @Nullable
-    public List<String> getLikedRestaurantsId() {
-        return likedRestaurantsId;
     }
 }

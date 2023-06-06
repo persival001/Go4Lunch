@@ -68,7 +68,7 @@ public class MapsViewModel extends ViewModel {
         return hasLocationPermissionUseCase.invoke();
     }
 
-    public void refreshLocationPermission() {
+    public void onStart() {
         refreshLocationPermissionUseCase.invoke();
     }
 
@@ -83,8 +83,7 @@ public class MapsViewModel extends ViewModel {
     }
 
     public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants() {
-        return getNearbyRestaurantsUseCase.invoke(
-        );
+        return getNearbyRestaurantsUseCase.invoke();
     }
 
     public LiveData<List<MarkerOptions>> getMarkerOptions() {

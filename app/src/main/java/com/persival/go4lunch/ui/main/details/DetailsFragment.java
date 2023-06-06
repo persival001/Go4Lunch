@@ -26,8 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class DetailsFragment extends Fragment {
 
-    private static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
-    private String restaurantId;
+    static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
     private FragmentDetailsBinding binding;
     private DetailsViewModel viewModel;
 
@@ -42,12 +41,7 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            restaurantId = getArguments().getString(KEY_RESTAURANT_ID);
-        }
-        if (Objects.equals(restaurantId, "")) {
-            throw new IllegalStateException("Please use DetailsFragment.newInstance() to launch the Fragment");
-        }
+
         viewModel = new ViewModelProvider(this).get(DetailsViewModel.class);
     }
 
@@ -63,7 +57,7 @@ public class DetailsFragment extends Fragment {
         binding.detailsRecyclerView.setAdapter(detailsAdapter);
 
         // Update UI with restaurant details
-        viewModel.getDetailViewStateLiveData(restaurantId).observe(getViewLifecycleOwner(), restaurantDetail -> {
+        viewModel.getDetailViewStateLiveData().observe(getViewLifecycleOwner(), restaurantDetail -> {
 
             Glide.with(binding.detailsPicture)
                 .load(restaurantDetail.getRestaurantPictureUrl())
@@ -97,9 +91,9 @@ public class DetailsFragment extends Fragment {
             //binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
             viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
                 if (isLiked) {
-                    binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_rate_24));
+                    binding.likeButton.setIconResource(R.drawable.baseline_star_rate_24);
                 } else {
-                    binding.likeButton.setIcon(getResources().getDrawable(R.drawable.baseline_star_border_24));
+                    binding.likeButton.setIconResource(R.drawable.baseline_star_border_24);
                 }
             });
 
@@ -111,7 +105,7 @@ public class DetailsFragment extends Fragment {
 
         });
 
-        viewModel.getWorkmateListLiveData(restaurantId).observe(getViewLifecycleOwner(), detailsAdapter::submitList);
+        viewModel.getWorkmateListLiveData().observe(getViewLifecycleOwner(), detailsAdapter::submitList);
 
         return binding.getRoot();
     }
@@ -120,24 +114,20 @@ public class DetailsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // Hide BottomNavigationView and Toolbar when the fragment is visible
-        if (getActivity() != null) {
-            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setVisibility(View.GONE);
-            Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-            toolbar.setVisibility(View.GONE);
-        }
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
+        Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.GONE);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         // Show BottomNavigationView and Toolbar when the fragment is not visible
-        if (getActivity() != null) {
-            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
-            bottomNavigationView.setVisibility(View.VISIBLE);
-            Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-            toolbar.setVisibility(View.VISIBLE);
-        }
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+        Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     @Override

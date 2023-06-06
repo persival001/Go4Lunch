@@ -1,5 +1,6 @@
 package com.persival.go4lunch.domain.restaurant;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
@@ -16,8 +17,8 @@ public interface PlacesRepository {
     );
 
     LiveData<NearbyRestaurantsResponse.Place> getRestaurantLiveData(
-        String restaurantId,
-        String apiKey
+        @NonNull String restaurantId,
+        @NonNull String apiKey
     );
 
 }

@@ -12,9 +12,7 @@ public interface UserRepository {
     @NonNull
     LiveData<List<WorkmateEntity>> getWorkmatesLiveData();
 
-    void setNewUserName(
-        String newUserName
-    );
+    void setNewUserName(@NonNull String userId, @NonNull  String newUserName);
 
     void deleteAccount();
 }

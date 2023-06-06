@@ -24,13 +24,8 @@ public class DetailsAdapter extends ListAdapter<DetailsWorkmateViewState, Detail
     @Override
     public DetailsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new DetailsAdapter.ViewHolder(
-            LayoutInflater.
-                from(parent.getContext()).
-                inflate(
-                    R.layout.item_details,
-                    parent,
-                    false
-                ));
+            LayoutInflater.from(parent.getContext()).inflate(R.layout.item_details, parent, false)
+        );
     }
 
     @Override

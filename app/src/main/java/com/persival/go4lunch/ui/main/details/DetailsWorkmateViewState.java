@@ -31,14 +31,10 @@ public class DetailsWorkmateViewState {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         DetailsWorkmateViewState that = (DetailsWorkmateViewState) o;
-        return id.equals(that.id) &&
-            workmatePictureUrl.equals(that.workmatePictureUrl) &&
-            workmateName.equals(that.workmateName);
+        return id.equals(that.id) && Objects.equals(workmatePictureUrl, that.workmatePictureUrl) && workmateName.equals(that.workmateName);
     }
 
     @NonNull

@@ -27,7 +27,7 @@ public class SetNewUserNameUseCase {
 
     public void invoke(String newUserName) {
         if (firebaseAuth.getCurrentUser() != null) {
-            userRepository.setNewUserName(newUserName);
+            userRepository.setNewUserName(firebaseAuth.getCurrentUser().getUid(), newUserName);
             loggedUserRepository.setNewUserName(newUserName);
         }
     }

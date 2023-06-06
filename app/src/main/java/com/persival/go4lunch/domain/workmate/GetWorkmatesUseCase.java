@@ -35,7 +35,7 @@ public class GetWorkmatesUseCase {
         LoggedUserEntity currentUser = getLoggedUserUseCase.invoke();
 
         if (currentUser == null) {
-            return new MutableLiveData<>(null);
+            return new MutableLiveData<>(new ArrayList<>());
         } else {
             WorkmateEntity currentWorkmate = mapLoggedUserToWorkmate(currentUser);
 
@@ -49,24 +49,20 @@ public class GetWorkmatesUseCase {
     }
 
 
-    private WorkmateEntity mapLoggedUserToWorkmate(LoggedUserEntity loggedUser) {
-        if (loggedUser == null) {
-            return null;
-        } else {
-            List<String> restaurantIds = new ArrayList<>();
-            restaurantIds.add("id1");
-            restaurantIds.add("id2");
-            restaurantIds.add("id3");
-            restaurantIds.add("id4");
-            restaurantIds.add("id5");
+    private WorkmateEntity mapLoggedUserToWorkmate(@NonNull LoggedUserEntity loggedUser) {
+        List<String> restaurantIds = new ArrayList<>();
+        restaurantIds.add("id1");
+        restaurantIds.add("id2");
+        restaurantIds.add("id3");
+        restaurantIds.add("id4");
+        restaurantIds.add("id5");
 
-            return new WorkmateEntity(
-                loggedUser.getId(),
-                loggedUser.getAvatarPictureUrl(),
-                loggedUser.getName(),
-                restaurantIds
-            );
-        }
+        return new WorkmateEntity(
+            loggedUser.getId(),
+            loggedUser.getAvatarPictureUrl(),
+            loggedUser.getName(),
+            restaurantIds
+        );
     }
 
 

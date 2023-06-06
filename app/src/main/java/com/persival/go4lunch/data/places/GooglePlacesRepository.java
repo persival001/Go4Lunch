@@ -64,7 +64,7 @@ public class GooglePlacesRepository implements PlacesRepository {
         return restaurantsLiveData;
     }
 
-    public LiveData<NearbyRestaurantsResponse.Place> getRestaurantLiveData(String restaurantId, String apiKey) {
+    public LiveData<NearbyRestaurantsResponse.Place> getRestaurantLiveData(@NonNull String restaurantId, @NonNull  String apiKey) {
         MutableLiveData<NearbyRestaurantsResponse.Place> restaurantLiveData = new MutableLiveData<>();
 
         NearbyRestaurantsResponse.Place cached = placeDetailCache.get(restaurantId);

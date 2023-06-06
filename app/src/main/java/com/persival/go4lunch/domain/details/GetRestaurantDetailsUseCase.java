@@ -26,7 +26,7 @@ public class GetRestaurantDetailsUseCase {
         this.getLocationUseCase = getLocationUseCase;
     }
 
-    public LiveData<NearbyRestaurantsResponse.Place> invoke(String restaurantId) {
+    public LiveData<NearbyRestaurantsResponse.Place> invoke(@NonNull String restaurantId) {
         return placesRepository.getRestaurantLiveData(
             restaurantId,
             MAPS_API_KEY
