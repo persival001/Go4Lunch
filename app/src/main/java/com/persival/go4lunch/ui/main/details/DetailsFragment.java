@@ -91,13 +91,18 @@ public class DetailsFragment extends Fragment {
 
             // Like this restaurant
             binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
-            viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
-                if (isLiked) {
-                    binding.likeButton.setIconResource(R.drawable.baseline_star_rate_24);
-                } else {
-                    binding.likeButton.setIconResource(R.drawable.baseline_star_border_24);
-                }
-            });
+            if (restaurantDetail.getRestaurantPhoneNumber() != null) {
+                binding.callButton.setVisibility(View.VISIBLE);
+                viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
+                    if (isLiked) {
+                        binding.likeButton.setIconResource(R.drawable.baseline_star_rate_24);
+                    } else {
+                        binding.likeButton.setIconResource(R.drawable.baseline_star_border_24);
+                    }
+                });
+            } else {
+                binding.callButton.setVisibility(View.GONE);
+            }
 
             // Open the restaurant's website
             binding.websiteButton.setOnClickListener(view -> {

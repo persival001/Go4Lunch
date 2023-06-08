@@ -1,8 +1,5 @@
 package com.persival.go4lunch.data.permissions;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-
 import android.Manifest;
 import android.app.Application;
 import android.content.Context;
@@ -10,11 +7,10 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.persival.go4lunch.domain.location.GpsPermissionRepository;
+import com.persival.go4lunch.domain.permissions.GpsPermissionRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,26 +27,21 @@ public class PermissionRepository implements GpsPermissionRepository {
         this.context = context;
     }
 
-    @Override
-    public void refreshLocationPermission() {
-        refreshGpsActivation();
-        boolean hasPermission = ActivityCompat.checkSelfPermission(
-            context, Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED;
-        locationPermissionLiveData.setValue(hasPermission);
-    }
 
-    public LiveData<Boolean> getLocationPermission() {
+    public LiveData<Boolean> isLocationPermission() {
         return locationPermissionLiveData;
-    }
-
-    @Override
-    public boolean hasLocationPermission() {
-        return ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
     }
 
     public LiveData<Boolean> isGpsActivated() {
         return isGpsActivatedLiveData;
+    }
+
+    @Override
+    public void refreshLocationPermission() {
+        boolean hasPermission = ActivityCompat.checkSelfPermission(
+            context, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED;
+        locationPermissionLiveData.setValue(hasPermission);
     }
 
     public void refreshGpsActivation() {

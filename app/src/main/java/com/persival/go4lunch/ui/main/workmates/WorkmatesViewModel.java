@@ -1,6 +1,6 @@
 package com.persival.go4lunch.ui.main.workmates;
 
-import android.app.Application;
+import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -22,12 +22,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class WorkmatesViewModel extends ViewModel {
 
     private final LiveData<List<WorkmatesViewState>> viewStateLiveData;
-    private final Application context;
+    private final Resources resources;
 
     @Inject
     public WorkmatesViewModel(
         @NonNull GetWorkmatesUseCase getWorkmatesUseCase,
-        Application context) {
+        Resources resources) {
         viewStateLiveData = Transformations.map(getWorkmatesUseCase.invoke(), users -> {
 
             List<WorkmatesViewState> workmatesViewState = new ArrayList<>();
@@ -47,15 +47,15 @@ public class WorkmatesViewModel extends ViewModel {
 
             return workmatesViewState;
         });
-        this.context = context;
+        this.resources = resources;
     }
 
     // Add "is eating at" before the workmate name and add the restaurant name
     private String getFormattedName(String name, String restaurantName) {
         if (name != null && restaurantName != null) {
-            return name + " " + context.getString(R.string.is_eating_at) + " " + restaurantName;
+            return name + " " + resources.getString(R.string.is_eating_at) + " " + restaurantName;
         } else {
-            return name + " " + context.getString(R.string.hasnt_decided_yet);
+            return name + " " + resources.getString(R.string.hasnt_decided_yet);
         }
     }
 

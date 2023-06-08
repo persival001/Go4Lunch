@@ -1,14 +1,16 @@
 package com.persival.go4lunch.ui.main.maps;
 
 import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,11 +30,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MapsFragment extends SupportMapFragment {
-    private static final int REQUEST_LOCATION_PERMISSION_CODE = 1000;
     private final List<Marker> markers = new ArrayList<>();
     private MapsViewModel mapsViewModel;
     private LatLng lastCameraPosition;
     private float lastZoomLevel;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+
 
     @NonNull
     public static MapsFragment newInstance() {
@@ -44,17 +47,6 @@ public class MapsFragment extends SupportMapFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
-
-        mapsViewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
-            if (!gps) {
-                new GpsDialogFragment().show(
-                    requireActivity().getSupportFragmentManager(),
-                    "GpsDialogFragment"
-                );
-            } else {
-                Log.d("MapsFragment", "GPS ACTIVATED");
-            }
-        });
 
         getMapAsync(googleMap -> {
             googleMap.setOnMarkerClickListener(marker -> {
@@ -87,14 +79,11 @@ public class MapsFragment extends SupportMapFragment {
                         .strokeColor(Color.BLUE)
                         .fillColor(0x110000FF);
                     googleMap.addCircle(circleOptions);
-                } else {
-                    Log.d("MapsFragment", "LOCATION IS NULL");
                 }
             });
 
             mapsViewModel.getNearbyRestaurants().observe(getViewLifecycleOwner(), places -> {
                 if (places != null) {
-                    Log.d("MapsFragment", "PLACES PAS NULL");
                     // Clear existing markers
                     for (Marker marker : markers) {
                         marker.remove();
@@ -107,7 +96,6 @@ public class MapsFragment extends SupportMapFragment {
                             place.getLatitude(),
                             place.getLongitude()
                         );
-                        Log.d("MapsFragment", "PLACE: " + place.getName() + " " + place.getAddress());
                         MarkerOptions markerOptions = new MarkerOptions()
                             .position(latLng)
                             .title(place.getName())
@@ -118,21 +106,31 @@ public class MapsFragment extends SupportMapFragment {
                 }
             });
 
+            // Check GPS activation
+            mapsViewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
+                if (!gps) {
+                    Log.d("MapsFragment", "GPS DEACTIVATED");
+                    new GpsDialogFragment().show(
+                        requireActivity().getSupportFragmentManager(),
+                        "GpsDialogFragment"
+                    );
+                } else {
+                    Log.d("MapsFragment", "GPS ACTIVATED");
+                }
+            });
+
         });
     }
 
     @Override
     public void onResume() {
-        super.onResume();
-        // Refresh location permission
+        mapsViewModel.refreshGpsActivation();
         mapsViewModel.onResume();
-
-        // If location permission is not granted, request it
-        if (!mapsViewModel.hasLocationPermission()) {
-            ActivityCompat.requestPermissions(
-                requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION_CODE
-            );
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
+        super.onResume();
     }
 
     @Override

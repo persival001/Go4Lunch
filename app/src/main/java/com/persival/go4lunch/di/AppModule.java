@@ -1,6 +1,9 @@
 package com.persival.go4lunch.di;
 
 import android.app.Application;
+import android.content.res.Resources;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -70,6 +73,12 @@ public class AppModule {
     @Provides
     public static FirebaseFirestore provideFirestoreDb() {
         return FirebaseFirestore.getInstance();
+    }
+
+    @Provides
+    @Singleton
+    public static Resources provideResources(@NonNull Application application) {
+        return application.getResources();
     }
 
 }

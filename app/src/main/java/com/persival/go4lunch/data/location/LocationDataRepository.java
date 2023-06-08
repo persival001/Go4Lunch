@@ -28,10 +28,8 @@ public class LocationDataRepository implements LocationRepository {
     private final FusedLocationProviderClient fusedLocationProviderClient;
     @NonNull
     private final SharedPreferencesRepository sharedPreferencesRepository;
-
     @NonNull
     private final MutableLiveData<LocationEntity> locationMutableLiveData = new MutableLiveData<>();
-
     private LocationCallback callback;
 
     @Inject

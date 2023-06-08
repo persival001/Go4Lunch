@@ -1,21 +1,20 @@
-package com.persival.go4lunch.domain.location;
+package com.persival.go4lunch.domain.permissions;
 
 import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 
-public class RefreshLocationPermissionUseCase {
-
+public class RefreshGpsActivationUseCase {
     @NonNull
     private final GpsPermissionRepository gpsPermissionRepository;
 
     @Inject
-    public RefreshLocationPermissionUseCase(
+    public RefreshGpsActivationUseCase(
         @NonNull GpsPermissionRepository gpsPermissionRepository) {
         this.gpsPermissionRepository = gpsPermissionRepository;
     }
 
     public void invoke() {
-        gpsPermissionRepository.refreshLocationPermission();
+        gpsPermissionRepository.refreshGpsActivation();
     }
 }

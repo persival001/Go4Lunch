@@ -2,7 +2,7 @@ package com.persival.go4lunch.ui.main.details;
 
 import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
-import android.app.Application;
+import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -29,7 +29,7 @@ public class DetailsViewModel extends ViewModel {
     public final LiveData<List<DetailsWorkmateViewState>> workmatesViewStateLiveData;
     public final LiveData<DetailsRestaurantViewState> restaurantViewStateLiveData;
     @NonNull
-    private final Application context;
+    private final Resources resources;
     @NonNull
     private final MutableLiveData<Boolean> isRestaurantLiked;
     @NonNull
@@ -39,12 +39,12 @@ public class DetailsViewModel extends ViewModel {
 
     @Inject
     public DetailsViewModel(
-        @NonNull Application context,
+        @NonNull Resources resources,
         @NonNull GetWorkmatesListUseCase getWorkmatesListUseCase,
         @NonNull GetRestaurantDetailsUseCase getRestaurantDetailsUseCase,
         @NonNull SavedStateHandle savedStateHandle
     ) {
-        this.context = context;
+        this.resources = resources;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
         isRestaurantChosen = new MutableLiveData<>();
@@ -132,7 +132,7 @@ public class DetailsViewModel extends ViewModel {
 
     // Add "is joining!" after the workmate name
     private String getWorkmateNameIsJoining(@NonNull String name) {
-        return context.getString(R.string.is_joining, name);
+        return resources.getString(R.string.is_joining, name);
     }
 
     // Convert rating from 5 to 3 stars

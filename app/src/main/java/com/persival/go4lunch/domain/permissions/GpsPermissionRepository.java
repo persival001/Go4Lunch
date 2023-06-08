@@ -1,4 +1,4 @@
-package com.persival.go4lunch.domain.location;
+package com.persival.go4lunch.domain.permissions;
 
 import androidx.lifecycle.LiveData;
 
@@ -6,9 +6,9 @@ public interface GpsPermissionRepository {
 
     void refreshLocationPermission();
 
-    LiveData<Boolean> getLocationPermission();
+    void refreshGpsActivation();
 
-    boolean hasLocationPermission();
+    LiveData<Boolean> isLocationPermission();
 
     LiveData<Boolean> isGpsActivated();
 }
