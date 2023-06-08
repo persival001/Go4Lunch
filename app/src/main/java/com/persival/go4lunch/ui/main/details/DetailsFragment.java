@@ -19,8 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentDetailsBinding;
 
-import java.util.Objects;
-
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -58,7 +56,6 @@ public class DetailsFragment extends Fragment {
 
         // Update UI with restaurant details
         viewModel.getDetailViewStateLiveData().observe(getViewLifecycleOwner(), restaurantDetail -> {
-
             Glide.with(binding.detailsPicture)
                 .load(restaurantDetail.getRestaurantPictureUrl())
                 .placeholder(R.drawable.logoresto)
@@ -70,7 +67,7 @@ public class DetailsFragment extends Fragment {
             binding.detailsRatingBar.setRating(restaurantDetail.getRestaurantRating());
 
             // Choose this restaurant for lunch
-            //binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.chooseThisRestaurant(restaurantDetail));
+            binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.chooseThisRestaurant(restaurantDetail));
             viewModel.getIsRestaurantChosen().observe(getViewLifecycleOwner(), isChosen -> {
                 if (isChosen) {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
@@ -82,13 +79,18 @@ public class DetailsFragment extends Fragment {
 
             // Call the restaurant
             binding.callButton.setOnClickListener(view -> {
+                if (restaurantDetail.getRestaurantPhoneNumber() != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + restaurantDetail.getRestaurantPhoneNumber()));
+                    startActivity(intent);
+                } else {
+                    binding.callButton.setVisibility(View.GONE);
+                }
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + restaurantDetail.getRestaurantPhoneNumber()));
                 startActivity(intent);
             });
 
-
             // Like this restaurant
-            //binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
+            binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
             viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
                 if (isLiked) {
                     binding.likeButton.setIconResource(R.drawable.baseline_star_rate_24);

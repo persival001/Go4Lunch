@@ -20,9 +20,14 @@ public class UserEntity {
         this.goingToPlaceId = goingToPlaceId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(loggedUserEntity, goingToPlaceId);
+    @NonNull
+    public LoggedUserEntity getLoggedUserEntity() {
+        return loggedUserEntity;
+    }
+
+    @Nullable
+    public String getGoingToPlaceId() {
+        return goingToPlaceId;
     }
 
     @Override
@@ -37,6 +42,12 @@ public class UserEntity {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(loggedUserEntity, goingToPlaceId);
+    }
+
+    @NonNull
+    @Override
     public String toString() {
         return "UserEntity{" +
             "loggedUserEntity=" + loggedUserEntity +
@@ -44,13 +55,4 @@ public class UserEntity {
             '}';
     }
 
-    @NonNull
-    public LoggedUserEntity getLoggedUserEntity() {
-        return loggedUserEntity;
-    }
-
-    @Nullable
-    public String getGoingToPlaceId() {
-        return goingToPlaceId;
-    }
 }

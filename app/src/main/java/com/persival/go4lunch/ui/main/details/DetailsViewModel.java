@@ -26,16 +26,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class DetailsViewModel extends ViewModel {
+    public final LiveData<List<DetailsWorkmateViewState>> workmatesViewStateLiveData;
+    public final LiveData<DetailsRestaurantViewState> restaurantViewStateLiveData;
     @NonNull
     private final Application context;
-    @NonNull
-    private final GetWorkmatesListUseCase getWorkmatesListUseCase;
-    @NonNull
-    private final GetRestaurantDetailsUseCase getRestaurantDetailsUseCase;
     @NonNull
     private final MutableLiveData<Boolean> isRestaurantLiked;
     @NonNull
     private final MutableLiveData<Boolean> isRestaurantChosen;
+    private DetailsRestaurantViewState restaurantDetail;
+
 
     @Inject
     public DetailsViewModel(
@@ -43,10 +43,8 @@ public class DetailsViewModel extends ViewModel {
         @NonNull GetWorkmatesListUseCase getWorkmatesListUseCase,
         @NonNull GetRestaurantDetailsUseCase getRestaurantDetailsUseCase,
         @NonNull SavedStateHandle savedStateHandle
-        ) {
+    ) {
         this.context = context;
-        this.getWorkmatesListUseCase = getWorkmatesListUseCase;
-        this.getRestaurantDetailsUseCase = getRestaurantDetailsUseCase;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
         isRestaurantChosen = new MutableLiveData<>();
@@ -57,28 +55,8 @@ public class DetailsViewModel extends ViewModel {
         if (restaurantId == null) {
             throw new IllegalStateException("Please use DetailsFragment.newInstance() to launch the Fragment");
         }
-    }
 
-    public LiveData<Boolean> getIsRestaurantChosen() {
-        return isRestaurantChosen;
-    }
-
-    public LiveData<Boolean> getIsRestaurantLiked() {
-        return isRestaurantLiked;
-    }
-
-   /* public void chooseThisRestaurant(DetailsRestaurantViewState detail) {
-        this.restaurantDetail = detail;
-        if (isRestaurantChosen.getValue() != null) {
-            isRestaurantChosen.setValue(!isRestaurantChosen.getValue());
-        }
-        if (restaurantDetail != null) {
-            //restaurantDetail.setChosen(isRestaurantChosen.getValue());
-        }
-    }*/
-
-    public LiveData<List<DetailsWorkmateViewState>> getWorkmateListLiveData() {
-        return Transformations.map(
+        workmatesViewStateLiveData = Transformations.map(
             getWorkmatesListUseCase.invoke(restaurantId),
             workmates -> {
                 List<DetailsWorkmateViewState> mappedWorkmates = new ArrayList<>();
@@ -86,25 +64,20 @@ public class DetailsViewModel extends ViewModel {
                     DetailsWorkmateViewState restaurantDetail = new DetailsWorkmateViewState(
                         workmate.getId(),
                         workmate.getPictureUrl(),
-                        //getWorkmateNameIsJoining(workmate.getWorkmateName()
-                        "test"
+                        getWorkmateNameIsJoining(workmate.getName())
                     );
                     mappedWorkmates.add(restaurantDetail);
                 }
                 return mappedWorkmates;
             }
         );
-    }
 
-    public LiveData<DetailsRestaurantViewState> getDetailViewStateLiveData() {
-        return Transformations.map(
+        restaurantViewStateLiveData = Transformations.map(
             getRestaurantDetailsUseCase.invoke(restaurantId),
             restaurant -> {
                 if (restaurant.getId() != null &&
                     restaurant.getName() != null &&
-                    restaurant.getAddress() != null &&
-                    restaurant.getPhoneNumber() != null &&
-                    restaurant.getWebsite() != null
+                    restaurant.getAddress() != null
                 ) {
                     return new DetailsRestaurantViewState(
                         restaurant.getId(),
@@ -122,20 +95,45 @@ public class DetailsViewModel extends ViewModel {
         );
     }
 
-
-    // Add "is joining!" after the workmate name
-    private String getWorkmateNameIsJoining(@NonNull String name) {
-        return context.getString(R.string.is_joining, name);
+    public LiveData<Boolean> getIsRestaurantChosen() {
+        return isRestaurantChosen;
     }
 
-   /* public void toggleLike() {
+    public LiveData<Boolean> getIsRestaurantLiked() {
+        return isRestaurantLiked;
+    }
+
+    public void chooseThisRestaurant(DetailsRestaurantViewState detail) {
+        this.restaurantDetail = detail;
+        if (isRestaurantChosen.getValue() != null) {
+            isRestaurantChosen.setValue(!isRestaurantChosen.getValue());
+        }
+        if (restaurantDetail != null) {
+            //restaurantDetail.setChosen(isRestaurantChosen.getValue());
+        }
+    }
+
+    public void toggleLike() {
         if (isRestaurantLiked.getValue() != null) {
             isRestaurantLiked.setValue(!isRestaurantLiked.getValue());
         }
         if (restaurantDetail != null) {
             //restaurantDetail.setLiked(isRestaurantLiked.getValue());
         }
-    }*/
+    }
+
+    public LiveData<List<DetailsWorkmateViewState>> getWorkmateListLiveData() {
+        return workmatesViewStateLiveData;
+    }
+
+    public LiveData<DetailsRestaurantViewState> getDetailViewStateLiveData() {
+        return restaurantViewStateLiveData;
+    }
+
+    // Add "is joining!" after the workmate name
+    private String getWorkmateNameIsJoining(@NonNull String name) {
+        return context.getString(R.string.is_joining, name);
+    }
 
     // Convert rating from 5 to 3 stars
     private float getRating(Float rating) {

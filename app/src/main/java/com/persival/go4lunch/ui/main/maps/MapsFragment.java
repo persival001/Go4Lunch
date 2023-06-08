@@ -3,6 +3,7 @@ package com.persival.go4lunch.ui.main.maps;
 import android.Manifest;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,10 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 
 import java.util.ArrayList;
@@ -25,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MapsFragment extends SupportMapFragment {
-
     private static final int REQUEST_LOCATION_PERMISSION_CODE = 1000;
     private final List<Marker> markers = new ArrayList<>();
     private MapsViewModel mapsViewModel;
@@ -42,6 +44,17 @@ public class MapsFragment extends SupportMapFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
+
+        mapsViewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
+            if (!gps) {
+                new GpsDialogFragment().show(
+                    requireActivity().getSupportFragmentManager(),
+                    "GpsDialogFragment"
+                );
+            } else {
+                Log.d("MapsFragment", "GPS ACTIVATED");
+            }
+        });
 
         getMapAsync(googleMap -> {
             googleMap.setOnMarkerClickListener(marker -> {
@@ -60,18 +73,6 @@ public class MapsFragment extends SupportMapFragment {
                 }
             });
 
-            mapsViewModel.getLocationPermission().observe(getViewLifecycleOwner(), hasPermission -> {
-                if (hasPermission) {
-                    mapsViewModel.startLocation();
-                } else {
-                    ActivityCompat.requestPermissions(
-                        requireActivity()
-                        , new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-                        , REQUEST_LOCATION_PERMISSION_CODE
-                    );
-                }
-            });
-
             mapsViewModel.getLocationLiveData().observe(getViewLifecycleOwner(), location -> {
                 if (location != null) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -86,40 +87,45 @@ public class MapsFragment extends SupportMapFragment {
                         .strokeColor(Color.BLUE)
                         .fillColor(0x110000FF);
                     googleMap.addCircle(circleOptions);
+                } else {
+                    Log.d("MapsFragment", "LOCATION IS NULL");
                 }
             });
 
-            mapsViewModel.getMarkerOptions().observe(getViewLifecycleOwner(), markerOptionsList -> {
-                if (markerOptionsList != null) {
+            mapsViewModel.getNearbyRestaurants().observe(getViewLifecycleOwner(), places -> {
+                if (places != null) {
+                    Log.d("MapsFragment", "PLACES PAS NULL");
                     // Clear existing markers
                     for (Marker marker : markers) {
                         marker.remove();
                     }
                     markers.clear();
 
-                    for (MarkerOptions markerOptions : markerOptionsList) {
+                    // Create new markers
+                    for (NearbyRestaurantsResponse.Place place : places) {
+                        LatLng latLng = new LatLng(
+                            place.getLatitude(),
+                            place.getLongitude()
+                        );
+                        Log.d("MapsFragment", "PLACE: " + place.getName() + " " + place.getAddress());
+                        MarkerOptions markerOptions = new MarkerOptions()
+                            .position(latLng)
+                            .title(place.getName())
+                            .snippet(place.getAddress())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                         markers.add(googleMap.addMarker(markerOptions));
                     }
                 }
             });
 
-            mapsViewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
-                if (!gps) {
-                    new GpsDialogFragment().show(
-                        requireActivity().getSupportFragmentManager(),
-                        "GpsDialogFragment"
-                    );
-                }
-            });
         });
     }
 
-    // TODO OnResume plutôt ?
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         // Refresh location permission
-        mapsViewModel.onStart();
+        mapsViewModel.onResume();
 
         // If location permission is not granted, request it
         if (!mapsViewModel.hasLocationPermission()) {

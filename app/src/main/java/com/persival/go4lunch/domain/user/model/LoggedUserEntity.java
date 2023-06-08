@@ -27,35 +27,6 @@ public class LoggedUserEntity {
         this.avatarPictureUrl = avatarPictureUrl;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, emailAddress, avatarPictureUrl);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        LoggedUserEntity that = (LoggedUserEntity) o;
-        return id.equals(that.id) &&
-            name.equals(that.name) &&
-            emailAddress.equals(that.emailAddress) &&
-            Objects.equals(avatarPictureUrl, that.avatarPictureUrl);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "LoggedUserEntity{" +
-            "id='" + id + '\'' +
-            ", name='" + name + '\'' +
-            ", emailAddress='" + emailAddress + '\'' +
-            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
-            '}';
-    }
-
     @NonNull
     public String getId() {
         return id;
@@ -74,5 +45,34 @@ public class LoggedUserEntity {
     @Nullable
     public String getAvatarPictureUrl() {
         return avatarPictureUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        LoggedUserEntity that = (LoggedUserEntity) o;
+        return id.equals(that.id) &&
+            name.equals(that.name) &&
+            emailAddress.equals(that.emailAddress) &&
+            Objects.equals(avatarPictureUrl, that.avatarPictureUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, emailAddress, avatarPictureUrl);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "LoggedUserEntity{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", emailAddress='" + emailAddress + '\'' +
+            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
+            '}';
     }
 }

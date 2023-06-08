@@ -4,12 +4,8 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.location.GetLocationPermissionUseCase;
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
@@ -21,7 +17,6 @@ import com.persival.go4lunch.domain.location.StopLocationRequestUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -68,7 +63,7 @@ public class MapsViewModel extends ViewModel {
         return hasLocationPermissionUseCase.invoke();
     }
 
-    public void onStart() {
+    public void onResume() {
         refreshLocationPermissionUseCase.invoke();
     }
 
@@ -85,26 +80,6 @@ public class MapsViewModel extends ViewModel {
     public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants() {
         return getNearbyRestaurantsUseCase.invoke();
     }
-
-    public LiveData<List<MarkerOptions>> getMarkerOptions() {
-        return Transformations.map(getNearbyRestaurants(), places -> {
-            List<MarkerOptions> markerOptionsList = new ArrayList<>();
-            for (NearbyRestaurantsResponse.Place place : places) {
-                LatLng latLng = new LatLng(
-                    place.getLatitude(),
-                    place.getLongitude()
-                );
-                MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng)
-                    .title(place.getName())
-                    .snippet(place.getAddress())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                markerOptionsList.add(markerOptions);
-            }
-            return markerOptionsList;
-        });
-    }
-
 
     public LiveData<LocationEntity> getLocationLiveData() {
         return getLocationUseCase.invoke();
