@@ -67,11 +67,10 @@ public class DetailsFragment extends Fragment {
             binding.detailsRatingBar.setRating(restaurantDetail.getRestaurantRating());
 
             // Choose this restaurant for lunch
-            binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.chooseThisRestaurant(restaurantDetail));
+            binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.onChooseRestaurant(restaurantDetail));
             viewModel.getIsRestaurantChosen().observe(getViewLifecycleOwner(), isChosen -> {
                 if (isChosen) {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
-
                 } else {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
                 }
@@ -80,6 +79,7 @@ public class DetailsFragment extends Fragment {
             // Call the restaurant
             binding.callButton.setOnClickListener(view -> {
                 if (restaurantDetail.getRestaurantPhoneNumber() != null) {
+                    binding.callButton.setVisibility(View.VISIBLE);
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + restaurantDetail.getRestaurantPhoneNumber()));
                     startActivity(intent);
                 } else {
@@ -90,24 +90,24 @@ public class DetailsFragment extends Fragment {
             });
 
             // Like this restaurant
-            binding.likeButton.setOnClickListener(v -> viewModel.toggleLike());
-            if (restaurantDetail.getRestaurantPhoneNumber() != null) {
-                binding.callButton.setVisibility(View.VISIBLE);
-                viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
-                    if (isLiked) {
-                        binding.likeButton.setIconResource(R.drawable.baseline_star_rate_24);
-                    } else {
-                        binding.likeButton.setIconResource(R.drawable.baseline_star_border_24);
-                    }
-                });
-            } else {
-                binding.callButton.setVisibility(View.GONE);
-            }
+            binding.likeButton.setOnClickListener(v -> viewModel.onToggleLikeRestaurant());
+            viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
+                if (isLiked) {
+                    binding.likeButton.setIconResource(R.drawable.baseline_star_rate_24);
+                } else {
+                    binding.likeButton.setIconResource(R.drawable.baseline_star_border_24);
+                }
+            });
 
             // Open the restaurant's website
             binding.websiteButton.setOnClickListener(view -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurantDetail.getRestaurantWebsiteUrl()));
-                startActivity(intent);
+                if (restaurantDetail.getRestaurantWebsiteUrl() != null) {
+                    binding.websiteButton.setVisibility(View.VISIBLE);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurantDetail.getRestaurantWebsiteUrl()));
+                    startActivity(intent);
+                } else {
+                    binding.websiteButton.setVisibility(View.GONE);
+                }
             });
 
         });

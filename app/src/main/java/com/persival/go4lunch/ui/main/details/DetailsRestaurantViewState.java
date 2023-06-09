@@ -15,9 +15,9 @@ public class DetailsRestaurantViewState {
     private final Float restaurantRating;
     @NonNull
     private final String restaurantAddress;
-    @NonNull
+    @Nullable
     private final String restaurantPhoneNumber;
-    @NonNull
+    @Nullable
     private final String restaurantWebsiteUrl;
 
     public DetailsRestaurantViewState(
@@ -26,8 +26,8 @@ public class DetailsRestaurantViewState {
         @NonNull String restaurantName,
         Float restaurantRating,
         @NonNull String restaurantAddress,
-        @NonNull String restaurantPhoneNumber,
-        @NonNull String restaurantWebsiteUrl
+        @Nullable String restaurantPhoneNumber,
+        @Nullable String restaurantWebsiteUrl
     ) {
         this.id = id;
         this.restaurantPictureUrl = restaurantPictureUrl;
@@ -39,11 +39,6 @@ public class DetailsRestaurantViewState {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, restaurantPictureUrl, restaurantName, restaurantRating, restaurantAddress, restaurantPhoneNumber, restaurantWebsiteUrl);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -51,18 +46,23 @@ public class DetailsRestaurantViewState {
             return false;
         DetailsRestaurantViewState that = (DetailsRestaurantViewState) o;
         return id.equals(that.id) &&
-            restaurantPictureUrl.equals(that.restaurantPictureUrl) &&
+            Objects.equals(restaurantPictureUrl, that.restaurantPictureUrl) &&
             restaurantName.equals(that.restaurantName) &&
             Objects.equals(restaurantRating, that.restaurantRating) &&
             restaurantAddress.equals(that.restaurantAddress) &&
-            restaurantPhoneNumber.equals(that.restaurantPhoneNumber) &&
-            restaurantWebsiteUrl.equals(that.restaurantWebsiteUrl);
+            Objects.equals(restaurantPhoneNumber, that.restaurantPhoneNumber) &&
+            Objects.equals(restaurantWebsiteUrl, that.restaurantWebsiteUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, restaurantPictureUrl, restaurantName, restaurantRating, restaurantAddress, restaurantPhoneNumber, restaurantWebsiteUrl);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "DetailsViewState{" +
+        return "DetailsRestaurantViewState{" +
             "id='" + id + '\'' +
             ", restaurantPictureUrl='" + restaurantPictureUrl + '\'' +
             ", restaurantName='" + restaurantName + '\'' +
@@ -97,12 +97,12 @@ public class DetailsRestaurantViewState {
         return restaurantAddress;
     }
 
-    @NonNull
+    @Nullable
     public String getRestaurantPhoneNumber() {
         return restaurantPhoneNumber;
     }
 
-    @NonNull
+    @Nullable
     public String getRestaurantWebsiteUrl() {
         return restaurantWebsiteUrl;
     }

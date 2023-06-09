@@ -36,7 +36,6 @@ public class DetailsViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isRestaurantChosen;
     private DetailsRestaurantViewState restaurantDetail;
 
-
     @Inject
     public DetailsViewModel(
         @NonNull Resources resources,
@@ -103,7 +102,7 @@ public class DetailsViewModel extends ViewModel {
         return isRestaurantLiked;
     }
 
-    public void chooseThisRestaurant(DetailsRestaurantViewState detail) {
+    public void onChooseRestaurant(DetailsRestaurantViewState detail) {
         this.restaurantDetail = detail;
         if (isRestaurantChosen.getValue() != null) {
             isRestaurantChosen.setValue(!isRestaurantChosen.getValue());
@@ -113,7 +112,7 @@ public class DetailsViewModel extends ViewModel {
         }
     }
 
-    public void toggleLike() {
+    public void onToggleLikeRestaurant() {
         if (isRestaurantLiked.getValue() != null) {
             isRestaurantLiked.setValue(!isRestaurantLiked.getValue());
         }

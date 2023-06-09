@@ -37,10 +37,8 @@ public class WorkmatesViewModel extends ViewModel {
                     new WorkmatesViewState(
                         workmateEntity.getId(),
                         workmateEntity.getPictureUrl(),
-                        //getFormattedName(workmateEntity.getWorkmateName(), workmateEntity.getRestaurantName()),
-                        "test",
-                        //workmateEntity.getRestaurantName()
-                        "test"
+                        getFormattedName(workmateEntity.getName(), "restaurantName"),
+                        "restaurantName"
                     )
                 );
             }
