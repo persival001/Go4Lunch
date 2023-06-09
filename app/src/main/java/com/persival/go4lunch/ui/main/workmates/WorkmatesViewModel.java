@@ -8,7 +8,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.R;
-import com.persival.go4lunch.domain.workmate.GetWorkmatesUseCase;
+import com.persival.go4lunch.domain.workmate.ReadWorkmatesUseCase;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
 import java.util.ArrayList;
@@ -26,9 +26,9 @@ public class WorkmatesViewModel extends ViewModel {
 
     @Inject
     public WorkmatesViewModel(
-        @NonNull GetWorkmatesUseCase getWorkmatesUseCase,
+        @NonNull ReadWorkmatesUseCase readWorkmatesUseCase,
         Resources resources) {
-        viewStateLiveData = Transformations.map(getWorkmatesUseCase.invoke(), users -> {
+        viewStateLiveData = Transformations.map(readWorkmatesUseCase.invoke(), users -> {
 
             List<WorkmatesViewState> workmatesViewState = new ArrayList<>();
 

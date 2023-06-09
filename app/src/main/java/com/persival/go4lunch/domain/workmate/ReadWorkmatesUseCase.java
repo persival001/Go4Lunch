@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
-import com.persival.go4lunch.domain.user.UserRepository;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
@@ -15,7 +14,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class GetWorkmatesUseCase {
+public class ReadWorkmatesUseCase {
 
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
@@ -23,7 +22,7 @@ public class GetWorkmatesUseCase {
     private final UserRepository userRepository;
 
     @Inject
-    public GetWorkmatesUseCase(
+    public ReadWorkmatesUseCase(
         @NonNull GetLoggedUserUseCase getLoggedUserUseCase,
         @NonNull UserRepository userRepository
     ) {

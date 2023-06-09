@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public class UserDto {
 
-    // Workmate
     @Nullable
     private final String id;
     @Nullable

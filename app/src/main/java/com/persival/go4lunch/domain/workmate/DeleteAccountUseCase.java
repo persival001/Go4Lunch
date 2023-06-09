@@ -1,6 +1,8 @@
-package com.persival.go4lunch.domain.user;
+package com.persival.go4lunch.domain.workmate;
 
 import androidx.annotation.NonNull;
+
+import com.persival.go4lunch.domain.user.LoggedUserRepository;
 
 import javax.inject.Inject;
 

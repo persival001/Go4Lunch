@@ -3,6 +3,7 @@ package com.persival.go4lunch.domain.user;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.persival.go4lunch.domain.workmate.UserRepository;
 
 import javax.inject.Inject;
 

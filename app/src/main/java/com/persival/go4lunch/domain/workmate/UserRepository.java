@@ -1,4 +1,4 @@
-package com.persival.go4lunch.domain.user;
+package com.persival.go4lunch.domain.workmate;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -12,7 +12,7 @@ public interface UserRepository {
     @NonNull
     LiveData<List<WorkmateEntity>> getWorkmatesLiveData();
 
-    void setNewUserName(@NonNull String userId, @NonNull  String newUserName);
+    void setNewUserName(@NonNull String userId, @NonNull String newUserName);
 
     void deleteAccount();
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -47,6 +48,13 @@ public class MapsFragment extends SupportMapFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
+
+        // Initialize requestPermissionLauncher
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                mapsViewModel.onResume();
+            }
+        });
 
         getMapAsync(googleMap -> {
             googleMap.setOnMarkerClickListener(marker -> {

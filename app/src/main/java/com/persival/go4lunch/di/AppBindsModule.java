@@ -9,7 +9,7 @@ import com.persival.go4lunch.domain.location.LocationRepository;
 import com.persival.go4lunch.domain.permissions.GpsPermissionRepository;
 import com.persival.go4lunch.domain.restaurant.PlacesRepository;
 import com.persival.go4lunch.domain.user.LoggedUserRepository;
-import com.persival.go4lunch.domain.user.UserRepository;
+import com.persival.go4lunch.domain.workmate.UserRepository;
 
 import javax.inject.Singleton;
 
