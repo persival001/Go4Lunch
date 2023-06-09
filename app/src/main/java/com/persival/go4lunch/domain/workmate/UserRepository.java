@@ -15,4 +15,6 @@ public interface UserRepository {
     void setNewUserName(@NonNull String userId, @NonNull String newUserName);
 
     void deleteAccount();
+
+    void createUser(WorkmateEntity newUser);
 }

@@ -78,6 +78,15 @@ public class FirestoreRepository implements UserRepository {
         return workmatesLiveData;
     }
 
+    // ----- Create new workmate -----
+    public void createUser(WorkmateEntity user) {
+        firebaseFirestore.collection(USERS).document(user.getId())
+            .set(user)
+            .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+            .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+    }
+
+
     // ----- Change user name -----
     public void setNewUserName(@NonNull String userId, @NonNull String newUserName) {
         firebaseFirestore

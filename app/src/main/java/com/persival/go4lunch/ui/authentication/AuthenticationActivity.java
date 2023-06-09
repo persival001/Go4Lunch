@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -22,7 +23,12 @@ import com.persival.go4lunch.ui.main.MainActivity;
 import java.util.Arrays;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AuthenticationActivity extends AppCompatActivity {
+
+    private AuthenticationViewModel viewModel;
 
     private final ActivityResultLauncher<Intent> signInActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
@@ -36,6 +42,8 @@ public class AuthenticationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        viewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             startMainActivity();
@@ -69,6 +77,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private void handleResponseAfterSignIn(int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                viewModel.createNewWorkmate();
                 startMainActivity();
             }
         } else {
