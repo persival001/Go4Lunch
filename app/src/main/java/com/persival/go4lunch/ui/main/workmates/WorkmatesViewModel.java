@@ -8,8 +8,8 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.R;
-import com.persival.go4lunch.domain.workmate.ReadWorkmatesUseCase;
-import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
+import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
+import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,19 +26,21 @@ public class WorkmatesViewModel extends ViewModel {
 
     @Inject
     public WorkmatesViewModel(
-        @NonNull ReadWorkmatesUseCase readWorkmatesUseCase,
+        @NonNull GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase,
         Resources resources) {
-        viewStateLiveData = Transformations.map(readWorkmatesUseCase.invoke(), users -> {
+        viewStateLiveData = Transformations.map(getWorkmatesEatAtRestaurantUseCase.invoke(), users -> {
 
             List<WorkmatesViewState> workmatesViewState = new ArrayList<>();
 
-            for (WorkmateEntity workmateEntity : users) {
+            for (WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity : users) {
                 workmatesViewState.add(
                     new WorkmatesViewState(
-                        workmateEntity.getId(),
-                        workmateEntity.getPictureUrl(),
-                        getFormattedName(workmateEntity.getName(), "restaurantName"),
-                        "restaurantName"
+                        workmateEatAtRestaurantEntity.getId(),
+                        workmateEatAtRestaurantEntity.getPictureUrl(),
+                        getFormattedName(
+                            workmateEatAtRestaurantEntity.getName(),
+                            workmateEatAtRestaurantEntity.getRestaurantName()
+                        )
                     )
                 );
             }

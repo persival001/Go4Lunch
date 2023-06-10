@@ -12,47 +12,16 @@ public class WorkmatesViewState {
     @NonNull
     private final String workmatePictureUrl;
     @NonNull
-    private final String workmateName;
-
-    // Associated restaurant
-    @NonNull
-    private final String restaurantName;
+    private final String text;
 
     public WorkmatesViewState(
         @NonNull String id,
         @NonNull String workmatePictureUrl,
-        @NonNull String workmateName,
-        @NonNull String restaurantName
+        @NonNull String text
     ) {
         this.id = id;
         this.workmatePictureUrl = workmatePictureUrl;
-        this.workmateName = workmateName;
-        this.restaurantName = restaurantName;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, workmatePictureUrl, workmateName, restaurantName);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        WorkmatesViewState that = (WorkmatesViewState) o;
-        return id.equals(that.id) && workmatePictureUrl.equals(that.workmatePictureUrl) && workmateName.equals(that.workmateName) && restaurantName.equals(that.restaurantName);
-    }
-
-    @Override
-    public String toString() {
-        return "WorkmatesViewState{" +
-            "id='" + id + '\'' +
-            ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
-            ", workmateName='" + workmateName + '\'' +
-            ", restaurantName='" + restaurantName + '\'' +
-            '}';
+        this.text = text;
     }
 
     @NonNull
@@ -66,12 +35,32 @@ public class WorkmatesViewState {
     }
 
     @NonNull
-    public String getWorkmateName() {
-        return workmateName;
+    public String getText() {
+        return text;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        WorkmatesViewState that = (WorkmatesViewState) o;
+        return id.equals(that.id) && workmatePictureUrl.equals(that.workmatePictureUrl) && text.equals(that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, workmatePictureUrl, text);
     }
 
     @NonNull
-    public String getRestaurantName() {
-        return restaurantName;
+    @Override
+    public String toString() {
+        return "WorkmatesViewState{" +
+            "id='" + id + '\'' +
+            ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
+            ", text='" + text + '\'' +
+            '}';
     }
 }

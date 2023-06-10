@@ -23,9 +23,9 @@ public class UpdateWorkmateUseCase {
         this.getLoggedUserUseCase = getLoggedUserUseCase;
     }
 
-    public void invoke(List<String> likedRestaurantsId, String eatingRestaurantId) {
+    public void invoke(List<String> likedRestaurantsId, String eatingRestaurantId, String eatingRestaurantName) {
         LoggedUserEntity currentUser = getLoggedUserUseCase.invoke();
 
-        userRepository.updateWorkmateInformation(currentUser, likedRestaurantsId, eatingRestaurantId);
+        userRepository.updateWorkmateInformation(currentUser, likedRestaurantsId, eatingRestaurantId, eatingRestaurantName);
     }
 }
