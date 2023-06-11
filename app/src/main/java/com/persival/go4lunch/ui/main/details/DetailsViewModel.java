@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.domain.details.GetLikedRestaurantsUseCase;
 import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.GetWorkmatesListUseCase;
 import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
@@ -30,6 +31,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class DetailsViewModel extends ViewModel {
     public final LiveData<List<DetailsWorkmateViewState>> workmatesViewStateLiveData;
     public final LiveData<DetailsRestaurantViewState> restaurantViewStateLiveData;
+    public final LiveData<List<String>> likedRestaurantsLiveData;
     @NonNull
     private final Resources resources;
     @NonNull
@@ -39,9 +41,10 @@ public class DetailsViewModel extends ViewModel {
     @NonNull
     private final SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase;
     @NonNull
+    private final GetLikedRestaurantsUseCase getLikedRestaurantsUseCase;
+    @NonNull
     private final SetRestaurantLikedUseCase setRestaurantLikedUseCase;
     private DetailsRestaurantViewState detailsRestaurantViewState;
-
 
     @Inject
     public DetailsViewModel(
@@ -50,9 +53,12 @@ public class DetailsViewModel extends ViewModel {
         @NonNull GetRestaurantDetailsUseCase getRestaurantDetailsUseCase,
         @NonNull SavedStateHandle savedStateHandle,
         @NonNull SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase,
-        @NonNull SetRestaurantLikedUseCase setRestaurantLikedUseCase) {
+        @NonNull GetLikedRestaurantsUseCase getLikedRestaurantsUseCase,
+        @NonNull SetRestaurantLikedUseCase setRestaurantLikedUseCase
+    ) {
         this.resources = resources;
         this.setRestaurantChosenToEatUseCase = setRestaurantChosenToEatUseCase;
+        this.getLikedRestaurantsUseCase = getLikedRestaurantsUseCase;
         this.setRestaurantLikedUseCase = setRestaurantLikedUseCase;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
@@ -64,6 +70,7 @@ public class DetailsViewModel extends ViewModel {
         if (restaurantId == null) {
             throw new IllegalStateException("Please use DetailsFragment.newInstance() to launch the Fragment");
         }
+        likedRestaurantsLiveData = getLikedRestaurantsUseCase.invoke();
 
         workmatesViewStateLiveData = Transformations.map(
             getWorkmatesListUseCase.invoke(restaurantId),
@@ -209,4 +216,12 @@ public class DetailsViewModel extends ViewModel {
             return "";
         }
     }
+
+    public void updateIsRestaurantLiked(boolean isLiked) {
+        isRestaurantLiked.setValue(isLiked);
+    }
+
 }
+
+
+

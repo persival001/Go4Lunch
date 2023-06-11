@@ -90,7 +90,11 @@ public class DetailsFragment extends Fragment {
             });
 
             // Like this restaurant
-            binding.likeButton.setOnClickListener(v -> viewModel.onToggleLikeRestaurant());
+            viewModel.likedRestaurantsLiveData.observe(getViewLifecycleOwner(), likedRestaurants -> {
+                if (likedRestaurants != null) {
+                    viewModel.updateIsRestaurantLiked(likedRestaurants.contains(restaurantDetail.getId()));
+                }
+            });
             viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
                 if (isLiked) {
                     binding.likeButton.setIconResource(R.drawable.baseline_star_rate_24);
@@ -98,6 +102,7 @@ public class DetailsFragment extends Fragment {
                     binding.likeButton.setIconResource(R.drawable.baseline_star_border_24);
                 }
             });
+            binding.likeButton.setOnClickListener(v -> viewModel.onToggleLikeRestaurant());
 
             // Open the restaurant's website
             binding.websiteButton.setOnClickListener(view -> {

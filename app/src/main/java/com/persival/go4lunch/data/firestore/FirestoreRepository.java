@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -179,19 +180,52 @@ public class FirestoreRepository implements UserRepository {
     public void updateLikedRestaurants(LoggedUserEntity user, boolean isAdded, String restaurantId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        if (isAdded) {
-            // Add a restaurantId to the liked restaurant array
-            db.collection(USERS).document(user.getId())
-                .update(LIKED_RESTAURANT_ID, FieldValue.arrayUnion(restaurantId))
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "RestaurantId added to liked restaurants successfully."))
-                .addOnFailureListener(e -> Log.w(TAG, "Error adding RestaurantId to liked restaurants", e));
-        } else {
-            // Remove a restaurantId from the liked restaurant array
-            db.collection(USERS).document(user.getId())
-                .update(LIKED_RESTAURANT_ID, FieldValue.arrayRemove(restaurantId))
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "RestaurantId removed from liked restaurants successfully."))
-                .addOnFailureListener(e -> Log.w(TAG, "Error removing RestaurantId from liked restaurants", e));
-        }
+        DocumentReference docRef = db.collection(USERS).document(user.getId());
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    List<String> likedRestaurantsId = (List<String>) document.get(LIKED_RESTAURANT_ID);
+
+                    if (isAdded) {
+                        // Add id of liked restaurant to the list
+                        db.collection(USERS).document(user.getId())
+                            .update(LIKED_RESTAURANT_ID, FieldValue.arrayUnion(restaurantId))
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "RestaurantId added to liked restaurants successfully."))
+                            .addOnFailureListener(e -> Log.w(TAG, "Error adding RestaurantId to liked restaurants", e));
+                        likedRestaurantsId.add(restaurantId);
+                    } else {
+                        // Erase id of liked restaurant from the list
+                        db.collection(USERS).document(user.getId())
+                            .update(LIKED_RESTAURANT_ID, FieldValue.arrayRemove(restaurantId))
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "RestaurantId removed from liked restaurants successfully."))
+                            .addOnFailureListener(e -> Log.w(TAG, "Error removing RestaurantId from liked restaurants", e));
+                        likedRestaurantsId.remove(restaurantId);
+                    }
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+    }
+
+    // ----- Get liked restaurants -----
+    public LiveData<List<String>> getLikedRestaurantsForUser(String userId) {
+        MutableLiveData<List<String>> likedRestaurants = new MutableLiveData<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(USERS).document(userId)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                List<String> restaurants = (List<String>) documentSnapshot.get(LIKED_RESTAURANT_ID);
+                likedRestaurants.setValue(restaurants);
+            })
+            .addOnFailureListener(e -> {
+                // handle error here
+            });
+        return likedRestaurants;
     }
 
 

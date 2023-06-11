@@ -29,4 +29,6 @@ public interface UserRepository {
     LiveData<List<WorkmateEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData();
 
     void updateLikedRestaurants(LoggedUserEntity invoke, boolean isAdded, String restaurantId);
+
+    LiveData<List<String>> getLikedRestaurantsForUser(String userId);
 }
