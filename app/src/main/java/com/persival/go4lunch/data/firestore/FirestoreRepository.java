@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.persival.go4lunch.domain.restaurant.model.UserRestaurantRelationsEntity;
@@ -156,17 +157,10 @@ public class FirestoreRepository implements UserRepository {
     // ----- Update workmate information -----
     public void updateWorkmateInformation(
         LoggedUserEntity user,
-        List<String> newLikedRestaurantIds,
         String eatingRestaurantId,
         String eatingRestaurantName
     ) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Update user liked restaurants
-        db.collection(USERS).document(user.getId())
-            .update(LIKED_RESTAURANT_ID, newLikedRestaurantIds)
-            .addOnSuccessListener(aVoid -> Log.d(TAG, "User liked restaurants updated successfully."))
-            .addOnFailureListener(e -> Log.w(TAG, "Error updating user liked restaurants", e));
 
         // Create new instance of UserRestaurantRelation
         UserRestaurantRelationsEntity userRestaurantRelationsEntity = new UserRestaurantRelationsEntity(
@@ -180,6 +174,24 @@ public class FirestoreRepository implements UserRepository {
             .set(userRestaurantRelationsEntity)
             .addOnSuccessListener(aVoid -> Log.d(TAG, "User restaurant relation added successfully."))
             .addOnFailureListener(e -> Log.w(TAG, "Error adding user restaurant relation", e));
+    }
+
+    public void updateLikedRestaurants(LoggedUserEntity user, boolean isAdded, String restaurantId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if (isAdded) {
+            // Add a restaurantId to the liked restaurant array
+            db.collection(USERS).document(user.getId())
+                .update(LIKED_RESTAURANT_ID, FieldValue.arrayUnion(restaurantId))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "RestaurantId added to liked restaurants successfully."))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding RestaurantId to liked restaurants", e));
+        } else {
+            // Remove a restaurantId from the liked restaurant array
+            db.collection(USERS).document(user.getId())
+                .update(LIKED_RESTAURANT_ID, FieldValue.arrayRemove(restaurantId))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "RestaurantId removed from liked restaurants successfully."))
+                .addOnFailureListener(e -> Log.w(TAG, "Error removing RestaurantId from liked restaurants", e));
+        }
     }
 
 

@@ -5,7 +5,6 @@ import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
@@ -16,7 +15,8 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.GetWorkmatesListUseCase;
-import com.persival.go4lunch.domain.details.SetRestaurantChosenToEat;
+import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
+import com.persival.go4lunch.domain.details.SetRestaurantLikedUseCase;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
 import java.util.ArrayList;
@@ -36,10 +36,12 @@ public class DetailsViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isRestaurantLiked;
     @NonNull
     private final MutableLiveData<Boolean> isRestaurantChosen;
-    private final List<String> likedRestaurantIds = new ArrayList<>();
-    private final SetRestaurantChosenToEat setRestaurantChosenToEat;
-    @Nullable
-    private DetailsRestaurantViewState restaurantDetail;
+    @NonNull
+    private final SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase;
+    @NonNull
+    private final SetRestaurantLikedUseCase setRestaurantLikedUseCase;
+    private DetailsRestaurantViewState detailsRestaurantViewState;
+
 
     @Inject
     public DetailsViewModel(
@@ -47,10 +49,11 @@ public class DetailsViewModel extends ViewModel {
         @NonNull GetWorkmatesListUseCase getWorkmatesListUseCase,
         @NonNull GetRestaurantDetailsUseCase getRestaurantDetailsUseCase,
         @NonNull SavedStateHandle savedStateHandle,
-        @Nullable SetRestaurantChosenToEat setRestaurantChosenToEat
-    ) {
+        @NonNull SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase,
+        @NonNull SetRestaurantLikedUseCase setRestaurantLikedUseCase) {
         this.resources = resources;
-        this.setRestaurantChosenToEat = setRestaurantChosenToEat;
+        this.setRestaurantChosenToEatUseCase = setRestaurantChosenToEatUseCase;
+        this.setRestaurantLikedUseCase = setRestaurantLikedUseCase;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
         isRestaurantChosen = new MutableLiveData<>();
@@ -85,7 +88,7 @@ public class DetailsViewModel extends ViewModel {
                     restaurant.getName() != null &&
                     restaurant.getAddress() != null
                 ) {
-                    return new DetailsRestaurantViewState(
+                    detailsRestaurantViewState = new DetailsRestaurantViewState(
                         restaurant.getId(),
                         getPictureUrl(restaurant.getPhotos()),
                         getFormattedName(restaurant.getName()),
@@ -94,7 +97,9 @@ public class DetailsViewModel extends ViewModel {
                         restaurant.getPhoneNumber(),
                         restaurant.getWebsite()
                     );
+                    return detailsRestaurantViewState;
                 } else {
+                    detailsRestaurantViewState = null;
                     return null;
                 }
             }
@@ -117,17 +122,16 @@ public class DetailsViewModel extends ViewModel {
 
         // Check if the restaurant is chosen
         if (isRestaurantChosen.getValue() != null && isRestaurantChosen.getValue()) {
-            // Restaurant is chosen - update restaurantDetail, restaurantId and restaurantName
-            this.restaurantDetail = detail;
-            String restaurantId = restaurantDetail.getId();
-            String restaurantName = restaurantDetail.getRestaurantName();
-            setRestaurantChosenToEat.invoke(restaurantId, restaurantName);
+            // Restaurant is chosen - update detailsRestaurantViewState, restaurantId and restaurantName
+            this.detailsRestaurantViewState = detail;
+            setRestaurantChosenToEatUseCase.invoke(
+                detailsRestaurantViewState.getId(),
+                detailsRestaurantViewState.getRestaurantName()
+            );
         } else {
             // Restaurant is unchosen - set everything to null
-            this.restaurantDetail = null;
-            String restaurantId = null;
-            String restaurantName = null;
-            setRestaurantChosenToEat.invoke(restaurantId, restaurantName);
+            this.detailsRestaurantViewState = null;
+            setRestaurantChosenToEatUseCase.invoke(null, null);
         }
     }
 
@@ -136,17 +140,15 @@ public class DetailsViewModel extends ViewModel {
         if (isRestaurantLiked.getValue() != null) {
             isRestaurantLiked.setValue(!isRestaurantLiked.getValue());
         }
-
         // Check if the restaurant is liked
-        if (isRestaurantLiked.getValue() != null && isRestaurantLiked.getValue()) {
-            String restaurantId = restaurantDetail.getId();
-            likedRestaurantIds.add(restaurantId);
-        } else {
-            String restaurantId = restaurantDetail.getId();
-            likedRestaurantIds.remove(restaurantId);
+        if (detailsRestaurantViewState != null) {
+            setRestaurantLikedUseCase.invoke(
+                isRestaurantLiked.getValue() != null &&
+                    isRestaurantLiked.getValue(),
+                detailsRestaurantViewState.getId()
+            );
         }
     }
-
 
     public LiveData<List<DetailsWorkmateViewState>> getWorkmateListLiveData() {
         return workmatesViewStateLiveData;

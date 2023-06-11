@@ -22,11 +22,11 @@ public interface UserRepository {
 
     void updateWorkmateInformation(
         LoggedUserEntity user,
-        List<String> newLikedRestaurantIds,
         String eatingRestaurantId,
         String eatingRestaurantName
     );
 
     LiveData<List<WorkmateEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData();
 
+    void updateLikedRestaurants(LoggedUserEntity invoke, boolean isAdded, String restaurantId);
 }

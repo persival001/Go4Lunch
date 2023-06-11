@@ -7,14 +7,14 @@ import com.persival.go4lunch.domain.workmate.UserRepository;
 
 import javax.inject.Inject;
 
-public class SetRestaurantChosenToEat {
+public class SetRestaurantChosenToEatUseCase {
     @NonNull
     private final UserRepository userRepository;
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
 
     @Inject
-    public SetRestaurantChosenToEat(
+    public SetRestaurantChosenToEatUseCase(
         @NonNull UserRepository userRepository,
         @NonNull GetLoggedUserUseCase getLoggedUserUseCase
     ) {
@@ -25,7 +25,6 @@ public class SetRestaurantChosenToEat {
     public void invoke(String restaurantId, String restaurantName) {
         userRepository.updateWorkmateInformation(
             getLoggedUserUseCase.invoke(),
-            null,
             restaurantId,
             restaurantName
         );
