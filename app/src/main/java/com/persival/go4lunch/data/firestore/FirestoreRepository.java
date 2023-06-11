@@ -35,6 +35,8 @@ public class FirestoreRepository implements UserRepository {
     @NonNull
     private static final String USER_EAT_AT_RESTAURANT = "userEatAtRestaurant";
     @NonNull
+    private static final String LIKED_RESTAURANT_ID = "likedRestaurantsId";
+    @NonNull
     private static final String TAG = "FirestoreRepository";
     @NonNull
     private final FirebaseFirestore firebaseFirestore;
@@ -87,6 +89,7 @@ public class FirestoreRepository implements UserRepository {
         return workmatesLiveData;
     }
 
+    // ----- Get the workmate list from Firestore and the relation with the restaurant he eat at -----
     public LiveData<List<WorkmateEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData() {
         MutableLiveData<List<WorkmateEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData = new MutableLiveData<>();
         List<WorkmateEatAtRestaurantEntity> workmates = new ArrayList<>();
@@ -99,7 +102,7 @@ public class FirestoreRepository implements UserRepository {
                 if (task.isSuccessful()) {
                     List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        UserDto user = document.toObject(UserDto.class);
+                        WorkmateDto user = document.toObject(WorkmateDto.class);
 
                         // For each user - get the relation
                         Task<DocumentSnapshot> userTask = db.collection(USER_EAT_AT_RESTAURANT).document(user.getId()).get();
@@ -110,7 +113,7 @@ public class FirestoreRepository implements UserRepository {
                         .addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 for (int i = 0; i < tasks.size(); i++) {
-                                    UserDto user = task.getResult().getDocuments().get(i).toObject(UserDto.class);
+                                    WorkmateDto user = task.getResult().getDocuments().get(i).toObject(WorkmateDto.class);
                                     DocumentSnapshot relationDoc = tasks.get(i).getResult();
                                     String restaurantName = null;
                                     if (relationDoc.exists()) {
@@ -120,11 +123,11 @@ public class FirestoreRepository implements UserRepository {
 
                                     WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
                                         user.getId(),
-                                        user.getWorkmatePictureUrl(),
-                                        user.getWorkmateName(),
+                                        user.getPictureUrl(),
+                                        user.getName(),
                                         restaurantName
                                     );
-                                    Log.d(TAG, "USER: " + user.getId() + " - " + user.getWorkmateName() + " - " + restaurantName);
+                                    Log.d(TAG, "USER: " + user.getId() + " - " + user.getName() + " - " + restaurantName);
                                     workmates.add(workmateEatAtRestaurantEntity);
                                 }
 
@@ -161,7 +164,7 @@ public class FirestoreRepository implements UserRepository {
 
         // Update user liked restaurants
         db.collection(USERS).document(user.getId())
-            .update("likedRestaurantsId", newLikedRestaurantIds)
+            .update(LIKED_RESTAURANT_ID, newLikedRestaurantIds)
             .addOnSuccessListener(aVoid -> Log.d(TAG, "User liked restaurants updated successfully."))
             .addOnFailureListener(e -> Log.w(TAG, "Error updating user liked restaurants", e));
 
@@ -173,7 +176,7 @@ public class FirestoreRepository implements UserRepository {
             new Date());
 
         // Add userEatAtRestaurant at the collection 'userEatAtRestaurant'
-        db.collection(USER_EAT_AT_RESTAURANT).document()
+        db.collection(USER_EAT_AT_RESTAURANT).document(user.getId())
             .set(userRestaurantRelationsEntity)
             .addOnSuccessListener(aVoid -> Log.d(TAG, "User restaurant relation added successfully."))
             .addOnFailureListener(e -> Log.w(TAG, "Error adding user restaurant relation", e));

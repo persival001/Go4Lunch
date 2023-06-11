@@ -28,4 +28,5 @@ public interface UserRepository {
     );
 
     LiveData<List<WorkmateEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData();
+
 }
