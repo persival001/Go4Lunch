@@ -3,6 +3,7 @@ package com.persival.go4lunch.domain.workmate;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+import com.persival.go4lunch.domain.restaurant.model.UserRestaurantRelationsEntity;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
@@ -31,4 +32,6 @@ public interface UserRepository {
     void updateLikedRestaurants(LoggedUserEntity invoke, boolean isAdded, String restaurantId);
 
     LiveData<List<String>> getLikedRestaurantsForUser(String userId);
+
+    LiveData<UserRestaurantRelationsEntity> getRestaurantChosenToEat(String userId);
 }

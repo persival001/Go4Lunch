@@ -223,9 +223,38 @@ public class FirestoreRepository implements UserRepository {
                 likedRestaurants.setValue(restaurants);
             })
             .addOnFailureListener(e -> {
-                // handle error here
+                Log.d(TAG, "Liked restaurants not found for user " + userId);
             });
         return likedRestaurants;
+    }
+
+    // ----- Get the id of the restaurant where the user is going to eat  -----
+    public LiveData<UserRestaurantRelationsEntity> getRestaurantChosenToEat(String userId) {
+        MutableLiveData<UserRestaurantRelationsEntity> userEatAtRestaurantLiveData = new MutableLiveData<>();
+
+        firebaseFirestore.collection(USER_EAT_AT_RESTAURANT)
+            .document(userId)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    UserRestaurantRelationsDto dto = documentSnapshot.toObject(UserRestaurantRelationsDto.class);
+
+                    // Convert DTO to Entity using the constructor
+                    UserRestaurantRelationsEntity entity = new UserRestaurantRelationsEntity(
+                        dto.getUserId(),
+                        dto.getRestaurantId(),
+                        dto.getRestaurantName(),
+                        dto.getDateOfVisit()
+                    );
+
+                    userEatAtRestaurantLiveData.setValue(entity);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            })
+            .addOnFailureListener(e -> Log.w(TAG, "Error getting document", e));
+
+        return userEatAtRestaurantLiveData;
     }
 
 
