@@ -15,17 +15,21 @@ public class WorkmateEatAtRestaurantEntity {
     private final String name;
     @NonNull
     private final String restaurantName;
+    @NonNull
+    private final String restaurantId;
 
     public WorkmateEatAtRestaurantEntity(
         @NonNull String id,
         @Nullable String pictureUrl,
         @NonNull String name,
-        @NonNull String restaurantName
+        @NonNull String restaurantName,
+        @NonNull String restaurantId
     ) {
         this.id = id;
         this.pictureUrl = pictureUrl;
         this.name = name;
         this.restaurantName = restaurantName;
+        this.restaurantId = restaurantId;
     }
 
     @NonNull
@@ -48,6 +52,11 @@ public class WorkmateEatAtRestaurantEntity {
         return restaurantName;
     }
 
+    @NonNull
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -55,22 +64,22 @@ public class WorkmateEatAtRestaurantEntity {
         if (o == null || getClass() != o.getClass())
             return false;
         WorkmateEatAtRestaurantEntity that = (WorkmateEatAtRestaurantEntity) o;
-        return id.equals(that.id) && Objects.equals(pictureUrl, that.pictureUrl) && name.equals(that.name) && restaurantName.equals(that.restaurantName);
+        return id.equals(that.id) && Objects.equals(pictureUrl, that.pictureUrl) && name.equals(that.name) && restaurantName.equals(that.restaurantName) && restaurantId.equals(that.restaurantId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pictureUrl, name, restaurantName);
+        return Objects.hash(id, pictureUrl, name, restaurantName, restaurantId);
     }
 
-    @NonNull
     @Override
     public String toString() {
-        return "WorkmateEatAtRestaurant{" +
+        return "WorkmateEatAtRestaurantEntity{" +
             "id='" + id + '\'' +
             ", pictureUrl='" + pictureUrl + '\'' +
             ", name='" + name + '\'' +
             ", restaurantName='" + restaurantName + '\'' +
+            ", restaurantId='" + restaurantId + '\'' +
             '}';
     }
 }

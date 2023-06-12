@@ -19,14 +19,17 @@ public class GetWorkmatesListUseCase {
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
     @NonNull
+    private final IsRestaurantChosenToEatUseCase isRestaurantChosenToEatUseCase;
+    @NonNull
     private final UserRepository userRepository;
 
     @Inject
     public GetWorkmatesListUseCase(
         @NonNull GetLoggedUserUseCase getLoggedUserUseCase,
-        @NonNull UserRepository userRepository
+        @NonNull IsRestaurantChosenToEatUseCase isRestaurantChosenToEatUseCase, @NonNull UserRepository userRepository
     ) {
         this.getLoggedUserUseCase = getLoggedUserUseCase;
+        this.isRestaurantChosenToEatUseCase = isRestaurantChosenToEatUseCase;
         this.userRepository = userRepository;
     }
 
@@ -41,7 +44,8 @@ public class GetWorkmatesListUseCase {
             return Transformations.map(workmatesLiveData, workmates -> {
                 List<WorkmateEntity> filteredWorkmates = new ArrayList<>();
                 for (WorkmateEntity workmate : workmates) {
-                    if (restaurantId.equals("ChIJ_xgBHcw8lEcRn")) {
+                    // restaurantId.equals(userRepository.getRestaurantChosenToEat(restaurantId).getValue())
+                    if (1 == 1) {
                         filteredWorkmates.add(workmate);
                     }
                 }

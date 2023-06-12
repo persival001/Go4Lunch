@@ -87,5 +87,7 @@
     <string name="is_eating_at">"is eating at "</string>
     <string name="is_joining">%s is joining!</string>
     <string name="hasnt_decided_yet">hasn\'t decided yet</string>
+    <string name="yes">YES</string>
+    <string name="exit">Do you really want to quit the application ?</string>
 
 </resources>

@@ -93,4 +93,6 @@
     <string name="is_eating_at">mange au</string>
     <string name="is_joining">%s y va!</string>
     <string name="hasnt_decided_yet">ne s\'est pas encore décidé</string>
+    <string name="yes">YES</string>
+    <string name="exit">Do you really want to quit the application ?</string>
 </resources>

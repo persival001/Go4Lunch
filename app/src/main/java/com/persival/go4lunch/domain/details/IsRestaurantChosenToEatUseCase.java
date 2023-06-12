@@ -4,13 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
-import com.persival.go4lunch.domain.restaurant.model.UserRestaurantRelationsEntity;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.workmate.UserRepository;
 
 import javax.inject.Inject;
 
-public class GetRestaurantChosenToEatUseCase {
+public class IsRestaurantChosenToEatUseCase {
 
     @NonNull
     private final UserRepository userRepository;
@@ -18,7 +17,7 @@ public class GetRestaurantChosenToEatUseCase {
     private final GetLoggedUserUseCase getLoggedUserUseCase;
 
     @Inject
-    public GetRestaurantChosenToEatUseCase(
+    public IsRestaurantChosenToEatUseCase(
         @NonNull UserRepository userRepository,
         @NonNull GetLoggedUserUseCase getLoggedUserUseCase
     ) {
@@ -27,12 +26,11 @@ public class GetRestaurantChosenToEatUseCase {
     }
 
     public LiveData<Boolean> invoke(String restaurantIdDetail) {
-        LiveData<UserRestaurantRelationsEntity> userEatsAtRestaurantLiveData
-            = userRepository.getRestaurantChosenToEat(getLoggedUserUseCase.invoke().getId());
+        LiveData<String> userEatsAtRestaurantLiveData = userRepository.getRestaurantChosenToEat(getLoggedUserUseCase.invoke().getId());
 
         return Transformations.map(userEatsAtRestaurantLiveData, userRestaurantRelationsEntity -> {
             if (userRestaurantRelationsEntity != null) {
-                return restaurantIdDetail.equals(userRestaurantRelationsEntity.getRestaurantId());
+                return restaurantIdDetail.equals(userEatsAtRestaurantLiveData.getValue());
             } else {
                 return false;
             }

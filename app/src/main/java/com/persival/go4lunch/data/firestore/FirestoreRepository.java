@@ -118,16 +118,20 @@ public class FirestoreRepository implements UserRepository {
                                     WorkmateDto user = task.getResult().getDocuments().get(i).toObject(WorkmateDto.class);
                                     DocumentSnapshot relationDoc = tasks.get(i).getResult();
                                     String restaurantName = null;
+                                    String restaurantId = null;
+                                    
                                     if (relationDoc.exists()) {
                                         UserRestaurantRelationsDto relation = relationDoc.toObject(UserRestaurantRelationsDto.class);
                                         restaurantName = relation.getRestaurantName();
+                                        restaurantId = relation.getRestaurantId();
                                     }
 
                                     WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
                                         user.getId(),
                                         user.getPictureUrl(),
                                         user.getName(),
-                                        restaurantName
+                                        restaurantName,
+                                        restaurantId
                                     );
                                     Log.d(TAG, "USER: " + user.getId() + " - " + user.getName() + " - " + restaurantName);
                                     workmates.add(workmateEatAtRestaurantEntity);
@@ -228,33 +232,28 @@ public class FirestoreRepository implements UserRepository {
         return likedRestaurants;
     }
 
-    // ----- Get the id of the restaurant where the user is going to eat  -----
-    public LiveData<UserRestaurantRelationsEntity> getRestaurantChosenToEat(String userId) {
-        MutableLiveData<UserRestaurantRelationsEntity> userEatAtRestaurantLiveData = new MutableLiveData<>();
+    // ----- Get and listen the id of the restaurant where the user is going to eat  -----
+    public LiveData<String> getRestaurantChosenToEat(String userId) {
+        MutableLiveData<String> restaurantIdLiveData = new MutableLiveData<>();
 
         firebaseFirestore.collection(USER_EAT_AT_RESTAURANT)
             .document(userId)
-            .get()
-            .addOnSuccessListener(documentSnapshot -> {
+            .addSnapshotListener((documentSnapshot, e) -> {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
                 if (documentSnapshot.exists()) {
                     UserRestaurantRelationsDto dto = documentSnapshot.toObject(UserRestaurantRelationsDto.class);
-
-                    // Convert DTO to Entity using the constructor
-                    UserRestaurantRelationsEntity entity = new UserRestaurantRelationsEntity(
-                        dto.getUserId(),
-                        dto.getRestaurantId(),
-                        dto.getRestaurantName(),
-                        dto.getDateOfVisit()
-                    );
-
-                    userEatAtRestaurantLiveData.setValue(entity);
+                    String restaurantId = dto.getRestaurantId();
+                    restaurantIdLiveData.setValue(restaurantId);
                 } else {
                     Log.d(TAG, "No such document");
                 }
-            })
-            .addOnFailureListener(e -> Log.w(TAG, "Error getting document", e));
+            });
 
-        return userEatAtRestaurantLiveData;
+        return restaurantIdLiveData;
     }
 
 
