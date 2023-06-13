@@ -11,9 +11,6 @@ import java.util.List;
 
 public interface UserRepository {
 
-    @NonNull
-    LiveData<List<WorkmateEntity>> getWorkmatesLiveData();
-
     void setNewUserName(@NonNull String userId, @NonNull String newUserName);
 
     void deleteAccount();
@@ -26,11 +23,9 @@ public interface UserRepository {
         String eatingRestaurantName
     );
 
-    LiveData<List<WorkmateEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData();
-
     void updateLikedRestaurants(LoggedUserEntity invoke, boolean isAdded, String restaurantId);
 
-    LiveData<List<String>> getLikedRestaurantsForUser(String userId);
+    LiveData<List<WorkmateEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData();
 
-    LiveData<String> getRestaurantChosenToEat(String userId);
+    LiveData<List<String>> getLikedRestaurantsForUser(String userId);
 }

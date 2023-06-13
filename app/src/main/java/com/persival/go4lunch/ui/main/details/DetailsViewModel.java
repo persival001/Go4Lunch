@@ -30,22 +30,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class DetailsViewModel extends ViewModel {
-    public final LiveData<List<DetailsWorkmateViewState>> workmatesViewStateLiveData;
     public final LiveData<DetailsRestaurantViewState> restaurantViewStateLiveData;
     public final LiveData<List<String>> likedRestaurantsLiveData;
+    public final LiveData<List<DetailsWorkmateViewState>> workmatesViewStateLiveData;
     @NonNull
     private final Resources resources;
     @NonNull
     private final MutableLiveData<Boolean> isRestaurantLiked;
+    @NonNull
+    private final MutableLiveData<Boolean> isRestaurantChosenLiveData;
     @NonNull
     private final SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase;
     @NonNull
     private final SetLikedRestaurantUseCase setLikedRestaurantUseCase;
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
-    @NonNull
-    private final MutableLiveData<Boolean> isRestaurantChosenLiveData;
-
     private DetailsRestaurantViewState detailsRestaurantViewState;
 
     @Inject
@@ -100,7 +99,6 @@ public class DetailsViewModel extends ViewModel {
 
             return detailsWorkmateViewState;
         });
-
 
         restaurantViewStateLiveData = Transformations.map(
             getRestaurantDetailsUseCase.invoke(restaurantId),
