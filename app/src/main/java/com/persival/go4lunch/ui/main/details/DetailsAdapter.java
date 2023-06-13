@@ -41,7 +41,7 @@ public class DetailsAdapter extends ListAdapter<DetailsWorkmateViewState, Detail
 
         @Override
         public boolean areContentsTheSame(@NonNull DetailsWorkmateViewState oldItem, @NonNull DetailsWorkmateViewState newItem) {
-            return oldItem.getId().equals(newItem.getId());
+            return oldItem.equals(newItem);
         }
     }
 

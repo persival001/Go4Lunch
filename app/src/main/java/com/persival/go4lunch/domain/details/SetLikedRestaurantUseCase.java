@@ -7,14 +7,14 @@ import com.persival.go4lunch.domain.workmate.UserRepository;
 
 import javax.inject.Inject;
 
-public class SetRestaurantLikedUseCase {
+public class SetLikedRestaurantUseCase {
     @NonNull
     private final UserRepository userRepository;
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
 
     @Inject
-    public SetRestaurantLikedUseCase(
+    public SetLikedRestaurantUseCase(
         @NonNull UserRepository userRepository,
         @NonNull GetLoggedUserUseCase getLoggedUserUseCase
     ) {

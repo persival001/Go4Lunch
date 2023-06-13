@@ -97,13 +97,17 @@ public class FirestoreRepository implements UserRepository {
         List<WorkmateEatAtRestaurantEntity> workmates = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Get all users
+        // Add snapshot listener to get updates in real time
         db.collection(USERS)
-            .get()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
+            .addSnapshotListener((snapshots, e) -> {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                if (snapshots != null) {
                     List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                    for (DocumentSnapshot document : snapshots.getDocuments()) {
                         WorkmateDto user = document.toObject(WorkmateDto.class);
 
                         // For each user - get the relation
@@ -112,14 +116,15 @@ public class FirestoreRepository implements UserRepository {
                     }
 
                     Tasks.whenAllComplete(tasks)
-                        .addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                workmates.clear(); // Clear the list of workmates
                                 for (int i = 0; i < tasks.size(); i++) {
-                                    WorkmateDto user = task.getResult().getDocuments().get(i).toObject(WorkmateDto.class);
+                                    WorkmateDto user = snapshots.getDocuments().get(i).toObject(WorkmateDto.class);
                                     DocumentSnapshot relationDoc = tasks.get(i).getResult();
                                     String restaurantName = null;
                                     String restaurantId = null;
-                                    
+
                                     if (relationDoc.exists()) {
                                         UserRestaurantRelationsDto relation = relationDoc.toObject(UserRestaurantRelationsDto.class);
                                         restaurantName = relation.getRestaurantName();
@@ -139,11 +144,11 @@ public class FirestoreRepository implements UserRepository {
 
                                 workmatesEatAtRestaurantLiveData.setValue(workmates);
                             } else {
-                                Log.d(TAG, "Error getting user documents: ", task1.getException());
+                                Log.d(TAG, "Error getting user documents: ", task.getException());
                             }
                         });
                 } else {
-                    Log.d(TAG, "Error getting user documents: ", task.getException());
+                    Log.d(TAG, "Current data null");
                 }
             });
 

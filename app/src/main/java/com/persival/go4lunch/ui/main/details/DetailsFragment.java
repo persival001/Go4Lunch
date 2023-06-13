@@ -69,7 +69,7 @@ public class DetailsFragment extends Fragment {
             // Choose this restaurant for lunch
             viewModel.getIsRestaurantChosenLiveData().observe(getViewLifecycleOwner(), isChosen -> {
                 // Update the button state based on the isChosen value.
-                binding.chooseThisRestaurantButton.setPressed(isChosen);
+                binding.chooseThisRestaurantButton.setSelected(isChosen);
 
                 // Change the image of the button based on whether it's chosen or not
                 if (isChosen) {
@@ -78,8 +78,8 @@ public class DetailsFragment extends Fragment {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
                 }
             });
-            binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.onChooseRestaurant(restaurantDetail));
 
+            binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.onChooseRestaurant(restaurantDetail));
 
             // Call the restaurant
             binding.callButton.setOnClickListener(view -> {

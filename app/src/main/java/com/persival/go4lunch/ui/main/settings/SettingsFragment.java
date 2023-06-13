@@ -16,6 +16,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -31,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentSettingsBinding;
 import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
+import com.persival.go4lunch.ui.main.maps.MapsFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -122,6 +124,18 @@ public class SettingsFragment extends Fragment {
             Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
             toolbar.setVisibility(View.GONE);
         }
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+            getViewLifecycleOwner(),
+            new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, MapsFragment.newInstance())
+                        .commit();
+                }
+
+            }
+        );
     }
 
     @Override

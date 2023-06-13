@@ -15,8 +15,8 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.details.GetLikedRestaurantsUseCase;
 import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
+import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
 import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
-import com.persival.go4lunch.domain.details.SetRestaurantLikedUseCase;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
 
@@ -39,7 +39,7 @@ public class DetailsViewModel extends ViewModel {
     @NonNull
     private final SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase;
     @NonNull
-    private final SetRestaurantLikedUseCase setRestaurantLikedUseCase;
+    private final SetLikedRestaurantUseCase setLikedRestaurantUseCase;
     @NonNull
     private final MutableLiveData<Boolean> isRestaurantChosenLiveData;
 
@@ -52,12 +52,12 @@ public class DetailsViewModel extends ViewModel {
         @NonNull SavedStateHandle savedStateHandle,
         @NonNull SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase,
         @NonNull GetLikedRestaurantsUseCase getLikedRestaurantsUseCase,
-        @NonNull SetRestaurantLikedUseCase setRestaurantLikedUseCase,
+        @NonNull SetLikedRestaurantUseCase setLikedRestaurantUseCase,
         @NonNull GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase
     ) {
         this.resources = resources;
         this.setRestaurantChosenToEatUseCase = setRestaurantChosenToEatUseCase;
-        this.setRestaurantLikedUseCase = setRestaurantLikedUseCase;
+        this.setLikedRestaurantUseCase = setLikedRestaurantUseCase;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
         isRestaurantChosenLiveData = new MutableLiveData<>();
@@ -80,7 +80,7 @@ public class DetailsViewModel extends ViewModel {
                         new DetailsWorkmateViewState(
                             workmateEatAtRestaurantEntity.getId(),
                             workmateEatAtRestaurantEntity.getPictureUrl(),
-                            getFormattedName(workmateEatAtRestaurantEntity.getName())
+                            getWorkmateNameIsJoining(workmateEatAtRestaurantEntity.getName())
                         )
                     );
                 }
@@ -88,7 +88,6 @@ public class DetailsViewModel extends ViewModel {
 
             return detailsWorkmateViewState;
         });
-
 
         restaurantViewStateLiveData = Transformations.map(
             getRestaurantDetailsUseCase.invoke(restaurantId),
@@ -152,7 +151,7 @@ public class DetailsViewModel extends ViewModel {
         }
         // Check if the restaurant is liked
         if (detailsRestaurantViewState != null) {
-            setRestaurantLikedUseCase.invoke(
+            setLikedRestaurantUseCase.invoke(
                 isRestaurantLiked.getValue() != null &&
                     isRestaurantLiked.getValue(),
                 detailsRestaurantViewState.getId()

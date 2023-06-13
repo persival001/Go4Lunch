@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -21,8 +22,10 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.persival.go4lunch.R;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
+import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +142,18 @@ public class MapsFragment extends SupportMapFragment {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
         super.onResume();
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+            getViewLifecycleOwner(),
+            new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, SettingsFragment.newInstance())
+                        .commit();
+                }
+
+            }
+        );
     }
 
     @Override
