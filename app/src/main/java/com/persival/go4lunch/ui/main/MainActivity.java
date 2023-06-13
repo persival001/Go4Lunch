@@ -22,6 +22,7 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
 import com.persival.go4lunch.databinding.NavigationDrawerHeaderBinding;
 import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
+import com.persival.go4lunch.ui.main.details.DetailsFragment;
 import com.persival.go4lunch.ui.main.maps.MapsFragment;
 import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 import com.persival.go4lunch.ui.main.settings.SettingsFragment;
@@ -36,18 +37,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ActivityMainBinding binding;
 
+    private String restaurantId;
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
         if (itemId == R.id.nav_your_lunch) {
-            Toast.makeText(this, "Lunch!", Toast.LENGTH_SHORT).show();
+            if (restaurantId == null) {
+                Toast.makeText(this, R.string.no_restaurant_selected, Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                DetailsFragment detailsFragment = DetailsFragment.newInstance(restaurantId);
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, detailsFragment)
+                    .addToBackStack(null)
+                    .commit();
+            }
+
         } else if (itemId == R.id.nav_settings) {
             SettingsFragment settingsFragment = SettingsFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerView, settingsFragment)
                 .addToBackStack(null)
                 .commit();
+
         } else if (itemId == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(this, AuthenticationActivity.class);
@@ -118,6 +132,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(navHeaderBinding.userImage);
         });
 
+        viewModel.getRestaurantIdForCurrentUserLiveData().observe(MainActivity.this, restaurantIdForCurrentUser -> {
+            if (restaurantIdForCurrentUser == null) {
+            } else {
+                restaurantId = restaurantIdForCurrentUser;
+            }
+        });
+
         // Set up the SearchView
         SearchView searchView = binding.searchView;
         // Handle when the SearchView loses focus
@@ -136,10 +157,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Toast.makeText(MainActivity.this, newText, Toast.LENGTH_SHORT).show();
-                if (newText.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
-                }
                 return false;
             }
         });

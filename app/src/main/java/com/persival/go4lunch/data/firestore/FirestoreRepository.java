@@ -1,5 +1,7 @@
 package com.persival.go4lunch.data.firestore;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -205,6 +207,34 @@ public class FirestoreRepository implements UserRepository {
                 .document(firebaseUser.getUid())
                 .delete();
         }
+    }
+
+    // ----- Get restaurantId for current user -----
+    public LiveData<String> getRestaurantIdForCurrentUser() {
+        MutableLiveData<String> restaurantIdLiveData = new MutableLiveData<>();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            String currentUserId = currentUser.getUid();
+
+            firebaseFirestore.collection(USER_EAT_AT_RESTAURANT)
+                .document(currentUserId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String restaurantId = document.getString("restaurantId");
+                            Log.e("ID DU RESTO", restaurantId);
+                            restaurantIdLiveData.setValue(restaurantId);
+                        }
+                    } else {
+                        Log.e("ID DU RESTO", "Error getting document", task.getException());
+                    }
+                });
+
+        }
+        return restaurantIdLiveData;
     }
 
 }
