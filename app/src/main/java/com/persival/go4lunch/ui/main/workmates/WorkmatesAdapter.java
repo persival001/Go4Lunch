@@ -58,7 +58,7 @@ public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesA
                 .error(R.drawable.ic_anon_user_48dp)
                 .into(avatarPicture);
 
-            if (item.getText().contains(context.getString(R.string.hasnt_decided_yet))) {
+            if (item.getText().contains(context.getString(R.string.hasnt_decided_yet_in_string))) {
                 avatarName.setTextColor(ContextCompat.getColor(context, com.google.android.libraries.places.R.color.quantum_grey500));
             } else {
                 avatarName.setTextColor(ContextCompat.getColor(context, com.google.android.libraries.places.R.color.quantum_black_text));

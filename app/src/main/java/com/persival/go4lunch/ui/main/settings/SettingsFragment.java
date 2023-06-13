@@ -133,7 +133,6 @@ public class SettingsFragment extends Fragment {
                         .replace(R.id.fragmentContainerView, MapsFragment.newInstance())
                         .commit();
                 }
-
             }
         );
     }

@@ -67,9 +67,9 @@ public class WorkmatesViewModel extends ViewModel {
     // Add "is eating at" before the workmate name and add the restaurant name
     private String getFormattedName(String name, String restaurantName) {
         if (name != null && restaurantName != null) {
-            return name + " " + resources.getString(R.string.is_eating_at) + " " + restaurantName;
+            return resources.getString(R.string.is_eating_at, name, restaurantName);
         } else {
-            return name + " " + resources.getString(R.string.hasnt_decided_yet);
+            return resources.getString(R.string.hasnt_decided_yet, name);
         }
     }
 
