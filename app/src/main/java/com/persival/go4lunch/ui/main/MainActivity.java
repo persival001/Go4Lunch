@@ -133,10 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         viewModel.getRestaurantIdForCurrentUserLiveData().observe(MainActivity.this, restaurantIdForCurrentUser -> {
-            if (restaurantIdForCurrentUser == null) {
-            } else {
-                restaurantId = restaurantIdForCurrentUser;
-            }
+            restaurantId = restaurantIdForCurrentUser;
         });
 
         // Set up the SearchView

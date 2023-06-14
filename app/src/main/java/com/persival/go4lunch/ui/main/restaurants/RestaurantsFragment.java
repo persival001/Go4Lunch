@@ -83,7 +83,6 @@ public class RestaurantsFragment extends Fragment {
                         .replace(R.id.fragmentContainerView, MapsFragment.newInstance())
                         .commit();
                 }
-
             }
         );
     }

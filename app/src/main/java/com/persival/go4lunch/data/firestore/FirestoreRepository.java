@@ -1,7 +1,5 @@
 package com.persival.go4lunch.data.firestore;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -37,6 +35,8 @@ public class FirestoreRepository implements UserRepository {
     private static final String USER_EAT_AT_RESTAURANT = "userEatAtRestaurant";
     @NonNull
     private static final String LIKED_RESTAURANT_ID = "likedRestaurantsId";
+    @NonNull
+    private static final String RESTAURANT_ID = "RestaurantId";
     @NonNull
     private final FirebaseFirestore firebaseFirestore;
     @NonNull
@@ -166,12 +166,16 @@ public class FirestoreRepository implements UserRepository {
                         // Add id of liked restaurant to the list
                         db.collection(USERS).document(user.getId())
                             .update(LIKED_RESTAURANT_ID, FieldValue.arrayUnion(restaurantId));
-                        likedRestaurantsId.add(restaurantId);
+                        if (likedRestaurantsId != null) {
+                            likedRestaurantsId.add(restaurantId);
+                        }
                     } else {
                         // Erase id of liked restaurant from the list
                         db.collection(USERS).document(user.getId())
                             .update(LIKED_RESTAURANT_ID, FieldValue.arrayRemove(restaurantId));
-                        likedRestaurantsId.remove(restaurantId);
+                        if (likedRestaurantsId != null) {
+                            likedRestaurantsId.remove(restaurantId);
+                        }
                     }
                 }
             }
@@ -219,21 +223,18 @@ public class FirestoreRepository implements UserRepository {
 
             firebaseFirestore.collection(USER_EAT_AT_RESTAURANT)
                 .document(currentUserId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            String restaurantId = document.getString("restaurantId");
-                            Log.e("ID DU RESTO", restaurantId);
-                            restaurantIdLiveData.setValue(restaurantId);
-                        }
-                    } else {
-                        Log.e("ID DU RESTO", "Error getting document", task.getException());
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        return;
+                    }
+
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        String restaurantId = documentSnapshot.getString(RESTAURANT_ID);
+                        restaurantIdLiveData.setValue(restaurantId);
                     }
                 });
-
         }
+
         return restaurantIdLiveData;
     }
 
