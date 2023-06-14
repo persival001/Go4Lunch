@@ -33,8 +33,9 @@ public class RestaurantsViewModel extends ViewModel {
     private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
     @NonNull
     private final IsGpsActivatedUseCase isGpsActivatedUseCase;
-    @NonNull
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
+    public LiveData<String> participantsLiveData;
+
 
     @Inject
     public RestaurantsViewModel(
@@ -53,7 +54,7 @@ public class RestaurantsViewModel extends ViewModel {
     private LiveData<List<RestaurantsViewState>> setupRestaurantsLiveData() {
         LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
         LiveData<String> locationAsString = transformLocationToString(locationLiveData);
-        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData = transformUnsortedRestaurantsLiveData(locationAsString);
+        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData = getRestaurantViewStateLiveData(locationAsString);
         return sortRestaurantsLiveData(unsortedRestaurantsLiveData);
     }
 
@@ -66,49 +67,44 @@ public class RestaurantsViewModel extends ViewModel {
         );
     }
 
-    private LiveData<List<RestaurantsViewState>> transformUnsortedRestaurantsLiveData(
+    private LiveData<List<RestaurantsViewState>> getRestaurantViewStateLiveData(
         LiveData<String> locationAsString
     ) {
         return Transformations.switchMap(
             locationAsString,
             locationStr -> Transformations.map(
                 getNearbyRestaurantsUseCase.invoke(),
-                places -> transformPlacesToRestaurantViewStates(locationStr, places)
+                places -> {
+                    List<RestaurantsViewState> restaurantsList = new ArrayList<>();
+                    for (NearbyRestaurantsResponse.Place restaurant : places) {
+                        if (restaurant.getId() != null &&
+                            restaurant.getName() != null &&
+                            restaurant.getAddress() != null
+                        ) {
+                            restaurantsList.add(
+                                new RestaurantsViewState(
+                                    restaurant.getId(),
+                                    getFormattedName(restaurant.getName()),
+                                    restaurant.getAddress(),
+                                    getOpeningTime(restaurant.getOpeningHours()),
+                                    getHaversineDistance(
+                                        restaurant.getLatitude(),
+                                        restaurant.getLongitude(),
+                                        locationStr
+                                    ),
+                                    "0",
+                                    getRating(restaurant.getRating()),
+                                    getPictureUrl(restaurant.getPhotos())
+                                )
+                            );
+                        }
+                    }
+                    return restaurantsList;
+                }
             )
         );
     }
-
-    private List<RestaurantsViewState> transformPlacesToRestaurantViewStates(
-        String locationStr,
-        List<NearbyRestaurantsResponse.Place> places
-    ) {
-        List<RestaurantsViewState> restaurantsList = new ArrayList<>();
-        for (NearbyRestaurantsResponse.Place restaurant : places) {
-            if (restaurant.getId() != null &&
-                restaurant.getName() != null &&
-                restaurant.getAddress() != null
-            ) {
-                restaurantsList.add(
-                    new RestaurantsViewState(
-                        restaurant.getId(),
-                        getFormattedName(restaurant.getName()),
-                        restaurant.getAddress(),
-                        getOpeningTime(restaurant.getOpeningHours()),
-                        getHaversineDistance(
-                            restaurant.getLatitude(),
-                            restaurant.getLongitude(),
-                            locationStr
-                        ),
-                        "0",
-                        getRating(restaurant.getRating()),
-                        getPictureUrl(restaurant.getPhotos())
-                    )
-                );
-            }
-        }
-        return restaurantsList;
-    }
-
+    
     private LiveData<List<RestaurantsViewState>> sortRestaurantsLiveData(
         LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData
     ) {

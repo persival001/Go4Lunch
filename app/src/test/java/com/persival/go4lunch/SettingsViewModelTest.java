@@ -31,7 +31,7 @@ public class SettingsViewModelTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        viewModel = new SettingsViewModel(getLoggedUserUseCase, setNewUserNameUseCase, getLoggedUserUseCase1, deleteAccountUseCase);
+        viewModel = new SettingsViewModel(getLoggedUserUseCase, setNewUserNameUseCase, deleteAccountUseCase);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class SettingsViewModelTest {
             loggedUserEntity.getAvatarPictureUrl()
         );
 
-        viewModel = new SettingsViewModel(getLoggedUserUseCase, setNewUserNameUseCase, getLoggedUserUseCase1, deleteAccountUseCase);
+        viewModel = new SettingsViewModel(getLoggedUserUseCase, setNewUserNameUseCase, deleteAccountUseCase);
 
         assertEquals(expectedViewState, viewModel.getLoggedUserLiveData().getValue());
     }

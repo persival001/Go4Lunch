@@ -12,6 +12,7 @@ public class NearbyRestaurantsResponse {
     @SerializedName("results")
     private List<Place> results;
 
+    @Nullable
     public List<Place> getResults() {
         return results;
     }
