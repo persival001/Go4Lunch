@@ -68,9 +68,7 @@ public class FirestoreRepository implements UserRepository {
                 if (snapshots != null) {
                     for (DocumentSnapshot document : snapshots.getDocuments()) {
                         WorkmateDto user = document.toObject(WorkmateDto.class);
-                        if (user != null && user.getId() != null) {
-                            usersMap.put(user.getId(), user);
-                        }
+                        usersMap.put(user.getId(), user);
                     }
                     updateWorkmatesLiveData(usersMap, relationsMap, workmatesEatAtRestaurantLiveData);
                 }
@@ -86,9 +84,7 @@ public class FirestoreRepository implements UserRepository {
                 if (snapshots != null) {
                     for (DocumentSnapshot document : snapshots.getDocuments()) {
                         UserRestaurantRelationsDto relation = document.toObject(UserRestaurantRelationsDto.class);
-                        if (relation != null && relation.getUserId() != null) {
-                            relationsMap.put(relation.getUserId(), relation);
-                        }
+                        relationsMap.put(relation.getUserId(), relation);
                     }
                     updateWorkmatesLiveData(usersMap, relationsMap, workmatesEatAtRestaurantLiveData);
                 }
@@ -114,16 +110,15 @@ public class FirestoreRepository implements UserRepository {
                 restaurantName = relation.getRestaurantName();
                 restaurantId = relation.getRestaurantId();
             }
-            if (restaurantName != null && restaurantId != null && user.getId() != null && user.getName() != null) {
-                WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
-                    user.getId(),
-                    user.getPictureUrl(),
-                    user.getName(),
-                    restaurantName,
-                    restaurantId
-                );
-                workmates.add(workmateEatAtRestaurantEntity);
-            }
+
+            WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
+                user.getId(),
+                user.getPictureUrl(),
+                user.getName(),
+                restaurantName,
+                restaurantId
+            );
+            workmates.add(workmateEatAtRestaurantEntity);
         }
 
         liveData.setValue(workmates);
@@ -171,14 +166,14 @@ public class FirestoreRepository implements UserRepository {
                         // Add id of liked restaurant to the list
                         db.collection(USERS).document(user.getId())
                             .update(LIKED_RESTAURANT_ID, FieldValue.arrayUnion(restaurantId));
-                        if (likedRestaurantsId != null) {
+                        if(likedRestaurantsId != null) {
                             likedRestaurantsId.add(restaurantId);
                         }
                     } else {
                         // Erase id of liked restaurant from the list
                         db.collection(USERS).document(user.getId())
                             .update(LIKED_RESTAURANT_ID, FieldValue.arrayRemove(restaurantId));
-                        if (likedRestaurantsId != null) {
+                        if(likedRestaurantsId != null) {
                             likedRestaurantsId.remove(restaurantId);
                         }
                     }
@@ -242,35 +237,5 @@ public class FirestoreRepository implements UserRepository {
 
         return restaurantIdLiveData;
     }
-
-    // ----- Get restaurantIds where users eat -----
-    public LiveData<List<String>> getAllRestaurantIds() {
-        MutableLiveData<List<String>> restaurantIdsLiveData = new MutableLiveData<>();
-        List<String> restaurantIds = new ArrayList<>();
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection(USER_EAT_AT_RESTAURANT)
-            .addSnapshotListener((snapshots, e) -> {
-                if (e != null) {
-                    return;
-                }
-
-                if (snapshots != null) {
-                    for (DocumentSnapshot document : snapshots.getDocuments()) {
-                        UserRestaurantRelationsDto relation = document.toObject(UserRestaurantRelationsDto.class);
-                        if (relation != null && relation.getRestaurantId() != null) {
-                            if (!restaurantIds.contains(relation.getRestaurantId())) {
-                                restaurantIds.add(relation.getRestaurantId());
-                            }
-                        }
-                    }
-                    restaurantIdsLiveData.setValue(restaurantIds);
-                }
-            });
-
-        return restaurantIdsLiveData;
-    }
-
 
 }

@@ -4,33 +4,38 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
-import com.persival.go4lunch.domain.workmate.UserRepository;
+import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
+import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class GetParticipantsUseCase {
 
     @NonNull
-    private final UserRepository userRepository;
+    private final GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase;
 
     @Inject
     public GetParticipantsUseCase(
-        @NonNull UserRepository userRepository
+        @NonNull GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase
     ) {
-        this.userRepository = userRepository;
+        this.getWorkmatesEatAtRestaurantUseCase = getWorkmatesEatAtRestaurantUseCase;
     }
 
-    public LiveData<String> invoke(String restaurantIdToCompare) {
-        return Transformations.map(userRepository.getAllRestaurantIds(), restaurantIds -> {
+    public LiveData<String> invoke(String restaurantId) {
+        LiveData<List<WorkmateEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData =
+            getWorkmatesEatAtRestaurantUseCase.invoke();
+
+        return Transformations.map(workmatesEatAtRestaurantLiveData, workmates -> {
             int count = 0;
-            if (restaurantIdToCompare != null) {
-                for (String restaurantId : restaurantIds) {
-                    if (restaurantId.equals(restaurantIdToCompare)) {
-                        count++;
-                    }
+            for (WorkmateEatAtRestaurantEntity workmate : workmates) {
+                if (workmate.getRestaurantId() != null && workmate.getRestaurantId().equals(restaurantId)) {
+                    count++;
                 }
             }
             return String.valueOf(count);
         });
     }
+
 }

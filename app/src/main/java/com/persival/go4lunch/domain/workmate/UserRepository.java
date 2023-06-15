@@ -30,6 +30,4 @@ public interface UserRepository {
     LiveData<List<String>> getLikedRestaurantsForUser(String userId);
 
     LiveData<String> getRestaurantIdForCurrentUser();
-
-    LiveData<List<String>> getAllRestaurantIds();
 }

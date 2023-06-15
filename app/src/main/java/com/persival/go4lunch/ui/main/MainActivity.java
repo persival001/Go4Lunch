@@ -154,15 +154,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 2) {
-                    // If the user has typed at least 3 characters, filter the list of restaurants
-                    /*List<String> predictions = new ArrayList<>();
-                    for (String restaurant : restaurantList) {
-                        if (restaurant.toLowerCase().startsWith(newText.toLowerCase())) {
-                            predictions.add(restaurant);
-                        }
-                    }*/
-                }
                 return false;
             }
         });

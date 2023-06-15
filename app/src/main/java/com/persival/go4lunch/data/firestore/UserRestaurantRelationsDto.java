@@ -1,6 +1,5 @@
 package com.persival.go4lunch.data.firestore;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Date;
@@ -60,7 +59,6 @@ public class UserRestaurantRelationsDto {
         return Objects.hash(userId, restaurantId, restaurantName, dateOfVisit);
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "UserRestaurantRelationsDto{" +
