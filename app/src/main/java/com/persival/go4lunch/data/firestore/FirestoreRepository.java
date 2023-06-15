@@ -116,7 +116,7 @@ public class FirestoreRepository implements UserRepository {
                 restaurantId = relation.getRestaurantId();
             }
 
-            if (user != null && restaurantName != null && restaurantId != null && user.getId() != null && user.getName() != null) {
+            if (user != null && user.getId() != null && user.getName() != null) {
                 WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
                     user.getId(),
                     user.getPictureUrl(),

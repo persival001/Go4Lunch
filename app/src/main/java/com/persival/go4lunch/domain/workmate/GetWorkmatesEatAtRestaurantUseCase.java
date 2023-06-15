@@ -40,7 +40,6 @@ public class GetWorkmatesEatAtRestaurantUseCase {
                 }
                 return 0;
             });
-
             sortedLiveData.setValue(workmates);
         });
 
