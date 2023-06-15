@@ -24,29 +24,6 @@ public class DetailsWorkmateViewState {
         this.workmateName = workmateName;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, workmatePictureUrl, workmateName);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DetailsWorkmateViewState that = (DetailsWorkmateViewState) o;
-        return id.equals(that.id) && Objects.equals(workmatePictureUrl, that.workmatePictureUrl) && workmateName.equals(that.workmateName);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "DetailsWorkmateViewState{" +
-            "id='" + id + '\'' +
-            ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
-            ", workmateName='" + workmateName + '\'' +
-            '}';
-    }
-
     @NonNull
     public String getId() {
         return id;
@@ -60,5 +37,32 @@ public class DetailsWorkmateViewState {
     @NonNull
     public String getWorkmateName() {
         return workmateName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        DetailsWorkmateViewState that = (DetailsWorkmateViewState) o;
+        return id.equals(that.id) &&
+            Objects.equals(workmatePictureUrl, that.workmatePictureUrl) &&
+            workmateName.equals(that.workmateName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, workmatePictureUrl, workmateName);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "DetailsWorkmateViewState{" +
+            "id='" + id + '\'' +
+            ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
+            ", workmateName='" + workmateName + '\'' +
+            '}';
     }
 }

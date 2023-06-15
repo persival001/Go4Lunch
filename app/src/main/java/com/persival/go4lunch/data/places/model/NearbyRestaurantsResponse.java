@@ -12,37 +12,49 @@ public class NearbyRestaurantsResponse {
     @SerializedName("results")
     private List<Place> results;
 
+    @Nullable
     public List<Place> getResults() {
         return results;
     }
 
+
     public static class Place {
+        @Nullable
         @SerializedName("geometry")
         private Geometry geometry;
+
         @Nullable
         @SerializedName("place_id")
         private String placeId;
+
         @Nullable
         @SerializedName("name")
         private String name;
+
         @Nullable
         @SerializedName("vicinity")
         private String address;
+
         @Nullable
         @SerializedName("opening_hours")
         private OpeningHours openingHours;
+
+        @Nullable
         @SerializedName("website")
-        @Nullable
         private String website;
+
+        @Nullable
         @SerializedName("formatted_phone_number")
-        @Nullable
         private String phoneNumber;
+
+        @Nullable
         @SerializedName("photos")
-        @Nullable
         private List<Photo> photos;
-        @SerializedName("rating")
+
         @Nullable
+        @SerializedName("rating")
         private Float rating;
+
 
         public double getLatitude() {
             return geometry != null && geometry.location != null ? geometry.location.lat : 0.0;
@@ -93,7 +105,9 @@ public class NearbyRestaurantsResponse {
         }
     }
 
+
     public static class OpeningHours {
+        @Nullable
         @SerializedName("open_now")
         private Boolean openNow;
 
@@ -102,16 +116,21 @@ public class NearbyRestaurantsResponse {
         }
     }
 
+
     public static class Photo {
+        @Nullable
         @SerializedName("photo_reference")
         private String photoReference;
 
+        @Nullable
         public String getPhotoReference() {
             return photoReference;
         }
     }
 
+
     private static class Geometry {
+        @Nullable
         @SerializedName("location")
         private Location location;
 

@@ -12,7 +12,6 @@ import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
 import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
-import com.persival.go4lunch.domain.restaurant.GetParticipantsUseCase;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,8 +27,6 @@ public class RestaurantsViewModel extends ViewModel {
     @NonNull
     private final GetLocationUseCase getLocationUseCase;
     @NonNull
-    private final GetParticipantsUseCase getParticipantsUseCase;
-    @NonNull
     private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
     @NonNull
     private final IsGpsActivatedUseCase isGpsActivatedUseCase;
@@ -39,12 +36,10 @@ public class RestaurantsViewModel extends ViewModel {
     @Inject
     public RestaurantsViewModel(
         @NonNull GetLocationUseCase getLocationUseCase,
-        @NonNull GetParticipantsUseCase getParticipantsUseCase,
         @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
         @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
     ) {
         this.getLocationUseCase = getLocationUseCase;
-        this.getParticipantsUseCase = getParticipantsUseCase;
         this.isGpsActivatedUseCase = isGpsActivatedUseCase;
         this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
         this.restaurantsLiveData = setupRestaurantsLiveData();

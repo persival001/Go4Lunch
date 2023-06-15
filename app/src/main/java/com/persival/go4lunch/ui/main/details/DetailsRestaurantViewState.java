@@ -38,6 +38,40 @@ public class DetailsRestaurantViewState {
         this.restaurantWebsiteUrl = restaurantWebsiteUrl;
     }
 
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    @Nullable
+    public String getRestaurantPictureUrl() {
+        return restaurantPictureUrl;
+    }
+
+    @NonNull
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public Float getRestaurantRating() {
+        return restaurantRating;
+    }
+
+    @NonNull
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    @Nullable
+    public String getRestaurantPhoneNumber() {
+        return restaurantPhoneNumber;
+    }
+
+    @Nullable
+    public String getRestaurantWebsiteUrl() {
+        return restaurantWebsiteUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -71,39 +105,5 @@ public class DetailsRestaurantViewState {
             ", restaurantPhoneNumber='" + restaurantPhoneNumber + '\'' +
             ", restaurantWebsiteUrl='" + restaurantWebsiteUrl + '\'' +
             '}';
-    }
-
-    @NonNull
-    public String getId() {
-        return id;
-    }
-
-    @Nullable
-    public String getRestaurantPictureUrl() {
-        return restaurantPictureUrl;
-    }
-
-    @NonNull
-    public String getRestaurantName() {
-        return restaurantName;
-    }
-
-    public Float getRestaurantRating() {
-        return restaurantRating;
-    }
-
-    @NonNull
-    public String getRestaurantAddress() {
-        return restaurantAddress;
-    }
-
-    @Nullable
-    public String getRestaurantPhoneNumber() {
-        return restaurantPhoneNumber;
-    }
-
-    @Nullable
-    public String getRestaurantWebsiteUrl() {
-        return restaurantWebsiteUrl;
     }
 }

@@ -40,7 +40,6 @@ public class MapsFragment extends SupportMapFragment {
     private float lastZoomLevel;
     private ActivityResultLauncher<String> requestPermissionLauncher;
 
-
     @NonNull
     public static MapsFragment newInstance() {
         return new MapsFragment();

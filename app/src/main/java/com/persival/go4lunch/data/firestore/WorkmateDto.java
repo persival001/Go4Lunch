@@ -13,7 +13,6 @@ public class WorkmateDto {
     @Nullable
     private final String pictureUrl;
 
-
     // Empty constructor needed for Firestore deserialization
     public WorkmateDto() {
         id = null;
@@ -43,7 +42,9 @@ public class WorkmateDto {
         if (o == null || getClass() != o.getClass())
             return false;
         WorkmateDto that = (WorkmateDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(pictureUrl, that.pictureUrl);
+        return Objects.equals(id, that.id) &&
+            Objects.equals(name, that.name) &&
+            Objects.equals(pictureUrl, that.pictureUrl);
     }
 
     @Override

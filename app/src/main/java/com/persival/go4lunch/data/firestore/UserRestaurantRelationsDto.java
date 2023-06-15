@@ -1,5 +1,6 @@
 package com.persival.go4lunch.data.firestore;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Date;
@@ -14,7 +15,6 @@ public class UserRestaurantRelationsDto {
     private final String restaurantName;
     @Nullable
     private final Date dateOfVisit;
-
 
     // Empty constructor needed for Firestore deserialization
     public UserRestaurantRelationsDto() {
@@ -51,7 +51,10 @@ public class UserRestaurantRelationsDto {
         if (o == null || getClass() != o.getClass())
             return false;
         UserRestaurantRelationsDto that = (UserRestaurantRelationsDto) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(restaurantId, that.restaurantId) && Objects.equals(restaurantName, that.restaurantName) && Objects.equals(dateOfVisit, that.dateOfVisit);
+        return Objects.equals(userId, that.userId) &&
+            Objects.equals(restaurantId, that.restaurantId) &&
+            Objects.equals(restaurantName, that.restaurantName) &&
+            Objects.equals(dateOfVisit, that.dateOfVisit);
     }
 
     @Override
@@ -59,6 +62,7 @@ public class UserRestaurantRelationsDto {
         return Objects.hash(userId, restaurantId, restaurantName, dateOfVisit);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "UserRestaurantRelationsDto{" +

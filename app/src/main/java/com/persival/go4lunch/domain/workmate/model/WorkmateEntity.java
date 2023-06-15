@@ -8,21 +8,20 @@ import java.util.Objects;
 
 public class WorkmateEntity {
 
-    // Workmate
     @NonNull
     private final String id;
     @Nullable
     private final String pictureUrl;
     @NonNull
     private final String name;
-    @NonNull
+    @Nullable
     private final List<String> likedRestaurantsId;
 
     public WorkmateEntity(
         @NonNull String id,
         @Nullable String pictureUrl,
         @NonNull String name,
-        @NonNull List<String> likedRestaurantsId
+        @Nullable List<String> likedRestaurantsId
     ) {
         this.id = id;
         this.pictureUrl = pictureUrl;
@@ -45,14 +44,9 @@ public class WorkmateEntity {
         return name;
     }
 
-    @NonNull
+    @Nullable
     public List<String> getLikedRestaurantsId() {
         return likedRestaurantsId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, pictureUrl, name, likedRestaurantsId);
     }
 
     @Override
@@ -68,6 +62,11 @@ public class WorkmateEntity {
             Objects.equals(likedRestaurantsId, that.likedRestaurantsId);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pictureUrl, name, likedRestaurantsId);
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -75,7 +74,7 @@ public class WorkmateEntity {
             "id='" + id + '\'' +
             ", pictureUrl='" + pictureUrl + '\'' +
             ", name='" + name + '\'' +
-            ", likedRestaurantId=" + likedRestaurantsId +
+            ", likedRestaurantsId=" + likedRestaurantsId +
             '}';
     }
 }

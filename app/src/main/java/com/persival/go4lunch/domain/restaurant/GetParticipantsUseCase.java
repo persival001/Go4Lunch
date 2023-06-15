@@ -30,7 +30,7 @@ public class GetParticipantsUseCase {
         return Transformations.map(workmatesEatAtRestaurantLiveData, workmates -> {
             int count = 0;
             for (WorkmateEatAtRestaurantEntity workmate : workmates) {
-                if (workmate.getRestaurantId() != null && workmate.getRestaurantId().equals(restaurantId)) {
+                if (workmate.getRestaurantId().equals(restaurantId)) {
                     count++;
                 }
             }

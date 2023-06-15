@@ -49,7 +49,7 @@ public class WorkmatesViewModel extends ViewModel {
                     workmatesViewState.add(
                         new WorkmatesViewState(
                             workmateEatAtRestaurantEntity.getId(),
-                            workmateEatAtRestaurantEntity.getPictureUrl(),
+                            workmateEatAtRestaurantEntity.getPictureUrl() != null ? workmateEatAtRestaurantEntity.getPictureUrl() : "",
                             getFormattedName(
                                 workmateEatAtRestaurantEntity.getName(),
                                 workmateEatAtRestaurantEntity.getRestaurantName()

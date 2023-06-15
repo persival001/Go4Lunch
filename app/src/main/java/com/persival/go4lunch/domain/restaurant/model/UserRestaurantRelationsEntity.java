@@ -54,7 +54,10 @@ public class UserRestaurantRelationsEntity {
         if (o == null || getClass() != o.getClass())
             return false;
         UserRestaurantRelationsEntity that = (UserRestaurantRelationsEntity) o;
-        return userId.equals(that.userId) && restaurantId.equals(that.restaurantId) && restaurantName.equals(that.restaurantName) && dateOfVisit.equals(that.dateOfVisit);
+        return userId.equals(that.userId) &&
+            restaurantId.equals(that.restaurantId) &&
+            restaurantName.equals(that.restaurantName) &&
+            dateOfVisit.equals(that.dateOfVisit);
     }
 
     @Override

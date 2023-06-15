@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
-import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.restaurant.PlacesRepository;
 
 import javax.inject.Inject;
@@ -14,16 +13,12 @@ import javax.inject.Inject;
 public class GetRestaurantDetailsUseCase {
     @NonNull
     private final PlacesRepository placesRepository;
-    @NonNull
-    private final GetLocationUseCase getLocationUseCase;
 
     @Inject
     public GetRestaurantDetailsUseCase(
-        @NonNull PlacesRepository placesRepository,
-        @NonNull GetLocationUseCase getLocationUseCase
+        @NonNull PlacesRepository placesRepository
     ) {
         this.placesRepository = placesRepository;
-        this.getLocationUseCase = getLocationUseCase;
     }
 
     public LiveData<NearbyRestaurantsResponse.Place> invoke(@NonNull String restaurantId) {

@@ -18,6 +18,7 @@ import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
 import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
+import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
 import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
 
@@ -76,7 +77,8 @@ public class DetailsViewModel extends ViewModel {
 
         workmatesViewStateLiveData = Transformations.map(getWorkmatesEatAtRestaurantUseCase.invoke(), users -> {
             List<DetailsWorkmateViewState> detailsWorkmateViewState = new ArrayList<>();
-            String loggedInUserId = this.getLoggedUserUseCase.invoke().getId();
+            LoggedUserEntity loggedUser = this.getLoggedUserUseCase.invoke();
+            String loggedInUserId = loggedUser != null ? loggedUser.getId() : null;
 
             for (WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity : users) {
                 if (workmateEatAtRestaurantEntity != null &&
@@ -99,6 +101,7 @@ public class DetailsViewModel extends ViewModel {
 
             return detailsWorkmateViewState;
         });
+
 
         restaurantViewStateLiveData = Transformations.map(
             getRestaurantDetailsUseCase.invoke(restaurantId),

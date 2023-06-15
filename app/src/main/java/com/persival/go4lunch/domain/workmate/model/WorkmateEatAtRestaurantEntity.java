@@ -13,17 +13,17 @@ public class WorkmateEatAtRestaurantEntity {
     private final String pictureUrl;
     @NonNull
     private final String name;
-    @NonNull
+    @Nullable
     private final String restaurantName;
-    @NonNull
+    @Nullable
     private final String restaurantId;
 
     public WorkmateEatAtRestaurantEntity(
         @NonNull String id,
         @Nullable String pictureUrl,
         @NonNull String name,
-        @NonNull String restaurantName,
-        @NonNull String restaurantId
+        @Nullable String restaurantName,
+        @Nullable String restaurantId
     ) {
         this.id = id;
         this.pictureUrl = pictureUrl;
@@ -47,12 +47,12 @@ public class WorkmateEatAtRestaurantEntity {
         return name;
     }
 
-    @NonNull
+    @Nullable
     public String getRestaurantName() {
         return restaurantName;
     }
 
-    @NonNull
+    @Nullable
     public String getRestaurantId() {
         return restaurantId;
     }
@@ -64,7 +64,7 @@ public class WorkmateEatAtRestaurantEntity {
         if (o == null || getClass() != o.getClass())
             return false;
         WorkmateEatAtRestaurantEntity that = (WorkmateEatAtRestaurantEntity) o;
-        return id.equals(that.id) && Objects.equals(pictureUrl, that.pictureUrl) && name.equals(that.name) && restaurantName.equals(that.restaurantName) && restaurantId.equals(that.restaurantId);
+        return id.equals(that.id) && Objects.equals(pictureUrl, that.pictureUrl) && name.equals(that.name) && Objects.equals(restaurantName, that.restaurantName) && Objects.equals(restaurantId, that.restaurantId);
     }
 
     @Override

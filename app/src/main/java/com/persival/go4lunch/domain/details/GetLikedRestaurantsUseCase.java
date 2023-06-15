@@ -2,10 +2,13 @@ package com.persival.go4lunch.domain.details;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
+import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,9 +30,14 @@ public class GetLikedRestaurantsUseCase {
     }
 
     public LiveData<List<String>> invoke() {
-        getLoggedUserUseCase.invoke();
-        return userRepository.getLikedRestaurantsForUser(getLoggedUserUseCase.invoke().getId());
+        LoggedUserEntity user = getLoggedUserUseCase.invoke();
+        if (user != null) {
+            String userId = user.getId();
+            return userRepository.getLikedRestaurantsForUser(userId);
+        } else {
+            return new MutableLiveData<>(new ArrayList<>());
+        }
     }
-}
 
+}
 

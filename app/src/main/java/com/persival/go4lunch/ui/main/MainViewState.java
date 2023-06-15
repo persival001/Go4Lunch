@@ -28,30 +28,6 @@ public class MainViewState {
         this.avatarPictureUrl = avatarPictureUrl;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, avatarName, email, avatarPictureUrl);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MainViewState that = (MainViewState) o;
-        return id.equals(that.id) && avatarName.equals(that.avatarName) && email.equals(that.email) && Objects.equals(avatarPictureUrl, that.avatarPictureUrl);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "SettingsViewState{" +
-            "id='" + id + '\'' +
-            ", avatarName='" + avatarName + '\'' +
-            ", email='" + email + '\'' +
-            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
-            '}';
-    }
-
     @NonNull
     public String getId() {
         return id;
@@ -72,4 +48,29 @@ public class MainViewState {
         return avatarPictureUrl;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        MainViewState that = (MainViewState) o;
+        return id.equals(that.id) && avatarName.equals(that.avatarName) && email.equals(that.email) && Objects.equals(avatarPictureUrl, that.avatarPictureUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, avatarName, email, avatarPictureUrl);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "MainViewState{" +
+            "id='" + id + '\'' +
+            ", avatarName='" + avatarName + '\'' +
+            ", email='" + email + '\'' +
+            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
+            '}';
+    }
 }

@@ -27,16 +27,19 @@ public class CreateWorkmateUseCase {
 
     public void invoke() {
         LoggedUserEntity currentUser = getLoggedUserUseCase.invoke();
+        if (currentUser != null) {
+            String userId = currentUser.getId();
+            String userName = currentUser.getName();
+            String userPhotoUrl = currentUser.getAvatarPictureUrl();
 
-        String userId = currentUser.getId();
-        String userName = currentUser.getName();
-        String userPhotoUrl = currentUser.getAvatarPictureUrl();
+            List<String> likedRestaurantsId = new ArrayList<>();
 
-        List<String> likedRestaurantsId = new ArrayList<>();
+            WorkmateEntity newUser = new WorkmateEntity(userId, userPhotoUrl, userName, likedRestaurantsId);
 
-        WorkmateEntity newUser = new WorkmateEntity(userId, userPhotoUrl, userName, likedRestaurantsId);
-
-        userRepository.createUser(newUser);
+            userRepository.createUser(newUser);
+        } else {
+            throw new IllegalStateException("User is not logged in");
+        }
     }
 
 }

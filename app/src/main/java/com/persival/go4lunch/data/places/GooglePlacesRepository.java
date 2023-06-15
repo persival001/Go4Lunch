@@ -44,7 +44,7 @@ public class GooglePlacesRepository implements PlacesRepository {
                     @NonNull Call<NearbyRestaurantsResponse> call,
                     @NonNull Response<NearbyRestaurantsResponse> response
                 ) {
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getResults() != null) {
                         placeRestaurantsCache.put(location, response.body().getResults());
                         restaurantsLiveData.setValue(response.body().getResults());
                         Log.d("RESPONSE", "The server responds to requests");
@@ -64,7 +64,7 @@ public class GooglePlacesRepository implements PlacesRepository {
         return restaurantsLiveData;
     }
 
-    public LiveData<NearbyRestaurantsResponse.Place> getRestaurantLiveData(@NonNull String restaurantId, @NonNull  String apiKey) {
+    public LiveData<NearbyRestaurantsResponse.Place> getRestaurantLiveData(@NonNull String restaurantId, @NonNull String apiKey) {
         MutableLiveData<NearbyRestaurantsResponse.Place> restaurantLiveData = new MutableLiveData<>();
 
         NearbyRestaurantsResponse.Place cached = placeDetailCache.get(restaurantId);
@@ -76,7 +76,7 @@ public class GooglePlacesRepository implements PlacesRepository {
                     @NonNull Call<PlaceDetailsResponse> call,
                     @NonNull Response<PlaceDetailsResponse> response
                 ) {
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getResult() != null) {
                         placeDetailCache.put(restaurantId, response.body().getResult());
                         restaurantLiveData.setValue(response.body().getResult());
                         Log.d("RESPONSE", "RESPONSE OK RESTO ID");

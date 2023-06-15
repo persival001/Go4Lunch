@@ -68,7 +68,10 @@ public class FirestoreRepository implements UserRepository {
                 if (snapshots != null) {
                     for (DocumentSnapshot document : snapshots.getDocuments()) {
                         WorkmateDto user = document.toObject(WorkmateDto.class);
-                        usersMap.put(user.getId(), user);
+                        if (user != null) {
+                            usersMap.put(user.getId(), user);
+                        }
+
                     }
                     updateWorkmatesLiveData(usersMap, relationsMap, workmatesEatAtRestaurantLiveData);
                 }
@@ -84,7 +87,9 @@ public class FirestoreRepository implements UserRepository {
                 if (snapshots != null) {
                     for (DocumentSnapshot document : snapshots.getDocuments()) {
                         UserRestaurantRelationsDto relation = document.toObject(UserRestaurantRelationsDto.class);
-                        relationsMap.put(relation.getUserId(), relation);
+                        if (relation != null) {
+                            relationsMap.put(relation.getUserId(), relation);
+                        }
                     }
                     updateWorkmatesLiveData(usersMap, relationsMap, workmatesEatAtRestaurantLiveData);
                 }
@@ -111,14 +116,16 @@ public class FirestoreRepository implements UserRepository {
                 restaurantId = relation.getRestaurantId();
             }
 
-            WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
-                user.getId(),
-                user.getPictureUrl(),
-                user.getName(),
-                restaurantName,
-                restaurantId
-            );
-            workmates.add(workmateEatAtRestaurantEntity);
+            if (user != null && restaurantName != null && restaurantId != null && user.getId() != null && user.getName() != null) {
+                WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
+                    user.getId(),
+                    user.getPictureUrl(),
+                    user.getName(),
+                    restaurantName,
+                    restaurantId
+                );
+                workmates.add(workmateEatAtRestaurantEntity);
+            }
         }
 
         liveData.setValue(workmates);
@@ -166,14 +173,14 @@ public class FirestoreRepository implements UserRepository {
                         // Add id of liked restaurant to the list
                         db.collection(USERS).document(user.getId())
                             .update(LIKED_RESTAURANT_ID, FieldValue.arrayUnion(restaurantId));
-                        if(likedRestaurantsId != null) {
+                        if (likedRestaurantsId != null) {
                             likedRestaurantsId.add(restaurantId);
                         }
                     } else {
                         // Erase id of liked restaurant from the list
                         db.collection(USERS).document(user.getId())
                             .update(LIKED_RESTAURANT_ID, FieldValue.arrayRemove(restaurantId));
-                        if(likedRestaurantsId != null) {
+                        if (likedRestaurantsId != null) {
                             likedRestaurantsId.remove(restaurantId);
                         }
                     }

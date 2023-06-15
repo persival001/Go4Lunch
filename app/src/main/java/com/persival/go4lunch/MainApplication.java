@@ -16,16 +16,12 @@ import dagger.hilt.android.HiltAndroidApp;
 @HiltAndroidApp
 public class MainApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
-    private static Application sApplication;
-
     @Inject
     PermissionRepository permissionRepository;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        sApplication = this;
 
         registerActivityLifecycleCallbacks(this);
     }

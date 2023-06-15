@@ -132,9 +132,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(navHeaderBinding.userImage);
         });
 
-        viewModel.getRestaurantIdForCurrentUserLiveData().observe(MainActivity.this, restaurantIdForCurrentUser -> {
-            restaurantId = restaurantIdForCurrentUser;
-        });
+        viewModel.getRestaurantIdForCurrentUserLiveData().observe(
+            MainActivity.this,
+            restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
+        );
 
         // Set up the SearchView
         SearchView searchView = binding.searchView;
