@@ -5,8 +5,8 @@ import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.restaurant.PlacesRepository;
+import com.persival.go4lunch.domain.restaurant.model.PlaceDetailsEntity;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ public class GetRestaurantDetailsUseCase {
         this.placesRepository = placesRepository;
     }
 
-    public LiveData<NearbyRestaurantsResponse.Place> invoke(@NonNull String restaurantId) {
+    public LiveData<PlaceDetailsEntity> invoke(@NonNull String restaurantId) {
         return placesRepository.getRestaurantLiveData(
             restaurantId,
             MAPS_API_KEY

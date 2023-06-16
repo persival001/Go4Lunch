@@ -21,14 +21,15 @@ public class RestaurantsViewState {
     @NonNull
     private final String pictureUrl;
 
-    public RestaurantsViewState(@NonNull String id,
-                                @NonNull String name,
-                                @NonNull String typeOfCuisineAndAddress,
-                                @NonNull Boolean openingTime,
-                                @NonNull String distance,
-                                @NonNull String participants,
-                                float rating,
-                                @NonNull String pictureUrl
+    public RestaurantsViewState(
+        @NonNull String id,
+        @NonNull String name,
+        @NonNull String typeOfCuisineAndAddress,
+        @NonNull Boolean openingTime,
+        @NonNull String distance,
+        @NonNull String participants,
+        float rating,
+        @NonNull String pictureUrl
     ) {
         this.id = id;
         this.name = name;

@@ -7,11 +7,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
 import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
+import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,31 +75,26 @@ public class RestaurantsViewModel extends ViewModel {
 
     private List<RestaurantsViewState> transformPlacesToRestaurantViewStates(
         String locationStr,
-        List<NearbyRestaurantsResponse.Place> places
+        List<NearbyRestaurantsEntity> places
     ) {
         List<RestaurantsViewState> restaurantsList = new ArrayList<>();
-        for (NearbyRestaurantsResponse.Place restaurant : places) {
-            if (restaurant.getId() != null &&
-                restaurant.getName() != null &&
-                restaurant.getAddress() != null
-            ) {
-                restaurantsList.add(
-                    new RestaurantsViewState(
-                        restaurant.getId(),
-                        getFormattedName(restaurant.getName()),
-                        restaurant.getAddress(),
-                        getOpeningTime(restaurant.getOpeningHours()),
-                        getHaversineDistance(
-                            restaurant.getLatitude(),
-                            restaurant.getLongitude(),
-                            locationStr
-                        ),
-                        "0",
-                        getRating(restaurant.getRating()),
-                        getPictureUrl(restaurant.getPhotos())
-                    )
-                );
-            }
+        for (NearbyRestaurantsEntity restaurant : places) {
+            restaurantsList.add(
+                new RestaurantsViewState(
+                    restaurant.getId(),
+                    getFormattedName(restaurant.getName()),
+                    restaurant.getAddress(),
+                    restaurant.isOpeningHours(),
+                    getHaversineDistance(
+                        restaurant.getLatitude(),
+                        restaurant.getLongitude(),
+                        locationStr
+                    ),
+                    "0",
+                    getRating(restaurant.getRating()),
+                    getPictureUrl(restaurant.getPhotoUrl())
+                )
+            );
         }
         return restaurantsList;
     }
@@ -164,9 +159,9 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     // Get a photo reference if it exists and convert it to a picture url
-    public String getPictureUrl(List<NearbyRestaurantsResponse.Photo> photos) {
+    public String getPictureUrl(List<String> photos) {
         if (photos != null && !photos.isEmpty()) {
-            String photoReference = photos.get(0).getPhotoReference();
+            String photoReference = photos.get(0);
             return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                 photoReference + "&key=" + MAPS_API_KEY;
         } else {
@@ -189,10 +184,6 @@ public class RestaurantsViewModel extends ViewModel {
         double distance = R * c;
 
         return String.format(Locale.getDefault(), "%.0f", distance) + " m";
-    }
-
-    private boolean getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {
-        return openingHours != null && openingHours.isOpenNow();
     }
 
     public LiveData<Boolean> isGpsActivatedLiveData() {

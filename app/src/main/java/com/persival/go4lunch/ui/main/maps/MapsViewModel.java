@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.location.StartLocationRequestUseCase;
 import com.persival.go4lunch.domain.location.StopLocationRequestUseCase;
@@ -15,6 +14,7 @@ import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.permissions.IsLocationPermissionUseCase;
 import com.persival.go4lunch.domain.permissions.RefreshGpsActivationUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
+import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class MapsViewModel extends ViewModel {
         this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
     }
 
-    public LiveData<List<NearbyRestaurantsResponse.Place>> getNearbyRestaurants() {
+    public LiveData<List<NearbyRestaurantsEntity>> getNearbyRestaurants() {
         return getNearbyRestaurantsUseCase.invoke();
     }
 

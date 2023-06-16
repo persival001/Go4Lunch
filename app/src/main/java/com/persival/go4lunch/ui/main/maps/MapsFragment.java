@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.persival.go4lunch.R;
-import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 
@@ -101,7 +101,7 @@ public class MapsFragment extends SupportMapFragment {
                     markers.clear();
 
                     // Create new markers
-                    for (NearbyRestaurantsResponse.Place place : places) {
+                    for (NearbyRestaurantsEntity place : places) {
                         LatLng latLng = new LatLng(
                             place.getLatitude(),
                             place.getLongitude()

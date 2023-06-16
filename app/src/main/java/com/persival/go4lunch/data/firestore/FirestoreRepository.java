@@ -36,7 +36,7 @@ public class FirestoreRepository implements UserRepository {
     @NonNull
     private static final String LIKED_RESTAURANT_ID = "likedRestaurantsId";
     @NonNull
-    private static final String RESTAURANT_ID = "RestaurantId";
+    private static final String RESTAURANT_ID = "restaurantId";
     @NonNull
     private final FirebaseFirestore firebaseFirestore;
     @NonNull

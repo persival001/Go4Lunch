@@ -17,7 +17,6 @@ public class NearbyRestaurantsResponse {
         return results;
     }
 
-
     public static class Place {
         @Nullable
         @SerializedName("geometry")

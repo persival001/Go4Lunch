@@ -6,9 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
-import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
+import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class GetNearbyRestaurantsUseCase {
         this.getLocationUseCase = getLocationUseCase;
     }
 
-    public LiveData<List<NearbyRestaurantsResponse.Place>> invoke() {
+    public LiveData<List<NearbyRestaurantsEntity>> invoke() {
         LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
 
         return Transformations.switchMap(

@@ -12,7 +12,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.R;
-import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
+import com.persival.go4lunch.data.places.model.PlaceDetailsResponse;
 import com.persival.go4lunch.domain.details.GetLikedRestaurantsUseCase;
 import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
@@ -106,24 +106,16 @@ public class DetailsViewModel extends ViewModel {
         restaurantViewStateLiveData = Transformations.map(
             getRestaurantDetailsUseCase.invoke(restaurantId),
             restaurant -> {
-                if (restaurant.getId() != null &&
-                    restaurant.getName() != null &&
-                    restaurant.getAddress() != null
-                ) {
-                    detailsRestaurantViewState = new DetailsRestaurantViewState(
-                        restaurant.getId(),
-                        getPictureUrl(restaurant.getPhotos()),
-                        getFormattedName(restaurant.getName()),
-                        getRating(restaurant.getRating()),
-                        restaurant.getAddress(),
-                        restaurant.getPhoneNumber(),
-                        restaurant.getWebsite()
-                    );
-                    return detailsRestaurantViewState;
-                } else {
-                    detailsRestaurantViewState = null;
-                    return null;
-                }
+                detailsRestaurantViewState = new DetailsRestaurantViewState(
+                    restaurant.getId(),
+                    getPictureUrl(restaurant.getPhotoUrl()),
+                    getFormattedName(restaurant.getName()),
+                    getRating(restaurant.getRating()),
+                    restaurant.getAddress(),
+                    restaurant.getPhoneNumber(),
+                    restaurant.getWebsite()
+                );
+                return detailsRestaurantViewState;
             }
         );
     }
@@ -218,7 +210,7 @@ public class DetailsViewModel extends ViewModel {
     }
 
     // Get a photo reference if it exists and convert it to a picture url
-    public String getPictureUrl(List<NearbyRestaurantsResponse.Photo> photos) {
+    public String getPictureUrl(List<PlaceDetailsResponse.PhotoDetails> photos) {
         if (photos != null && !photos.isEmpty()) {
             String photoReference = photos.get(0).getPhotoReference();
             return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
