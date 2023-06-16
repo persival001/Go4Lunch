@@ -80,6 +80,13 @@ public class MapsFragment extends SupportMapFragment {
                 if (location != null) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
+                    // Ajoutez un marqueur à la position de l'utilisateur
+                    MarkerOptions userMarkerOptions = new MarkerOptions()
+                        .position(latLng)
+                        .title(getString(R.string.your_position))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    googleMap.addMarker(userMarkerOptions);
+
                     // Move the camera to the current location
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
 

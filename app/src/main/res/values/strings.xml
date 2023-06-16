@@ -97,4 +97,5 @@
     <string name="exit">Voulez-vous vraiment quitter l\'application ?</string>
     <string name="hasnt_decided_yet_in_string">ne s\'est pas encore décidé</string>
     <string name="no_restaurant_selected">No restaurant for lunch</string>
+    <string name="your_position">You are here !</string>
 </resources>
