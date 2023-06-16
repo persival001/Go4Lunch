@@ -9,6 +9,10 @@ public class UserRestaurantRelationsEntity {
     @NonNull
     private final String userId;
     @NonNull
+    private final String userName;
+    @NonNull
+    private final String userPictureUrl;
+    @NonNull
     private final String restaurantId;
     @NonNull
     private final String restaurantName;
@@ -17,11 +21,15 @@ public class UserRestaurantRelationsEntity {
 
     public UserRestaurantRelationsEntity(
         @NonNull String userId,
+        @NonNull String userName,
+        @NonNull String userPictureUrl,
         @NonNull String restaurantId,
         @NonNull String restaurantName,
         @NonNull Date dateOfVisit
     ) {
         this.userId = userId;
+        this.userName = userName;
+        this.userPictureUrl = userPictureUrl;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
         this.dateOfVisit = dateOfVisit;
@@ -30,6 +38,16 @@ public class UserRestaurantRelationsEntity {
     @NonNull
     public String getUserId() {
         return userId;
+    }
+
+    @NonNull
+    public String getUserName() {
+        return userName;
+    }
+
+    @NonNull
+    public String getUserPictureUrl() {
+        return userPictureUrl;
     }
 
     @NonNull
@@ -55,6 +73,8 @@ public class UserRestaurantRelationsEntity {
             return false;
         UserRestaurantRelationsEntity that = (UserRestaurantRelationsEntity) o;
         return userId.equals(that.userId) &&
+            userName.equals(that.userName) &&
+            userPictureUrl.equals(that.userPictureUrl) &&
             restaurantId.equals(that.restaurantId) &&
             restaurantName.equals(that.restaurantName) &&
             dateOfVisit.equals(that.dateOfVisit);
@@ -62,7 +82,7 @@ public class UserRestaurantRelationsEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, restaurantId, restaurantName, dateOfVisit);
+        return Objects.hash(userId, userName, userPictureUrl, restaurantId, restaurantName, dateOfVisit);
     }
 
     @NonNull
@@ -70,6 +90,8 @@ public class UserRestaurantRelationsEntity {
     public String toString() {
         return "UserRestaurantRelationsEntity{" +
             "userId='" + userId + '\'' +
+            ", userName='" + userName + '\'' +
+            ", userPictureUrl='" + userPictureUrl + '\'' +
             ", restaurantId='" + restaurantId + '\'' +
             ", restaurantName='" + restaurantName + '\'' +
             ", dateOfVisit=" + dateOfVisit +

@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
 import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
@@ -26,10 +25,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class RestaurantsViewModel extends ViewModel {
     @NonNull
-    private final GetLocationUseCase getLocationUseCase;
-    @NonNull
-    private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
-    @NonNull
     private final IsGpsActivatedUseCase isGpsActivatedUseCase;
     @NonNull
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
@@ -40,42 +35,24 @@ public class RestaurantsViewModel extends ViewModel {
         @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
         @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
     ) {
-        this.getLocationUseCase = getLocationUseCase;
         this.isGpsActivatedUseCase = isGpsActivatedUseCase;
-        this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
-        this.restaurantsLiveData = setupRestaurantsLiveData();
-    }
 
-    private LiveData<List<RestaurantsViewState>> setupRestaurantsLiveData() {
         LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
-        LiveData<String> locationAsString = transformLocationToString(locationLiveData);
-        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData = transformUnsortedRestaurantsLiveData(locationAsString);
-        return sortRestaurantsLiveData(unsortedRestaurantsLiveData);
-    }
-
-    private LiveData<String> transformLocationToString(
-        LiveData<LocationEntity> locationLiveData
-    ) {
-        return Transformations.map(
+        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData = Transformations.switchMap(
             locationLiveData,
-            location -> location.getLatitude() + "," + location.getLongitude()
-        );
-    }
-
-    private LiveData<List<RestaurantsViewState>> transformUnsortedRestaurantsLiveData(
-        LiveData<String> locationAsString
-    ) {
-        return Transformations.switchMap(
-            locationAsString,
-            locationStr -> Transformations.map(
+            location -> Transformations.map(
                 getNearbyRestaurantsUseCase.invoke(),
-                places -> transformPlacesToRestaurantViewStates(locationStr, places)
+                places -> mapPlacesToRestaurantViewStates(location.getLatitude() + "," + location.getLongitude(), places)
             )
         );
+        restaurantsLiveData = Transformations.map(
+            unsortedRestaurantsLiveData,
+            restaurantList -> sortRestaurantViewStates(restaurantList)
+        );
     }
 
-    private List<RestaurantsViewState> transformPlacesToRestaurantViewStates(
-        String locationStr,
+    private List<RestaurantsViewState> mapPlacesToRestaurantViewStates(
+        String location,
         List<NearbyRestaurantsEntity> places
     ) {
         List<RestaurantsViewState> restaurantsList = new ArrayList<>();
@@ -83,27 +60,21 @@ public class RestaurantsViewModel extends ViewModel {
             restaurantsList.add(
                 new RestaurantsViewState(
                     restaurant.getId(),
-                    getFormattedName(restaurant.getName()),
+                    mapFormattedName(restaurant.getName()),
                     restaurant.getAddress(),
                     restaurant.isOpeningHours(),
-                    getHaversineDistance(
+                    mapHaversineDistance(
                         restaurant.getLatitude(),
                         restaurant.getLongitude(),
-                        locationStr
+                        location
                     ),
                     "0",
-                    getRating(restaurant.getRating()),
-                    getPictureUrl(restaurant.getPhotos())
+                    mapRating(restaurant.getRating()),
+                    mapPictureUrl(restaurant.getPhotos())
                 )
             );
         }
         return restaurantsList;
-    }
-
-    private LiveData<List<RestaurantsViewState>> sortRestaurantsLiveData(
-        LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData
-    ) {
-        return Transformations.map(unsortedRestaurantsLiveData, this::sortRestaurantViewStates);
     }
 
     private List<RestaurantsViewState> sortRestaurantViewStates(List<RestaurantsViewState> restaurantsList) {
@@ -128,7 +99,7 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     // Convert rating from 5 to 3 stars
-    private float getRating(Float rating) {
+    private float mapRating(Float rating) {
         if (rating != null) {
             return rating * 3F / 5F;
         } else {
@@ -137,7 +108,7 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     // Convert a string to title case like "Restaurant Name"
-    private String getFormattedName(String name) {
+    private String mapFormattedName(String name) {
         if (name != null) {
             StringBuilder titleCase = new StringBuilder();
             boolean nextTitleCase = true;
@@ -160,7 +131,7 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     // Get a photo reference if it exists and convert it to a picture url
-    public String getPictureUrl(List<String> photos) {
+    public String mapPictureUrl(List<String> photos) {
         if (photos != null && !photos.isEmpty()) {
             String photoReference = photos.get(0);
             return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
@@ -171,7 +142,7 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     // Get the distance between two points
-    public String getHaversineDistance(double restaurantLatitude, double restaurantLongitude, String gpsLocation) {
+    public String mapHaversineDistance(double restaurantLatitude, double restaurantLongitude, String gpsLocation) {
         String[] locationSplit = gpsLocation.split(",");
         double gpsLatitude = Double.parseDouble(locationSplit[0]);
         double gpsLongitude = Double.parseDouble(locationSplit[1]);
@@ -185,10 +156,6 @@ public class RestaurantsViewModel extends ViewModel {
         double distance = R * c;
 
         return String.format(Locale.getDefault(), "%.0f", distance) + " m";
-    }
-
-    private boolean getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {
-        return openingHours != null && openingHours.isOpenNow();
     }
 
     public LiveData<Boolean> isGpsActivatedLiveData() {

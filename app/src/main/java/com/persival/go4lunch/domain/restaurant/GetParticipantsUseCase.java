@@ -23,18 +23,17 @@ public class GetParticipantsUseCase {
         this.getWorkmatesEatAtRestaurantUseCase = getWorkmatesEatAtRestaurantUseCase;
     }
 
-    public LiveData<String> invoke(String restaurantId) {
-        LiveData<List<WorkmateEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData =
-            getWorkmatesEatAtRestaurantUseCase.invoke();
+    public LiveData<Integer> invoke(String restaurantId) {
+        LiveData<List<WorkmateEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData = getWorkmatesEatAtRestaurantUseCase.invoke();
 
         return Transformations.map(workmatesEatAtRestaurantLiveData, workmates -> {
             int count = 0;
             for (WorkmateEatAtRestaurantEntity workmate : workmates) {
-                if (workmate.getRestaurantId().equals(restaurantId)) {
+                if (restaurantId.equals(workmate.getRestaurantId())) {
                     count++;
                 }
             }
-            return String.valueOf(count);
+            return count;
         });
     }
 

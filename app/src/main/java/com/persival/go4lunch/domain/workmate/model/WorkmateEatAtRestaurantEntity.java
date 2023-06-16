@@ -3,6 +3,7 @@ package com.persival.go4lunch.domain.workmate.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class WorkmateEatAtRestaurantEntity {
@@ -23,8 +24,8 @@ public class WorkmateEatAtRestaurantEntity {
         @Nullable String pictureUrl,
         @NonNull String name,
         @Nullable String restaurantName,
-        @Nullable String restaurantId
-    ) {
+        @Nullable String restaurantId,
+        Date dateOfVisit) {
         this.id = id;
         this.pictureUrl = pictureUrl;
         this.name = name;

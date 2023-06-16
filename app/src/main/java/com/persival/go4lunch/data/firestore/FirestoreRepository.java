@@ -18,9 +18,7 @@ import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,89 +49,44 @@ public class FirestoreRepository implements UserRepository {
         this.firebaseFirestore = firebaseFirestore;
     }
 
-    // ----- Get the workmate list from Firestore and the relation with the restaurant he eat at -----
     public LiveData<List<WorkmateEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData() {
         MutableLiveData<List<WorkmateEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData = new MutableLiveData<>();
-        Map<String, WorkmateDto> usersMap = new HashMap<>();
-        Map<String, UserRestaurantRelationsDto> relationsMap = new HashMap<>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Listener for USERS collection
-        db.collection(USERS)
+        
+        firebaseFirestore.collection(USER_EAT_AT_RESTAURANT)
             .addSnapshotListener((snapshots, e) -> {
                 if (e != null) {
                     return;
                 }
 
                 if (snapshots != null) {
+                    List<WorkmateEatAtRestaurantEntity> workmates = new ArrayList<>();
                     for (DocumentSnapshot document : snapshots.getDocuments()) {
-                        WorkmateDto user = document.toObject(WorkmateDto.class);
-                        if (user != null) {
-                            usersMap.put(user.getId(), user);
-                        }
+                        UserEatAtRestaurantDto userEatAtRestaurantDto = document.toObject(UserEatAtRestaurantDto.class);
+                        if (userEatAtRestaurantDto != null
+                            && userEatAtRestaurantDto.getUserId() != null
+                            && userEatAtRestaurantDto.getUserName() != null
+                            && userEatAtRestaurantDto.getUserPictureUrl() != null) {
 
-                    }
-                    updateWorkmatesLiveData(usersMap, relationsMap, workmatesEatAtRestaurantLiveData);
-                }
-            });
+                            WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
+                                userEatAtRestaurantDto.getUserId(),
+                                userEatAtRestaurantDto.getUserPictureUrl(),
+                                userEatAtRestaurantDto.getUserName(),
+                                userEatAtRestaurantDto.getRestaurantName(),
+                                userEatAtRestaurantDto.getRestaurantId(),
+                                userEatAtRestaurantDto.getDateOfVisit());
 
-        // Listener for USER_EAT_AT_RESTAURANT collection
-        db.collection(USER_EAT_AT_RESTAURANT)
-            .addSnapshotListener((snapshots, e) -> {
-                if (e != null) {
-                    return;
-                }
-
-                if (snapshots != null) {
-                    for (DocumentSnapshot document : snapshots.getDocuments()) {
-                        UserRestaurantRelationsDto relation = document.toObject(UserRestaurantRelationsDto.class);
-                        if (relation != null) {
-                            relationsMap.put(relation.getUserId(), relation);
+                            workmates.add(workmateEatAtRestaurantEntity);
                         }
                     }
-                    updateWorkmatesLiveData(usersMap, relationsMap, workmatesEatAtRestaurantLiveData);
+                    workmatesEatAtRestaurantLiveData.setValue(workmates);
                 }
             });
 
         return workmatesEatAtRestaurantLiveData;
     }
 
-    private void updateWorkmatesLiveData(Map<String, WorkmateDto> usersMap,
-                                         Map<String, UserRestaurantRelationsDto> relationsMap,
-                                         MutableLiveData<List<WorkmateEatAtRestaurantEntity>> liveData) {
-
-        List<WorkmateEatAtRestaurantEntity> workmates = new ArrayList<>();
-
-        for (Map.Entry<String, WorkmateDto> entry : usersMap.entrySet()) {
-            String userId = entry.getKey();
-            WorkmateDto user = entry.getValue();
-            UserRestaurantRelationsDto relation = relationsMap.get(userId);
-
-            String restaurantName = null;
-            String restaurantId = null;
-            if (relation != null) {
-                restaurantName = relation.getRestaurantName();
-                restaurantId = relation.getRestaurantId();
-            }
-
-            if (user != null && user.getId() != null && user.getName() != null) {
-                WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
-                    user.getId(),
-                    user.getPictureUrl(),
-                    user.getName(),
-                    restaurantName,
-                    restaurantId
-                );
-                workmates.add(workmateEatAtRestaurantEntity);
-            }
-        }
-
-        liveData.setValue(workmates);
-    }
-
-
     // ----- Create new workmate -----
-    public void createUser(WorkmateEntity user) {
+    public void createUser(@NonNull WorkmateEntity user) {
         firebaseFirestore.collection(USERS).document(user.getId())
             .set(user);
     }
@@ -144,24 +97,22 @@ public class FirestoreRepository implements UserRepository {
         String eatingRestaurantId,
         String eatingRestaurantName
     ) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         // Create new instance of UserRestaurantRelation
         UserRestaurantRelationsEntity userRestaurantRelationsEntity = new UserRestaurantRelationsEntity(
             user.getId(),
+            user.getName(),
+            user.getAvatarPictureUrl(),
             eatingRestaurantId,
             eatingRestaurantName,
             new Date());
 
         // Add userEatAtRestaurant at the collection 'userEatAtRestaurant'
-        db.collection(USER_EAT_AT_RESTAURANT).document(user.getId())
+        firebaseFirestore.collection(USER_EAT_AT_RESTAURANT).document(user.getId())
             .set(userRestaurantRelationsEntity);
     }
 
-    public void updateLikedRestaurants(LoggedUserEntity user, boolean isAdded, String restaurantId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        DocumentReference docRef = db.collection(USERS).document(user.getId());
+    public void updateLikedRestaurants(@NonNull LoggedUserEntity user, boolean isAdded, @NonNull String restaurantId) {
+        DocumentReference docRef = firebaseFirestore.collection(USERS).document(user.getId());
 
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -171,14 +122,14 @@ public class FirestoreRepository implements UserRepository {
 
                     if (isAdded) {
                         // Add id of liked restaurant to the list
-                        db.collection(USERS).document(user.getId())
+                        firebaseFirestore.collection(USERS).document(user.getId())
                             .update(LIKED_RESTAURANT_ID, FieldValue.arrayUnion(restaurantId));
                         if (likedRestaurantsId != null) {
                             likedRestaurantsId.add(restaurantId);
                         }
                     } else {
                         // Erase id of liked restaurant from the list
-                        db.collection(USERS).document(user.getId())
+                        firebaseFirestore.collection(USERS).document(user.getId())
                             .update(LIKED_RESTAURANT_ID, FieldValue.arrayRemove(restaurantId));
                         if (likedRestaurantsId != null) {
                             likedRestaurantsId.remove(restaurantId);
@@ -190,10 +141,9 @@ public class FirestoreRepository implements UserRepository {
     }
 
     // ----- Get liked restaurants -----
-    public LiveData<List<String>> getLikedRestaurantsForUser(String userId) {
+    public LiveData<List<String>> getLikedRestaurantsForUser(@NonNull String userId) {
         MutableLiveData<List<String>> likedRestaurants = new MutableLiveData<>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(USERS).document(userId)
+        firebaseFirestore.collection(USERS).document(userId)
             .get()
             .addOnSuccessListener(documentSnapshot -> {
                 List<String> restaurants = (List<String>) documentSnapshot.get(LIKED_RESTAURANT_ID);
