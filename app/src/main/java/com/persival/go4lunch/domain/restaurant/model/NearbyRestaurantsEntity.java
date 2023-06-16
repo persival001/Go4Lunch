@@ -23,7 +23,7 @@ public class NearbyRestaurantsEntity {
     private final float rating;
 
     @Nullable
-    private final List<String> photoUrl;
+    private final List<String> photos;
 
     private final double latitude;
 
@@ -35,7 +35,7 @@ public class NearbyRestaurantsEntity {
         @NonNull String address,
         boolean openingHours,
         float rating,
-        @Nullable List<String> photoUrl,
+        @Nullable List<String> photos,
         double latitude,
         double longitude
     ) {
@@ -44,7 +44,7 @@ public class NearbyRestaurantsEntity {
         this.address = address;
         this.openingHours = openingHours;
         this.rating = rating;
-        this.photoUrl = photoUrl;
+        this.photos = photos;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -73,8 +73,8 @@ public class NearbyRestaurantsEntity {
     }
 
     @Nullable
-    public List<String> getPhotoUrl() {
-        return photoUrl;
+    public List<String> getPhotos() {
+        return photos;
     }
 
     public double getLatitude() {
@@ -92,20 +92,15 @@ public class NearbyRestaurantsEntity {
         if (o == null || getClass() != o.getClass())
             return false;
         NearbyRestaurantsEntity that = (NearbyRestaurantsEntity) o;
-        return openingHours == that.openingHours &&
-            Float.compare(that.rating, rating) == 0 &&
-            Double.compare(that.latitude, latitude) == 0 &&
-            Double.compare(that.longitude, longitude) == 0 &&
-            id.equals(that.id) && name.equals(that.name) &&
-            address.equals(that.address) &&
-            Objects.equals(photoUrl, that.photoUrl);
+        return openingHours == that.openingHours && Float.compare(that.rating, rating) == 0 && Double.compare(that.latitude, latitude) == 0 && Double.compare(that.longitude, longitude) == 0 && id.equals(that.id) && name.equals(that.name) && address.equals(that.address) && Objects.equals(photos, that.photos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, openingHours, rating, photoUrl, latitude, longitude);
+        return Objects.hash(id, name, address, openingHours, rating, photos, latitude, longitude);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "NearbyRestaurantsEntity{" +
@@ -114,7 +109,7 @@ public class NearbyRestaurantsEntity {
             ", address='" + address + '\'' +
             ", openingHours=" + openingHours +
             ", rating=" + rating +
-            ", photoUrl=" + photoUrl +
+            ", photos=" + photos +
             ", latitude=" + latitude +
             ", longitude=" + longitude +
             '}';

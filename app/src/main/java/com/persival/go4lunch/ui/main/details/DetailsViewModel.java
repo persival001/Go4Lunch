@@ -12,7 +12,6 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.R;
-import com.persival.go4lunch.data.places.model.PlaceDetailsResponse;
 import com.persival.go4lunch.domain.details.GetLikedRestaurantsUseCase;
 import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
@@ -210,9 +209,9 @@ public class DetailsViewModel extends ViewModel {
     }
 
     // Get a photo reference if it exists and convert it to a picture url
-    public String getPictureUrl(List<PlaceDetailsResponse.PhotoDetails> photos) {
+    public String getPictureUrl(List<String> photos) {
         if (photos != null && !photos.isEmpty()) {
-            String photoReference = photos.get(0).getPhotoReference();
+            String photoReference = photos.get(0);
             return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                 photoReference + "&key=" + MAPS_API_KEY;
         } else {

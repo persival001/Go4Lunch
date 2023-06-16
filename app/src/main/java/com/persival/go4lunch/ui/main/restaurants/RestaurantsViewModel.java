@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
 import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
@@ -92,7 +93,7 @@ public class RestaurantsViewModel extends ViewModel {
                     ),
                     "0",
                     getRating(restaurant.getRating()),
-                    getPictureUrl(restaurant.getPhotoUrl())
+                    getPictureUrl(restaurant.getPhotos())
                 )
             );
         }
@@ -184,6 +185,10 @@ public class RestaurantsViewModel extends ViewModel {
         double distance = R * c;
 
         return String.format(Locale.getDefault(), "%.0f", distance) + " m";
+    }
+
+    private boolean getOpeningTime(NearbyRestaurantsResponse.OpeningHours openingHours) {
+        return openingHours != null && openingHours.isOpenNow();
     }
 
     public LiveData<Boolean> isGpsActivatedLiveData() {

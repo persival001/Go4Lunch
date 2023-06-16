@@ -3,8 +3,6 @@ package com.persival.go4lunch.domain.restaurant.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.persival.go4lunch.data.places.model.PlaceDetailsResponse;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +12,7 @@ public class PlaceDetailsEntity {
     private final String id;
 
     @Nullable
-    private final List<PlaceDetailsResponse.PhotoDetails> photoUrl;
+    private final List<String> photoUrl;
 
     @NonNull
     private final String name;
@@ -32,7 +30,7 @@ public class PlaceDetailsEntity {
 
     public PlaceDetailsEntity(
         @NonNull String id,
-        @Nullable List<PlaceDetailsResponse.PhotoDetails> photoUrl,
+        @Nullable List<String> photoUrl,
         @NonNull String name,
         float rating,
         @NonNull String address,
@@ -54,7 +52,7 @@ public class PlaceDetailsEntity {
     }
 
     @Nullable
-    public List<PlaceDetailsResponse.PhotoDetails> getPhotoUrl() {
+    public List<String> getPhotoUrl() {
         return photoUrl;
     }
 
@@ -89,12 +87,7 @@ public class PlaceDetailsEntity {
         if (o == null || getClass() != o.getClass())
             return false;
         PlaceDetailsEntity that = (PlaceDetailsEntity) o;
-        return Float.compare(that.rating, rating) == 0 &&
-            id.equals(that.id) &&
-            Objects.equals(photoUrl, that.photoUrl) &&
-            name.equals(that.name) && address.equals(that.address) &&
-            Objects.equals(phoneNumber, that.phoneNumber) &&
-            Objects.equals(website, that.website);
+        return Float.compare(that.rating, rating) == 0 && id.equals(that.id) && Objects.equals(photoUrl, that.photoUrl) && name.equals(that.name) && address.equals(that.address) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(website, that.website);
     }
 
     @Override
@@ -102,7 +95,6 @@ public class PlaceDetailsEntity {
         return Objects.hash(id, photoUrl, name, rating, address, phoneNumber, website);
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "PlaceDetailsEntity{" +

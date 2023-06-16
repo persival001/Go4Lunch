@@ -128,15 +128,24 @@ public class GooglePlacesRepository implements PlacesRepository {
             String address = place.getAddress();
             boolean openingHours = (place.getOpeningHours() != null) ? place.getOpeningHours().isOpenNow() : false;
             float rating = place.getRating() != null ? place.getRating() : 0;
-            List<String> photoUrl = new ArrayList<>();
+
+            List<NearbyRestaurantsResponse.Photo> photos = place.getPhotos();
+            List<String> photoUrls = new ArrayList<>();
+            if (photos != null) {
+                for (NearbyRestaurantsResponse.Photo photo : photos) {
+                    photoUrls.add(photo.getPhotoReference());
+                }
+            }
+
             double lat = place.getLatitude();
             double lng = place.getLongitude();
 
-            return new NearbyRestaurantsEntity(id, name, address, openingHours, rating, photoUrl, lat, lng);
+            return new NearbyRestaurantsEntity(id, name, address, openingHours, rating, photoUrls, lat, lng);
         } else {
             return null;
         }
     }
+
 
     private PlaceDetailsEntity mapPlaceDetailsResponseToEntity(PlaceDetailsResponse.PlaceDetails placeDetails) {
         if (placeDetails != null &&
@@ -151,9 +160,15 @@ public class GooglePlacesRepository implements PlacesRepository {
             String phoneNumber = placeDetails.getPhoneNumber();
             String website = placeDetails.getWebsite();
 
-            List<PlaceDetailsResponse.PhotoDetails> photoUrl = new ArrayList<>();
+            List<PlaceDetailsResponse.PhotoDetails> photos = placeDetails.getPhotos();
+            List<String> photoUrls = new ArrayList<>();
+            if (photos != null) {
+                for (PlaceDetailsResponse.PhotoDetails photo : photos) {
+                    photoUrls.add(photo.getPhotoReference());
+                }
+            }
 
-            return new PlaceDetailsEntity(id, photoUrl, name, rating, address, phoneNumber, website);
+            return new PlaceDetailsEntity(id, photoUrls, name, rating, address, phoneNumber, website);
         } else {
             return null;
         }
