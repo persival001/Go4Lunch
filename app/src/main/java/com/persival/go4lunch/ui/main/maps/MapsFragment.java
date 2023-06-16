@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
+import com.persival.go4lunch.ui.main.details.DetailsFragment;
 import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 
 import java.util.ArrayList;
@@ -102,17 +103,35 @@ public class MapsFragment extends SupportMapFragment {
 
                     // Create new markers
                     for (NearbyRestaurantsEntity place : places) {
-                        LatLng latLng = new LatLng(
-                            place.getLatitude(),
-                            place.getLongitude()
-                        );
+                        LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
                         MarkerOptions markerOptions = new MarkerOptions()
                             .position(latLng)
                             .title(place.getName())
                             .snippet(place.getAddress())
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                        markers.add(googleMap.addMarker(markerOptions));
+                        Marker marker = googleMap.addMarker(markerOptions);
+                        if (marker != null) {
+                            marker.setTag(place.getId());
+                        }
+                        markers.add(marker);
                     }
+
+                }
+            });
+
+            // Navigate to DetailsFragment when clicking on a marker
+            googleMap.setOnInfoWindowClickListener(marker -> {
+                String restaurantId = (String) marker.getTag();
+                DetailsFragment detailsFragment = null;
+                if (restaurantId != null) {
+                    detailsFragment = DetailsFragment.newInstance(restaurantId);
+                }
+
+                if (detailsFragment != null) {
+                    getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, detailsFragment)
+                        .addToBackStack(null)
+                        .commit();
                 }
             });
 
