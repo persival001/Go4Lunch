@@ -81,7 +81,6 @@
     <string name="cancel">Cancel</string>
     <string name="annuler">Annuler</string>
     <string name="activer">Activer</string>
-    <string name="gps_desactivated">Gps is off</string>
     <string name="gps_off">Gps is off</string>
     <string name="please_activate_gps">To make this application work with all its features, we need you to activate your Gps with the precise location.\n\nDon\'t worry, we don\'t store any of your data.</string>
     <string name="is_eating_at">"%s is eating at %s"</string>
