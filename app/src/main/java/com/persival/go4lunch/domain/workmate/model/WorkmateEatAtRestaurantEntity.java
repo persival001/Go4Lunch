@@ -18,6 +18,8 @@ public class WorkmateEatAtRestaurantEntity {
     private final String restaurantName;
     @Nullable
     private final String restaurantId;
+    @Nullable
+    private final Date dateOfVisit;
 
     public WorkmateEatAtRestaurantEntity(
         @NonNull String id,
@@ -25,12 +27,14 @@ public class WorkmateEatAtRestaurantEntity {
         @NonNull String name,
         @Nullable String restaurantName,
         @Nullable String restaurantId,
-        Date dateOfVisit) {
+        @Nullable Date dateOfVisit
+    ) {
         this.id = id;
         this.pictureUrl = pictureUrl;
         this.name = name;
         this.restaurantName = restaurantName;
         this.restaurantId = restaurantId;
+        this.dateOfVisit = dateOfVisit;
     }
 
     @NonNull
@@ -58,6 +62,11 @@ public class WorkmateEatAtRestaurantEntity {
         return restaurantId;
     }
 
+    @Nullable
+    public Date getDateOfVisit() {
+        return dateOfVisit;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -65,14 +74,20 @@ public class WorkmateEatAtRestaurantEntity {
         if (o == null || getClass() != o.getClass())
             return false;
         WorkmateEatAtRestaurantEntity that = (WorkmateEatAtRestaurantEntity) o;
-        return id.equals(that.id) && Objects.equals(pictureUrl, that.pictureUrl) && name.equals(that.name) && Objects.equals(restaurantName, that.restaurantName) && Objects.equals(restaurantId, that.restaurantId);
+        return id.equals(that.id) &&
+            Objects.equals(pictureUrl, that.pictureUrl) &&
+            name.equals(that.name) &&
+            Objects.equals(restaurantName, that.restaurantName) &&
+            Objects.equals(restaurantId, that.restaurantId) &&
+            Objects.equals(dateOfVisit, that.dateOfVisit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pictureUrl, name, restaurantName, restaurantId);
+        return Objects.hash(id, pictureUrl, name, restaurantName, restaurantId, dateOfVisit);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "WorkmateEatAtRestaurantEntity{" +
@@ -81,6 +96,7 @@ public class WorkmateEatAtRestaurantEntity {
             ", name='" + name + '\'' +
             ", restaurantName='" + restaurantName + '\'' +
             ", restaurantId='" + restaurantId + '\'' +
+            ", dateOfVisit=" + dateOfVisit +
             '}';
     }
 }

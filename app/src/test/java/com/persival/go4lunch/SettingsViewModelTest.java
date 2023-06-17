@@ -2,6 +2,8 @@ package com.persival.go4lunch;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,10 +62,34 @@ public class SettingsViewModelTest {
     }
 
     @Test
+    public void testGetLoggedUserLiveDataFailure() {
+        // Arrange
+        when(getLoggedUserUseCase.invoke()).thenReturn(null);
+
+        // Act
+        SettingsViewModel viewModel = new SettingsViewModel(getLoggedUserUseCase, setNewUserNameUseCase, deleteAccountUseCase);
+        LiveData<SettingsViewState> liveData = viewModel.getLoggedUserLiveData();
+
+        // Assert
+        assertNull(liveData.getValue());
+    }
+
+
+    @Test
     public void testSetNewUserName() {
         String newUserName = "newUserName";
         viewModel.setNewUserName(newUserName);
         verify(setNewUserNameUseCase).invoke(newUserName);
+    }
+
+    @Test(expected = Exception.class)
+    public void testSetNewUserNameFailure() {
+        // Arrange
+        String newUserName = "newUserName";
+        doThrow(new Exception("Mock Exception")).when(setNewUserNameUseCase).invoke(newUserName);
+
+        // Act
+        viewModel.setNewUserName(newUserName);
     }
 
     @Test
@@ -71,4 +97,14 @@ public class SettingsViewModelTest {
         viewModel.deleteAccount();
         verify(deleteAccountUseCase).invoke();
     }
+
+    @Test(expected = Exception.class)
+    public void testDeleteAccountFailure() {
+        // Arrange
+        doThrow(new Exception("Mock Exception")).when(deleteAccountUseCase).invoke();
+
+        // Act
+        viewModel.deleteAccount();
+    }
+
 }

@@ -40,6 +40,9 @@ public class WorkmatesViewModel extends ViewModel {
 
         viewStateLiveData = Transformations.map(getWorkmatesEatAtRestaurantUseCase.invoke(), users -> {
 
+            if (users == null)
+                return null;
+
             List<WorkmatesViewState> workmatesViewState = new ArrayList<>();
 
             for (WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity : users) {
