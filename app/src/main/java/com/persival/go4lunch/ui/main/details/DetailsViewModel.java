@@ -19,7 +19,7 @@ import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
-import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
+import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,20 +79,20 @@ public class DetailsViewModel extends ViewModel {
             LoggedUserEntity loggedUser = this.getLoggedUserUseCase.invoke();
             String loggedInUserId = loggedUser != null ? loggedUser.getId() : null;
 
-            for (WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity : users) {
-                if (workmateEatAtRestaurantEntity != null &&
-                    workmateEatAtRestaurantEntity.getRestaurantId() != null &&
-                    workmateEatAtRestaurantEntity.getRestaurantId().equals(restaurantId)) {
+            for (UserEatAtRestaurantEntity userEatAtRestaurantEntity : users) {
+                if (userEatAtRestaurantEntity != null &&
+                    userEatAtRestaurantEntity.getRestaurantId() != null &&
+                    userEatAtRestaurantEntity.getRestaurantId().equals(restaurantId)) {
 
                     detailsWorkmateViewState.add(
                         new DetailsWorkmateViewState(
-                            workmateEatAtRestaurantEntity.getId(),
-                            workmateEatAtRestaurantEntity.getPictureUrl(),
-                            getWorkmateNameIsJoining(workmateEatAtRestaurantEntity.getName())
+                            userEatAtRestaurantEntity.getId(),
+                            userEatAtRestaurantEntity.getPictureUrl(),
+                            getWorkmateNameIsJoining(userEatAtRestaurantEntity.getName())
                         )
                     );
 
-                    if (workmateEatAtRestaurantEntity.getId().equals(loggedInUserId)) {
+                    if (userEatAtRestaurantEntity.getId().equals(loggedInUserId)) {
                         isRestaurantChosenLiveData.setValue(true);
                     }
                 }

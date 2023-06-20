@@ -6,26 +6,26 @@ import androidx.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class WorkmateEntity {
+public class UserEntity {
 
     @NonNull
     private final String id;
-    @Nullable
-    private final String pictureUrl;
     @NonNull
     private final String name;
     @Nullable
+    private final String pictureUrl;
+    @Nullable
     private final List<String> likedRestaurantsId;
 
-    public WorkmateEntity(
+    public UserEntity(
         @NonNull String id,
-        @Nullable String pictureUrl,
         @NonNull String name,
+        @Nullable String pictureUrl,
         @Nullable List<String> likedRestaurantsId
     ) {
         this.id = id;
-        this.pictureUrl = pictureUrl;
         this.name = name;
+        this.pictureUrl = pictureUrl;
         this.likedRestaurantsId = likedRestaurantsId;
     }
 
@@ -34,14 +34,14 @@ public class WorkmateEntity {
         return id;
     }
 
-    @Nullable
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
     @NonNull
     public String getName() {
         return name;
+    }
+
+    @Nullable
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
     @Nullable
@@ -55,25 +55,22 @@ public class WorkmateEntity {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        WorkmateEntity that = (WorkmateEntity) o;
-        return id.equals(that.id) &&
-            Objects.equals(pictureUrl, that.pictureUrl) &&
-            name.equals(that.name) &&
-            Objects.equals(likedRestaurantsId, that.likedRestaurantsId);
+        UserEntity that = (UserEntity) o;
+        return id.equals(that.id) && name.equals(that.name) && Objects.equals(pictureUrl, that.pictureUrl) && Objects.equals(likedRestaurantsId, that.likedRestaurantsId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pictureUrl, name, likedRestaurantsId);
+        return Objects.hash(id, name, pictureUrl, likedRestaurantsId);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "WorkmateEntity{" +
+        return "UserEntity{" +
             "id='" + id + '\'' +
-            ", pictureUrl='" + pictureUrl + '\'' +
             ", name='" + name + '\'' +
+            ", pictureUrl='" + pictureUrl + '\'' +
             ", likedRestaurantsId=" + likedRestaurantsId +
             '}';
     }

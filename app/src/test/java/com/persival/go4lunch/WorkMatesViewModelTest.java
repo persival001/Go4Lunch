@@ -17,7 +17,7 @@ import androidx.lifecycle.Observer;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
-import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
+import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 import com.persival.go4lunch.ui.main.workmates.WorkmatesViewModel;
 import com.persival.go4lunch.ui.main.workmates.WorkmatesViewState;
 import com.persival.go4lunch.utils.TestUtil;
@@ -55,7 +55,7 @@ public class WorkMatesViewModelTest {
 
     private LoggedUserEntity loggedUserEntity;
 
-    private MutableLiveData<List<WorkmateEatAtRestaurantEntity>> liveData;
+    private MutableLiveData<List<UserEatAtRestaurantEntity>> liveData;
 
 
     @Before
@@ -71,9 +71,9 @@ public class WorkMatesViewModelTest {
 
     @Test
     public void testGetWorkmatesSuccess() {
-        WorkmateEatAtRestaurantEntity entity1 = new WorkmateEatAtRestaurantEntity("2", "https://image.com", "Emilie", "Restaurant 1", "001", new Date());
-        WorkmateEatAtRestaurantEntity entity2 = new WorkmateEatAtRestaurantEntity("3", "https://image.com", "Gino", "Restaurant 2", "002", new Date());
-        List<WorkmateEatAtRestaurantEntity> listOfWorkmates = new ArrayList<>();
+        UserEatAtRestaurantEntity entity1 = new UserEatAtRestaurantEntity("2", "https://image.com", "Emilie", "Restaurant 1", "001", new Date());
+        UserEatAtRestaurantEntity entity2 = new UserEatAtRestaurantEntity("3", "https://image.com", "Gino", "Restaurant 2", "002", new Date());
+        List<UserEatAtRestaurantEntity> listOfWorkmates = new ArrayList<>();
         listOfWorkmates.add(entity1);
         listOfWorkmates.add(entity2);
         liveData.setValue(listOfWorkmates);

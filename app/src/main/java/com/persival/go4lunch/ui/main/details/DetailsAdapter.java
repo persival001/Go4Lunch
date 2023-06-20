@@ -62,7 +62,7 @@ public class DetailsAdapter extends ListAdapter<DetailsWorkmateViewState, Detail
                 .load(item.getWorkmatePictureUrl())
                 .circleCrop()
                 .placeholder(R.drawable.ic_anon_user_48dp)
-                .error(R.drawable.baseline_error_24)
+                .error(R.drawable.ic_anon_user_48dp)
                 .into(avatarPicture);
 
             avatarName.setText(item.getWorkmateName());

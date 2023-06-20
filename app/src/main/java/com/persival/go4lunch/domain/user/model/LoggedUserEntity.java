@@ -10,21 +10,21 @@ public class LoggedUserEntity {
     private final String id;
     @NonNull
     private final String name;
+    @Nullable
+    private final String pictureUrl;
     @NonNull
     private final String emailAddress;
-    @Nullable
-    private final String avatarPictureUrl;
 
     public LoggedUserEntity(
         @NonNull String id,
         @NonNull String name,
-        @NonNull String emailAddress,
-        @Nullable String avatarPictureUrl
+        @Nullable String pictureUrl,
+        @NonNull String emailAddress
     ) {
         this.id = id;
         this.name = name;
+        this.pictureUrl = pictureUrl;
         this.emailAddress = emailAddress;
-        this.avatarPictureUrl = avatarPictureUrl;
     }
 
     @NonNull
@@ -37,15 +37,16 @@ public class LoggedUserEntity {
         return name;
     }
 
+    @Nullable
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
     @NonNull
     public String getEmailAddress() {
         return emailAddress;
     }
 
-    @Nullable
-    public String getAvatarPictureUrl() {
-        return avatarPictureUrl;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -56,13 +57,13 @@ public class LoggedUserEntity {
         LoggedUserEntity that = (LoggedUserEntity) o;
         return id.equals(that.id) &&
             name.equals(that.name) &&
-            emailAddress.equals(that.emailAddress) &&
-            Objects.equals(avatarPictureUrl, that.avatarPictureUrl);
+            Objects.equals(pictureUrl, that.pictureUrl) &&
+            emailAddress.equals(that.emailAddress);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, emailAddress, avatarPictureUrl);
+        return Objects.hash(id, name, pictureUrl, emailAddress);
     }
 
     @NonNull
@@ -71,8 +72,8 @@ public class LoggedUserEntity {
         return "LoggedUserEntity{" +
             "id='" + id + '\'' +
             ", name='" + name + '\'' +
+            ", pictureUrl='" + pictureUrl + '\'' +
             ", emailAddress='" + emailAddress + '\'' +
-            ", avatarPictureUrl='" + avatarPictureUrl + '\'' +
             '}';
     }
 }

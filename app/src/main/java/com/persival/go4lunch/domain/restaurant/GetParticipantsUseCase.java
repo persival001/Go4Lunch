@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
 import com.persival.go4lunch.domain.workmate.UserRepository;
-import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
+import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +23,11 @@ public class GetParticipantsUseCase {
     }
 
     public LiveData<HashMap<String, Integer>> invoke() {
-        LiveData<List<WorkmateEatAtRestaurantEntity>> workmatesLiveData = userRepository.getWorkmatesEatAtRestaurantLiveData();
+        LiveData<List<UserEatAtRestaurantEntity>> workmatesLiveData = userRepository.getWorkmatesEatAtRestaurantLiveData();
 
         return Transformations.map(workmatesLiveData, workmates -> {
             HashMap<String, Integer> restaurantUserCount = new HashMap<>();
-            for (WorkmateEatAtRestaurantEntity workmate : workmates) {
+            for (UserEatAtRestaurantEntity workmate : workmates) {
                 String restaurantId = workmate.getRestaurantId();
                 Integer count = restaurantUserCount.get(restaurantId);
                 if (count == null) {

@@ -1,27 +1,27 @@
 package com.persival.go4lunch.domain.user;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import javax.inject.Inject;
 
-public class GetLoggedUserUseCase {
+public class GetUserNameChangedLiveData {
 
     @NonNull
     private final LoggedUserRepository loggedUserRepository;
 
     @Inject
-    public GetLoggedUserUseCase(
+    public GetUserNameChangedLiveData(
         @NonNull LoggedUserRepository loggedUserRepository
     ) {
         this.loggedUserRepository = loggedUserRepository;
     }
 
-    @Nullable
-    public LoggedUserEntity invoke() {
-        return loggedUserRepository.getLoggedUser();
+    public LiveData<LoggedUserEntity> invoke() {
+        return loggedUserRepository.getUserNameChangedLiveData();
     }
 
 }
+

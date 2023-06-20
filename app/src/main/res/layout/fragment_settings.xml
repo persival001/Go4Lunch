@@ -22,7 +22,7 @@
             android:gravity="center">
 
             <!-- PROFILE IMAGE -->
-            <ImageButton
+            <ImageView
                 android:id="@+id/profileImageButton"
                 android:layout_width="100dp"
                 android:layout_height="100dp"

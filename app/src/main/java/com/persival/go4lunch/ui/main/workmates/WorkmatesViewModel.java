@@ -11,7 +11,7 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
-import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
+import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +45,20 @@ public class WorkmatesViewModel extends ViewModel {
 
             List<WorkmatesViewState> workmatesViewState = new ArrayList<>();
 
-            for (WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity : users) {
-                if (workmateEatAtRestaurantEntity != null &&
+            for (UserEatAtRestaurantEntity userEatAtRestaurantEntity : users) {
+                if (userEatAtRestaurantEntity != null &&
                     loggedUserId != null &&
-                    !workmateEatAtRestaurantEntity.getId().equals(loggedUserId)) {
+                    !userEatAtRestaurantEntity.getId().equals(loggedUserId)) {
                     workmatesViewState.add(
                         new WorkmatesViewState(
-                            workmateEatAtRestaurantEntity.getId(),
-                            workmateEatAtRestaurantEntity.getPictureUrl() != null ? workmateEatAtRestaurantEntity.getPictureUrl() : "",
+                            userEatAtRestaurantEntity.getId(),
+                            userEatAtRestaurantEntity.getPictureUrl() != null ? userEatAtRestaurantEntity.getPictureUrl() : "",
                             getFormattedName(
-                                workmateEatAtRestaurantEntity.getName(),
-                                workmateEatAtRestaurantEntity.getRestaurantName()
+                                userEatAtRestaurantEntity.getName(),
+                                userEatAtRestaurantEntity.getRestaurantName()
                             )
+
+
                         )
                     );
                 }

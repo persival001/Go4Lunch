@@ -3,11 +3,14 @@ package com.persival.go4lunch.data.firebase;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.persival.go4lunch.domain.user.LoggedUserRepository;
+import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import java.util.Objects;
 
@@ -18,16 +21,49 @@ public class FirebaseRepository implements LoggedUserRepository {
     private static final String TAG = "FirestoreRepository";
     @NonNull
     private final FirebaseAuth firebaseAuth;
+    @NonNull
+    private final MutableLiveData<LoggedUserEntity> loggedUserEntityMutableLiveData = new MutableLiveData<>();
 
     @Inject
-    public FirebaseRepository(
-        @NonNull FirebaseAuth firebaseAuth
-    ) {
+    public FirebaseRepository(@NonNull FirebaseAuth firebaseAuth) {
         this.firebaseAuth = firebaseAuth;
+        firebaseAuth.addAuthStateListener(firebaseAuth1 -> {
+            FirebaseUser firebaseUser = firebaseAuth1.getCurrentUser();
+            if (firebaseUser != null &&
+                firebaseUser.getDisplayName() != null &&
+                firebaseUser.getEmail() != null
+            ) {
+                LoggedUserEntity loggedUserEntity = new LoggedUserEntity(
+                    firebaseUser.getUid(),
+                    firebaseUser.getDisplayName(),
+                    firebaseUser.getPhotoUrl() == null ? null : Objects.requireNonNull(firebaseUser.getPhotoUrl()).toString(),
+                    firebaseUser.getEmail());
+                loggedUserEntityMutableLiveData.setValue(loggedUserEntity);
+            }
+        });
+    }
+
+    public LiveData<LoggedUserEntity> getUserNameChangedLiveData() {
+        return loggedUserEntityMutableLiveData;
+    }
+
+    public LoggedUserEntity getLoggedUser() {
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser == null || firebaseUser.getDisplayName() == null || firebaseUser.getEmail() == null) {
+            return null;
+        } else {
+            return new LoggedUserEntity(
+                firebaseUser.getUid(),
+                firebaseUser.getDisplayName(),
+                firebaseUser.getPhotoUrl() == null ? null : firebaseUser.getPhotoUrl().toString(),
+                firebaseUser.getEmail()
+            );
+        }
     }
 
     // ----- Change user name -----
-    public void setNewUserName(String newUserName) {
+    public void setNewUserName(@NonNull String newUserName) {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         if (firebaseUser != null && !Objects.equals(firebaseUser.getDisplayName(), newUserName)) {
@@ -35,11 +71,20 @@ public class FirebaseRepository implements LoggedUserRepository {
                 .setDisplayName(newUserName)
                 .build();
 
-            firebaseUser.updateProfile(profileUpdates).addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    Log.e(TAG, "Firebase Auth: Error updating user name", task.getException());
-                }
-            });
+            firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && firebaseUser.getEmail() != null) {
+                        LoggedUserEntity loggedUserEntity = new LoggedUserEntity(
+                            firebaseUser.getUid(),
+                            newUserName,
+                            firebaseUser.getPhotoUrl() == null ? null : firebaseUser.getPhotoUrl().toString(),
+                            firebaseUser.getEmail()
+                        );
+                        loggedUserEntityMutableLiveData.setValue(loggedUserEntity);
+                    } else {
+                        Log.e(TAG, "Firebase Auth: Error updating user name", task.getException());
+                    }
+                });
         }
     }
 

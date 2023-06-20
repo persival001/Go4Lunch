@@ -39,7 +39,7 @@ public class SettingsViewModel extends ViewModel {
                 loggedUserEntity.getId(),
                 loggedUserEntity.getName(),
                 loggedUserEntity.getEmailAddress(),
-                loggedUserEntity.getAvatarPictureUrl() != null ? loggedUserEntity.getAvatarPictureUrl() : ""
+                loggedUserEntity.getPictureUrl() != null ? loggedUserEntity.getPictureUrl() : ""
             );
             settingsViewStateLiveData.setValue(settingsViewState);
         }

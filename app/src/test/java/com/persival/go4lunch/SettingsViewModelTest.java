@@ -53,7 +53,7 @@ public class SettingsViewModelTest {
             loggedUserEntity.getId(),
             loggedUserEntity.getName(),
             loggedUserEntity.getEmailAddress(),
-            loggedUserEntity.getAvatarPictureUrl()
+            loggedUserEntity.getPictureUrl()
         );
 
         LiveData<SettingsViewState> liveData = viewModel.getLoggedUserLiveData();

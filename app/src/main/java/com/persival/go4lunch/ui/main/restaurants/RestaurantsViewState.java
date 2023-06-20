@@ -10,7 +10,7 @@ public class RestaurantsViewState {
     @NonNull
     private final String name;
     @NonNull
-    private final String typeOfCuisineAndAddress;
+    private final String address;
     @NonNull
     private final Boolean openingTime;
     @NonNull
@@ -24,7 +24,7 @@ public class RestaurantsViewState {
     public RestaurantsViewState(
         @NonNull String id,
         @NonNull String name,
-        @NonNull String typeOfCuisineAndAddress,
+        @NonNull String address,
         @NonNull Boolean openingTime,
         @NonNull String distance,
         @NonNull String participants,
@@ -33,7 +33,7 @@ public class RestaurantsViewState {
     ) {
         this.id = id;
         this.name = name;
-        this.typeOfCuisineAndAddress = typeOfCuisineAndAddress;
+        this.address = address;
         this.openingTime = openingTime;
         this.distance = distance;
         this.participants = participants;
@@ -53,7 +53,7 @@ public class RestaurantsViewState {
 
     @NonNull
     public String getTypeOfCuisineAndAddress() {
-        return typeOfCuisineAndAddress;
+        return address;
     }
 
     @NonNull
@@ -85,7 +85,7 @@ public class RestaurantsViewState {
         return Objects.hash(
             id,
             name,
-            typeOfCuisineAndAddress,
+            address,
             openingTime,
             distance,
             participants,
@@ -102,7 +102,7 @@ public class RestaurantsViewState {
         RestaurantsViewState that = (RestaurantsViewState) o;
         return name.equals(that.name)
             && id.equals(that.id)
-            && typeOfCuisineAndAddress.equals(that.typeOfCuisineAndAddress)
+            && address.equals(that.address)
             && openingTime.equals(that.openingTime)
             && distance.equals(that.distance)
             && participants.equals(that.participants)
@@ -116,7 +116,7 @@ public class RestaurantsViewState {
         return "RestaurantsViewState{" +
             "id=" + id +
             "name='" + name + '\'' +
-            ", typeOfCuisineAndAddress='" + typeOfCuisineAndAddress + '\'' +
+            ", typeOfCuisineAndAddress='" + address + '\'' +
             ", openingTime='" + openingTime + '\'' +
             ", distance='" + distance + '\'' +
             ", participants='" + participants + '\'' +

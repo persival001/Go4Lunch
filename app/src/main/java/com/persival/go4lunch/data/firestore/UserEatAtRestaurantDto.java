@@ -8,11 +8,11 @@ import java.util.Objects;
 
 public class UserEatAtRestaurantDto {
     @Nullable
-    private final String userId;
+    private final String id;
     @Nullable
-    private final String userName;
+    private final String name;
     @Nullable
-    private final String userPictureUrl;
+    private final String pictureUrl;
     @Nullable
     private final String restaurantId;
     @Nullable
@@ -22,27 +22,27 @@ public class UserEatAtRestaurantDto {
 
     // Empty constructor needed for Firestore deserialization
     public UserEatAtRestaurantDto() {
-        userId = null;
-        userName = null;
-        userPictureUrl = null;
+        id = null;
+        name = null;
+        pictureUrl = null;
         restaurantId = null;
         restaurantName = null;
         dateOfVisit = null;
     }
 
     @Nullable
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
 
     @Nullable
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
     @Nullable
-    public String getUserPictureUrl() {
-        return userPictureUrl;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
     @Nullable
@@ -67,9 +67,9 @@ public class UserEatAtRestaurantDto {
         if (o == null || getClass() != o.getClass())
             return false;
         UserEatAtRestaurantDto that = (UserEatAtRestaurantDto) o;
-        return Objects.equals(userId, that.userId) &&
-            Objects.equals(userName, that.userName) &&
-            Objects.equals(userPictureUrl, that.userPictureUrl) &&
+        return Objects.equals(id, that.id) &&
+            Objects.equals(name, that.name) &&
+            Objects.equals(pictureUrl, that.pictureUrl) &&
             Objects.equals(restaurantId, that.restaurantId) &&
             Objects.equals(restaurantName, that.restaurantName) &&
             Objects.equals(dateOfVisit, that.dateOfVisit);
@@ -77,16 +77,16 @@ public class UserEatAtRestaurantDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, userName, userPictureUrl, restaurantId, restaurantName, dateOfVisit);
+        return Objects.hash(id, name, pictureUrl, restaurantId, restaurantName, dateOfVisit);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "UserRestaurantRelationsDto{" +
-            "userId='" + userId + '\'' +
-            ", userName='" + userName + '\'' +
-            ", userPictureUrl='" + userPictureUrl + '\'' +
+        return "UserEatAtRestaurantDto{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", pictureUrl='" + pictureUrl + '\'' +
             ", restaurantId='" + restaurantId + '\'' +
             ", restaurantName='" + restaurantName + '\'' +
             ", dateOfVisit=" + dateOfVisit +

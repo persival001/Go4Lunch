@@ -10,11 +10,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.persival.go4lunch.domain.restaurant.model.UserRestaurantRelationsEntity;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.UserRepository;
-import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
-import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
+import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
+import com.persival.go4lunch.domain.workmate.model.UserEntity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,9 +48,9 @@ public class FirestoreRepository implements UserRepository {
         this.firebaseFirestore = firebaseFirestore;
     }
 
-    public LiveData<List<WorkmateEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData() {
-        MutableLiveData<List<WorkmateEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData = new MutableLiveData<>();
-        
+    public LiveData<List<UserEatAtRestaurantEntity>> getWorkmatesEatAtRestaurantLiveData() {
+        MutableLiveData<List<UserEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData = new MutableLiveData<>();
+
         firebaseFirestore.collection(USER_EAT_AT_RESTAURANT)
             .addSnapshotListener((snapshots, e) -> {
                 if (e != null) {
@@ -59,23 +58,23 @@ public class FirestoreRepository implements UserRepository {
                 }
 
                 if (snapshots != null) {
-                    List<WorkmateEatAtRestaurantEntity> workmates = new ArrayList<>();
+                    List<UserEatAtRestaurantEntity> workmates = new ArrayList<>();
                     for (DocumentSnapshot document : snapshots.getDocuments()) {
                         UserEatAtRestaurantDto userEatAtRestaurantDto = document.toObject(UserEatAtRestaurantDto.class);
                         if (userEatAtRestaurantDto != null
-                            && userEatAtRestaurantDto.getUserId() != null
-                            && userEatAtRestaurantDto.getUserName() != null
-                            && userEatAtRestaurantDto.getUserPictureUrl() != null) {
+                            && userEatAtRestaurantDto.getId() != null
+                            && userEatAtRestaurantDto.getName() != null
+                            && userEatAtRestaurantDto.getPictureUrl() != null) {
 
-                            WorkmateEatAtRestaurantEntity workmateEatAtRestaurantEntity = new WorkmateEatAtRestaurantEntity(
-                                userEatAtRestaurantDto.getUserId(),
-                                userEatAtRestaurantDto.getUserPictureUrl(),
-                                userEatAtRestaurantDto.getUserName(),
-                                userEatAtRestaurantDto.getRestaurantName(),
+                            UserEatAtRestaurantEntity userEatAtRestaurantEntity = new UserEatAtRestaurantEntity(
+                                userEatAtRestaurantDto.getId(),
+                                userEatAtRestaurantDto.getName(),
+                                userEatAtRestaurantDto.getPictureUrl(),
                                 userEatAtRestaurantDto.getRestaurantId(),
+                                userEatAtRestaurantDto.getRestaurantName(),
                                 userEatAtRestaurantDto.getDateOfVisit());
 
-                            workmates.add(workmateEatAtRestaurantEntity);
+                            workmates.add(userEatAtRestaurantEntity);
                         }
                     }
                     workmatesEatAtRestaurantLiveData.setValue(workmates);
@@ -86,29 +85,27 @@ public class FirestoreRepository implements UserRepository {
     }
 
     // ----- Create new workmate -----
-    public void createUser(@NonNull WorkmateEntity user) {
+    public void createUser(@NonNull UserEntity user) {
         firebaseFirestore.collection(USERS).document(user.getId())
             .set(user);
     }
 
     // ----- Update workmate information -----
     public void updateWorkmateInformation(
-        LoggedUserEntity user,
-        String eatingRestaurantId,
-        String eatingRestaurantName
+        @NonNull LoggedUserEntity loggedUserEntity,
+        @NonNull String eatingRestaurantId,
+        @NonNull String eatingRestaurantName
     ) {
-        // Create new instance of UserRestaurantRelation
-        UserRestaurantRelationsEntity userRestaurantRelationsEntity = new UserRestaurantRelationsEntity(
-            user.getId(),
-            user.getName(),
-            user.getAvatarPictureUrl(),
+        UserEatAtRestaurantEntity userEatAtRestaurantEntity = new UserEatAtRestaurantEntity(
+            loggedUserEntity.getId(),
+            loggedUserEntity.getName(),
+            loggedUserEntity.getPictureUrl() != null ? loggedUserEntity.getPictureUrl() : "",
             eatingRestaurantId,
             eatingRestaurantName,
             new Date());
 
-        // Add userEatAtRestaurant at the collection 'userEatAtRestaurant'
-        firebaseFirestore.collection(USER_EAT_AT_RESTAURANT).document(user.getId())
-            .set(userRestaurantRelationsEntity);
+        firebaseFirestore.collection(USER_EAT_AT_RESTAURANT).document(loggedUserEntity.getId())
+            .set(userEatAtRestaurantEntity);
     }
 
     public void updateLikedRestaurants(@NonNull LoggedUserEntity user, boolean isAdded, @NonNull String restaurantId) {
@@ -168,6 +165,7 @@ public class FirestoreRepository implements UserRepository {
                 .document(firebaseUser.getUid())
                 .delete();
         }
+        firebaseAuth.signOut();
     }
 
     // ----- Get restaurantId for current user -----

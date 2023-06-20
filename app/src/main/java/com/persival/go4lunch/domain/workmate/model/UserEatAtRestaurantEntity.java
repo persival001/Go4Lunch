@@ -6,34 +6,34 @@ import androidx.annotation.Nullable;
 import java.util.Date;
 import java.util.Objects;
 
-public class WorkmateEatAtRestaurantEntity {
+public class UserEatAtRestaurantEntity {
 
     @NonNull
     private final String id;
-    @Nullable
-    private final String pictureUrl;
     @NonNull
     private final String name;
     @Nullable
-    private final String restaurantName;
+    private final String pictureUrl;
     @Nullable
     private final String restaurantId;
     @Nullable
+    private final String restaurantName;
+    @Nullable
     private final Date dateOfVisit;
 
-    public WorkmateEatAtRestaurantEntity(
+    public UserEatAtRestaurantEntity(
         @NonNull String id,
-        @Nullable String pictureUrl,
         @NonNull String name,
-        @Nullable String restaurantName,
+        @Nullable String pictureUrl,
         @Nullable String restaurantId,
+        @Nullable String restaurantName,
         @Nullable Date dateOfVisit
     ) {
         this.id = id;
-        this.pictureUrl = pictureUrl;
         this.name = name;
-        this.restaurantName = restaurantName;
+        this.pictureUrl = pictureUrl;
         this.restaurantId = restaurantId;
+        this.restaurantName = restaurantName;
         this.dateOfVisit = dateOfVisit;
     }
 
@@ -42,24 +42,24 @@ public class WorkmateEatAtRestaurantEntity {
         return id;
     }
 
-    @Nullable
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
     @NonNull
     public String getName() {
         return name;
     }
 
     @Nullable
-    public String getRestaurantName() {
-        return restaurantName;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
     @Nullable
     public String getRestaurantId() {
         return restaurantId;
+    }
+
+    @Nullable
+    public String getRestaurantName() {
+        return restaurantName;
     }
 
     @Nullable
@@ -73,29 +73,29 @@ public class WorkmateEatAtRestaurantEntity {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        WorkmateEatAtRestaurantEntity that = (WorkmateEatAtRestaurantEntity) o;
+        UserEatAtRestaurantEntity that = (UserEatAtRestaurantEntity) o;
         return id.equals(that.id) &&
-            Objects.equals(pictureUrl, that.pictureUrl) &&
             name.equals(that.name) &&
-            Objects.equals(restaurantName, that.restaurantName) &&
+            Objects.equals(pictureUrl, that.pictureUrl) &&
             Objects.equals(restaurantId, that.restaurantId) &&
+            Objects.equals(restaurantName, that.restaurantName) &&
             Objects.equals(dateOfVisit, that.dateOfVisit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pictureUrl, name, restaurantName, restaurantId, dateOfVisit);
+        return Objects.hash(id, name, pictureUrl, restaurantId, restaurantName, dateOfVisit);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "WorkmateEatAtRestaurantEntity{" +
+        return "UserEatAtRestaurantEntity{" +
             "id='" + id + '\'' +
-            ", pictureUrl='" + pictureUrl + '\'' +
             ", name='" + name + '\'' +
-            ", restaurantName='" + restaurantName + '\'' +
+            ", pictureUrl='" + pictureUrl + '\'' +
             ", restaurantId='" + restaurantId + '\'' +
+            ", restaurantName='" + restaurantName + '\'' +
             ", dateOfVisit=" + dateOfVisit +
             '}';
     }

@@ -30,8 +30,6 @@ public class RestaurantsViewModel extends ViewModel {
     @NonNull
     private final IsGpsActivatedUseCase isGpsActivatedUseCase;
     @NonNull
-    private final GetParticipantsUseCase getParticipantsUseCase;
-    @NonNull
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
 
     @Inject
@@ -41,7 +39,6 @@ public class RestaurantsViewModel extends ViewModel {
         @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase,
         @NonNull GetParticipantsUseCase getParticipantsUseCase) {
         this.isGpsActivatedUseCase = isGpsActivatedUseCase;
-        this.getParticipantsUseCase = getParticipantsUseCase;
 
         LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
         LiveData<HashMap<String, Integer>> participantsLiveData = getParticipantsUseCase.invoke();

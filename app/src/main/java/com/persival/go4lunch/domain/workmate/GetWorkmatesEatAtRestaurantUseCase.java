@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
-import com.persival.go4lunch.domain.workmate.model.WorkmateEatAtRestaurantEntity;
+import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,9 +23,9 @@ public class GetWorkmatesEatAtRestaurantUseCase {
 
     // Sort the list of workmates by restaurant name.
     // If the restaurant name is null, the workmate will be at the end of the list
-    public LiveData<List<WorkmateEatAtRestaurantEntity>> invoke() {
-        LiveData<List<WorkmateEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData = userRepository.getWorkmatesEatAtRestaurantLiveData();
-        MediatorLiveData<List<WorkmateEatAtRestaurantEntity>> sortedLiveData = new MediatorLiveData<>();
+    public LiveData<List<UserEatAtRestaurantEntity>> invoke() {
+        LiveData<List<UserEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData = userRepository.getWorkmatesEatAtRestaurantLiveData();
+        MediatorLiveData<List<UserEatAtRestaurantEntity>> sortedLiveData = new MediatorLiveData<>();
 
         sortedLiveData.addSource(workmatesEatAtRestaurantLiveData, workmates -> {
             Collections.sort(workmates, (workmate1, workmate2) -> {

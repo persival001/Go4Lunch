@@ -1,158 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/restaurant_details"
+    android:id="@+id/restaurant_details_scroll"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <ImageView
-        android:id="@+id/details_picture"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/restaurant_details"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/play_store_512" />
+        android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/orange_rectangle"
-        app:layout_constraintTop_toBottomOf="@+id/details_picture" />
+        <ImageView
+            android:id="@+id/details_picture"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/play_store_512" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="250dp" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/orange_rectangle"
+            app:layout_constraintTop_toBottomOf="@+id/details_picture" />
 
-    <TextView
-        android:id="@+id/details_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_large_margin"
-        android:maxLength="28"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/default_text_middle_size"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/details_picture"
-        tools:text="LA PIZZA DELLA MAMMA" />
-
-    <RatingBar
-        android:id="@+id/details_rating_bar"
-        style="@style/Widget.AppCompat.RatingBar.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/default_margin"
-        android:numStars="3"
-        android:progressBackgroundTint="@color/colorPrimary"
-        android:progressTint="@color/filled_star_color"
-        android:stepSize="0.1"
-        app:layout_constraintBottom_toBottomOf="@+id/details_name"
-        app:layout_constraintStart_toEndOf="@+id/details_name"
-        app:layout_constraintTop_toTopOf="@+id/details_name" />
-
-    <TextView
-        android:id="@+id/details_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_large_margin"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/details_name"
-        tools:text="Italian restaurant - 42 rue de la Mifa 75000 Paris" />
-
-    <ImageButton
-        android:id="@+id/choose_this_restaurant_button"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginEnd="16dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/go_to_this_restaurant"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_go_fab"
-        app:layout_constraintBottom_toBottomOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-    <GridLayout
-        android:id="@+id/grid_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:columnCount="3"
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        app:rowCount="1">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/call_button"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_rowWeight="1"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:text="@string/call"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            app:backgroundTint="#FFFFFF"
-            app:icon="@drawable/baseline_phone_24"
-            app:iconGravity="top"
-            app:iconPadding="8dp"
-            app:iconTint="@color/colorPrimary" />
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="250dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/like_button"
+        <TextView
+            android:id="@+id/details_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_rowWeight="1"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:text="@string/like"
-            android:textColor="@color/colorPrimary"
+            android:layout_margin="@dimen/default_large_margin"
+            android:maxLength="28"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/default_text_middle_size"
             android:textStyle="bold"
-            app:backgroundTint="#FFFFFF"
-            app:icon="@drawable/baseline_star_rate_24"
-            app:iconGravity="top"
-            app:iconPadding="8dp"
-            app:iconTint="@color/colorPrimary" />
+            app:layout_constraintStart_toStartOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/details_picture"
+            tools:text="LA PIZZA DELLA MAMMA" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/website_button"
+        <RatingBar
+            android:id="@+id/details_rating_bar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_rowWeight="1"
-            android:layout_column="2"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:text="@string/website_button"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            app:backgroundTint="#FFFFFF"
-            app:icon="@drawable/baseline_public_24"
-            app:iconGravity="top"
-            app:iconPadding="8dp"
-            app:iconTint="@color/colorPrimary" />
+            android:layout_marginStart="@dimen/default_margin"
+            android:numStars="3"
+            android:progressBackgroundTint="@color/colorPrimary"
+            android:progressTint="@color/filled_star_color"
+            android:stepSize="0.1"
+            app:layout_constraintBottom_toBottomOf="@+id/details_name"
+            app:layout_constraintStart_toEndOf="@+id/details_name"
+            app:layout_constraintTop_toTopOf="@+id/details_name" />
 
-    </GridLayout>
+        <TextView
+            android:id="@+id/details_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_large_margin"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/view"
+            app:layout_constraintStart_toStartOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/details_name"
+            tools:text="Italian restaurant - 42 rue de la Mifa 75000 Paris" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/details_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/grid_layout"
-        tools:listitem="@layout/item_details" />
+        <ImageButton
+            android:id="@+id/choose_this_restaurant_button"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="16dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/go_to_this_restaurant"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_go_fab"
+            app:layout_constraintBottom_toBottomOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <GridLayout
+            android:id="@+id/grid_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:columnCount="3"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:rowCount="1">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/call_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_rowWeight="1"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:text="@string/call"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:backgroundTint="#FFFFFF"
+                app:icon="@drawable/baseline_phone_24"
+                app:iconGravity="top"
+                app:iconPadding="8dp"
+                app:iconTint="@color/colorPrimary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/like_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_rowWeight="1"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:text="@string/like"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:backgroundTint="#FFFFFF"
+                app:icon="@drawable/baseline_star_rate_24"
+                app:iconGravity="top"
+                app:iconPadding="8dp"
+                app:iconTint="@color/colorPrimary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/website_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_rowWeight="1"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:text="@string/website_button"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:backgroundTint="#FFFFFF"
+                app:icon="@drawable/baseline_public_24"
+                app:iconGravity="top"
+                app:iconPadding="8dp"
+                app:iconTint="@color/colorPrimary" />
+
+        </GridLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/details_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/grid_layout"
+            tools:listitem="@layout/item_details" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

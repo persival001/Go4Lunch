@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
-import com.persival.go4lunch.domain.workmate.model.WorkmateEntity;
+import com.persival.go4lunch.domain.workmate.model.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +26,18 @@ public class CreateWorkmateUseCase {
     }
 
     public void invoke() {
-        LoggedUserEntity currentUser = getLoggedUserUseCase.invoke();
-        if (currentUser != null) {
-            String userId = currentUser.getId();
-            String userName = currentUser.getName();
-            String userPhotoUrl = currentUser.getAvatarPictureUrl();
+        LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
+        if (loggedUserEntity != null) {
+            String userId = loggedUserEntity.getId();
+            String userName = loggedUserEntity.getName();
+            String userPictureUrl = loggedUserEntity.getPictureUrl();
 
             List<String> likedRestaurantsId = new ArrayList<>();
 
-            WorkmateEntity newUser = new WorkmateEntity(userId, userPhotoUrl, userName, likedRestaurantsId);
+            UserEntity newUser = new UserEntity(userId, userName, userPictureUrl, likedRestaurantsId);
 
             userRepository.createUser(newUser);
+            userRepository.updateWorkmateInformation(loggedUserEntity, null, null);
         } else {
             throw new IllegalStateException("User is not logged in");
         }

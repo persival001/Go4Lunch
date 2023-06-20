@@ -2,11 +2,11 @@ package com.persival.go4lunch.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
-import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
+import com.persival.go4lunch.domain.user.GetUserNameChangedLiveData;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import javax.inject.Inject;
@@ -16,28 +16,30 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class MainViewModel extends ViewModel {
 
-    private final MutableLiveData<MainViewState> mainViewStateLiveData = new MutableLiveData<>();
+    private final LiveData<MainViewState> mainViewStateLiveData;
     @NonNull
     private final GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase;
 
     @Inject
     public MainViewModel(
-        @NonNull final GetLoggedUserUseCase getLoggedUserUseCase,
-        @NonNull GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase
+        @NonNull GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase,
+        @NonNull GetUserNameChangedLiveData getUserNameChangedLiveData
     ) {
         this.getRestaurantIdForCurrentUserUseCase = getRestaurantIdForCurrentUserUseCase;
 
-        LoggedUserEntity loggedUserEntity = getLoggedUserUseCase.invoke();
+        mainViewStateLiveData = Transformations.map(getUserNameChangedLiveData.invoke(), this::mapToMainViewState);
+    }
 
-        if (loggedUserEntity != null) {
-            MainViewState mainViewState = new MainViewState(
-                loggedUserEntity.getId(),
-                loggedUserEntity.getName(),
-                loggedUserEntity.getEmailAddress(),
-                loggedUserEntity.getAvatarPictureUrl()
-            );
-            mainViewStateLiveData.setValue(mainViewState);
+    private MainViewState mapToMainViewState(LoggedUserEntity loggedUserEntity) {
+        if (loggedUserEntity == null) {
+            return null;
         }
+        return new MainViewState(
+            loggedUserEntity.getId(),
+            loggedUserEntity.getName(),
+            loggedUserEntity.getEmailAddress(),
+            loggedUserEntity.getPictureUrl()
+        );
     }
 
     public LiveData<MainViewState> getAuthenticatedUserLiveData() {
@@ -47,5 +49,5 @@ public class MainViewModel extends ViewModel {
     public LiveData<String> getRestaurantIdForCurrentUserLiveData() {
         return getRestaurantIdForCurrentUserUseCase.invoke();
     }
-    
 }
+
