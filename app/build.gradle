@@ -6,6 +6,8 @@ plugins {
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'jacoco'
+
 
 android {
     namespace 'com.persival.go4lunch'
@@ -111,8 +113,6 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:3.11.2'
     testImplementation 'androidx.test:core:1.5.0'
     testImplementation 'io.mockk:mockk:1.12.0'
-
-    testImplementation "org.robolectric:robolectric:4.7.3"
     testImplementation "androidx.arch.core:core-testing:2.2.0"
 
 }

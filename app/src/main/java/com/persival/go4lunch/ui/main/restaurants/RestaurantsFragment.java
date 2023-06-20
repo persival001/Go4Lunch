@@ -68,7 +68,7 @@ public class RestaurantsFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        viewModel.getSortedRestaurantsLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
+        viewModel.getSortedRestaurantsLiveData().observe(getViewLifecycleOwner(), list -> adapter.submitList(list));
     }
 
     @Override

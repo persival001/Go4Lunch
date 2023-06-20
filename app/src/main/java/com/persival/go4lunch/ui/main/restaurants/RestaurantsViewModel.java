@@ -11,12 +11,15 @@ import com.persival.go4lunch.domain.location.GetLocationUseCase;
 import com.persival.go4lunch.domain.location.model.LocationEntity;
 import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
+import com.persival.go4lunch.domain.restaurant.GetParticipantsUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -27,36 +30,52 @@ public class RestaurantsViewModel extends ViewModel {
     @NonNull
     private final IsGpsActivatedUseCase isGpsActivatedUseCase;
     @NonNull
+    private final GetParticipantsUseCase getParticipantsUseCase;
+    @NonNull
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
 
     @Inject
     public RestaurantsViewModel(
         @NonNull GetLocationUseCase getLocationUseCase,
         @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
-        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
-    ) {
+        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase,
+        @NonNull GetParticipantsUseCase getParticipantsUseCase) {
         this.isGpsActivatedUseCase = isGpsActivatedUseCase;
+        this.getParticipantsUseCase = getParticipantsUseCase;
 
         LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
+        LiveData<HashMap<String, Integer>> participantsLiveData = getParticipantsUseCase.invoke();
+
         LiveData<List<RestaurantsViewState>> unsortedRestaurantsLiveData = Transformations.switchMap(
             locationLiveData,
-            location -> Transformations.map(
+            location -> Transformations.switchMap(
                 getNearbyRestaurantsUseCase.invoke(),
-                places -> mapPlacesToRestaurantViewStates(location.getLatitude() + "," + location.getLongitude(), places)
+                places -> Transformations.map(
+                    participantsLiveData,
+                    participants -> mapPlacesToRestaurantViewStates(location.getLatitude() + "," + location.getLongitude(), places, participants)
+                )
             )
         );
+
         restaurantsLiveData = Transformations.map(
             unsortedRestaurantsLiveData,
             restaurantList -> sortRestaurantViewStates(restaurantList)
         );
     }
 
+
     private List<RestaurantsViewState> mapPlacesToRestaurantViewStates(
         String location,
-        List<NearbyRestaurantsEntity> places
+        List<NearbyRestaurantsEntity> places,
+        Map<String, Integer> placeIdsCount
     ) {
         List<RestaurantsViewState> restaurantsList = new ArrayList<>();
         for (NearbyRestaurantsEntity restaurant : places) {
+            Integer participantCount = 0;
+            if (placeIdsCount.containsKey(restaurant.getId())) {
+                participantCount = placeIdsCount.get(restaurant.getId());
+            }
+
             restaurantsList.add(
                 new RestaurantsViewState(
                     restaurant.getId(),
@@ -68,7 +87,7 @@ public class RestaurantsViewModel extends ViewModel {
                         restaurant.getLongitude(),
                         location
                     ),
-                    "0",
+                    participantCount.toString(),
                     mapRating(restaurant.getRating()),
                     mapPictureUrl(restaurant.getPhotos())
                 )
