@@ -43,10 +43,12 @@ public class FirebaseRepository implements LoggedUserRepository {
         });
     }
 
+    // ----- Get a listened logged user -----
     public LiveData<LoggedUserEntity> getUserNameChangedLiveData() {
         return loggedUserEntityMutableLiveData;
     }
 
+    // ----- Get a logged user -----
     public LoggedUserEntity getLoggedUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 

@@ -2,7 +2,7 @@ package com.persival.go4lunch;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -10,9 +10,7 @@ import static org.mockito.Mockito.when;
 import android.content.res.Resources;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
@@ -41,26 +39,19 @@ public class WorkMatesViewModelTest {
 
     @Mock
     private GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase;
-
     @Mock
     private Resources resources;
-
     @Mock
     private GetLoggedUserUseCase getLoggedUserUseCase;
 
-    @Mock
-    private Observer<List<WorkmatesViewState>> observer;
-
     private WorkmatesViewModel viewModel;
-
-    private LoggedUserEntity loggedUserEntity;
 
     private MutableLiveData<List<UserEatAtRestaurantEntity>> liveData;
 
 
     @Before
     public void setUp() {
-        loggedUserEntity = mock(LoggedUserEntity.class);
+        LoggedUserEntity loggedUserEntity = new LoggedUserEntity("1", "Emilie", "https://image.com", "001");
         when(getLoggedUserUseCase.invoke()).thenReturn(loggedUserEntity);
 
         liveData = new MutableLiveData<>();
@@ -71,6 +62,7 @@ public class WorkMatesViewModelTest {
 
     @Test
     public void testGetWorkmatesSuccess() {
+        // Given
         UserEatAtRestaurantEntity entity1 = new UserEatAtRestaurantEntity("2", "https://image.com", "Emilie", "Restaurant 1", "001", new Date());
         UserEatAtRestaurantEntity entity2 = new UserEatAtRestaurantEntity("3", "https://image.com", "Gino", "Restaurant 2", "002", new Date());
         List<UserEatAtRestaurantEntity> listOfWorkmates = new ArrayList<>();
@@ -78,32 +70,32 @@ public class WorkMatesViewModelTest {
         listOfWorkmates.add(entity2);
         liveData.setValue(listOfWorkmates);
 
+
         // When
         List<WorkmatesViewState> result = TestUtil.getValueForTesting(viewModel.getViewStateLiveData());
 
         // Then
         assertEquals(2, result.size());
-
         verify(getWorkmatesEatAtRestaurantUseCase).invoke();
         verify(getLoggedUserUseCase).invoke();
-
         verifyNoMoreInteractions(getWorkmatesEatAtRestaurantUseCase);
         verifyNoMoreInteractions(getLoggedUserUseCase);
     }
 
     @Test
     public void testGetWorkmatesFailure() {
-        // Arrange
+        // Given
         when(getWorkmatesEatAtRestaurantUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
 
-        // Act
-        WorkmatesViewModel viewModel = new WorkmatesViewModel(getWorkmatesEatAtRestaurantUseCase, resources, getLoggedUserUseCase);
-        LiveData<List<WorkmatesViewState>> liveData = viewModel.getViewStateLiveData();
+        // When
+        List<WorkmatesViewState> result = TestUtil.getValueForTesting(viewModel.getViewStateLiveData());
 
-        // Assert
-        liveData.observeForever(observer);
-        verify(observer).onChanged(null);
-        liveData.removeObserver(observer);
+        // Then
+        assertNull(result);
+        verify(getWorkmatesEatAtRestaurantUseCase).invoke();
+        verify(getLoggedUserUseCase).invoke();
+        verifyNoMoreInteractions(getWorkmatesEatAtRestaurantUseCase);
+        verifyNoMoreInteractions(getLoggedUserUseCase);
     }
 
 }

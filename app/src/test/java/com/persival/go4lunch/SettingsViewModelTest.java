@@ -30,12 +30,14 @@ public class SettingsViewModelTest {
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+
     @Mock
     private GetLoggedUserUseCase getLoggedUserUseCase;
     @Mock
     private SetNewUserNameUseCase setNewUserNameUseCase;
     @Mock
     private DeleteAccountUseCase deleteAccountUseCase;
+
     private SettingsViewModel viewModel;
     private LoggedUserEntity loggedUserEntity;
 
@@ -49,6 +51,7 @@ public class SettingsViewModelTest {
 
     @Test
     public void testGetLoggedUserLiveData() {
+        // Given
         SettingsViewState expectedViewState = new SettingsViewState(
             loggedUserEntity.getId(),
             loggedUserEntity.getName(),
@@ -56,55 +59,65 @@ public class SettingsViewModelTest {
             loggedUserEntity.getPictureUrl()
         );
 
+        // When
         LiveData<SettingsViewState> liveData = viewModel.getLoggedUserLiveData();
+
+        // Then
         assertNotNull(liveData);
         assertEquals(expectedViewState, liveData.getValue());
     }
 
     @Test
     public void testGetLoggedUserLiveDataFailure() {
-        // Arrange
+        // Given
         when(getLoggedUserUseCase.invoke()).thenReturn(null);
 
-        // Act
+        // When
         SettingsViewModel viewModel = new SettingsViewModel(getLoggedUserUseCase, setNewUserNameUseCase, deleteAccountUseCase);
         LiveData<SettingsViewState> liveData = viewModel.getLoggedUserLiveData();
 
-        // Assert
+        // Then
         assertNull(liveData.getValue());
     }
 
-
     @Test
     public void testSetNewUserName() {
+        // Given
         String newUserName = "newUserName";
+
+        // When
         viewModel.setNewUserName(newUserName);
+
+        // Then
         verify(setNewUserNameUseCase).invoke(newUserName);
     }
 
     @Test(expected = Exception.class)
     public void testSetNewUserNameFailure() {
-        // Arrange
+        // Given
         String newUserName = "newUserName";
         doThrow(new Exception("Mock Exception")).when(setNewUserNameUseCase).invoke(newUserName);
 
-        // Act
+        // When
         viewModel.setNewUserName(newUserName);
     }
 
     @Test
     public void testDeleteAccount() {
+        // When
         viewModel.deleteAccount();
+
+        // Then
         verify(deleteAccountUseCase).invoke();
     }
 
     @Test(expected = Exception.class)
     public void testDeleteAccountFailure() {
-        // Arrange
+        // Given
         doThrow(new Exception("Mock Exception")).when(deleteAccountUseCase).invoke();
 
-        // Act
+        // When
         viewModel.deleteAccount();
     }
-
 }
+

@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
 import com.persival.go4lunch.databinding.NavigationDrawerHeaderBinding;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActivityMainBinding binding;
 
     private String restaurantId;
+    private ListenerRegistration listenerRegistration;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -180,6 +182,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
         finish();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+        }
     }
 
 }
