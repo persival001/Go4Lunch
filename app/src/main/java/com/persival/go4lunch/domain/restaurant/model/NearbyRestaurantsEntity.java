@@ -103,15 +103,6 @@ public class NearbyRestaurantsEntity {
     @NonNull
     @Override
     public String toString() {
-        return "NearbyRestaurantsEntity{" +
-            "id='" + id + '\'' +
-            ", name='" + name + '\'' +
-            ", address='" + address + '\'' +
-            ", openingHours=" + openingHours +
-            ", rating=" + rating +
-            ", photos=" + photos +
-            ", latitude=" + latitude +
-            ", longitude=" + longitude +
-            '}';
+        return name;
     }
 }

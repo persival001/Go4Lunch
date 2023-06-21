@@ -23,13 +23,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.SearchView
+            <AutoCompleteTextView
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_margin="@dimen/default_margin"
                 android:background="@color/quantum_white_100"
-                app:queryHint="Search restaurants" />
+                android:drawableStart="@drawable/baseline_search_24"
+                android:hint="@string/search_restaurants"
+                android:singleLine="true" />
 
         </androidx.appcompat.widget.Toolbar>
 

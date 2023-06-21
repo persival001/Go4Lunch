@@ -1,16 +1,21 @@
 package com.persival.go4lunch.ui.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +27,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
 import com.persival.go4lunch.databinding.NavigationDrawerHeaderBinding;
+import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
 import com.persival.go4lunch.ui.main.details.DetailsFragment;
 import com.persival.go4lunch.ui.main.maps.MapsFragment;
@@ -29,6 +35,7 @@ import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 import com.persival.go4lunch.ui.main.workmates.WorkmatesFragment;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -139,25 +146,69 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
         );
 
-        // Set up the SearchView
-        SearchView searchView = binding.searchView;
-        // Handle when the SearchView loses focus
-        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                searchView.setIconified(true);
-                searchView.onActionViewCollapsed();
-            }
+        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.search_view);
+        ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            new ArrayList<>()
+        );
+
+        autoCompleteTextView.setAdapter(adapter);
+        autoCompleteTextView.setThreshold(3);
+
+        viewModel.getFilteredRestaurantsLiveData().observe(MainActivity.this, restaurants -> {
+            adapter.clear();
+            adapter.addAll(restaurants);
+            adapter.notifyDataSetChanged();
         });
-        // Handle changes to the SearchView's text
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
+            NearbyRestaurantsEntity selectedRestaurant = (NearbyRestaurantsEntity) parent.getItemAtPosition(position);
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+
+            if (currentFragment instanceof MapsFragment) {
+                // Use the selectedRestaurant restaurantId to launch DetailsFragment
+                Toast.makeText(this, selectedRestaurant.getName(), Toast.LENGTH_SHORT).show();
+                /*MapsFragment mapsFragment = MapsFragment.newInstance(selectedRestaurant.getId());
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, mapsFragment)
+                    .addToBackStack(null)
+                    .commit();*/
+            } else if (currentFragment instanceof RestaurantsFragment) {
+                DetailsFragment detailsFragment = DetailsFragment.newInstance(selectedRestaurant.getId());
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, detailsFragment)
+                    .addToBackStack(null)
+                    .commit();
+            }
+
+            // Close the soft keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
+            }
+
+            // Clear the search field
+            autoCompleteTextView.setText("");
+        });
+
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() >= 3) {
+                    viewModel.updateSearchString(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed
             }
         });
 
