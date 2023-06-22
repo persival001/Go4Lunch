@@ -57,7 +57,7 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<List<NearbyRestaurantsEntity>> getFilteredRestaurantsLiveData() {
         return Transformations.switchMap(searchStringLiveData, searchString -> {
-            if (searchString.length() >= 3) {
+            if (searchString.length() >= 2) {
                 return Transformations.switchMap(getNearbyRestaurantsUseCase.invoke(), restaurants -> {
 
                     List<NearbyRestaurantsEntity> filteredRestaurants = new ArrayList<>();

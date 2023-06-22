@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
 
         autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setThreshold(3);
+        autoCompleteTextView.setThreshold(1);
 
         viewModel.getFilteredRestaurantsLiveData().observe(MainActivity.this, restaurants -> {
             adapter.clear();
@@ -167,13 +167,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
 
             if (currentFragment instanceof MapsFragment) {
-                // Use the selectedRestaurant restaurantId to launch DetailsFragment
-                Toast.makeText(this, selectedRestaurant.getName(), Toast.LENGTH_SHORT).show();
-                /*MapsFragment mapsFragment = MapsFragment.newInstance(selectedRestaurant.getId());
-                getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, mapsFragment)
-                    .addToBackStack(null)
-                    .commit();*/
+                // Update the marker on the map
+                ((MapsFragment) currentFragment).zoomToMarker(selectedRestaurant);
             } else if (currentFragment instanceof RestaurantsFragment) {
                 DetailsFragment detailsFragment = DetailsFragment.newInstance(selectedRestaurant.getId());
                 getSupportFragmentManager().beginTransaction()
@@ -201,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() >= 3) {
+                if (s.length() >= 1) {
                     viewModel.updateSearchString(s.toString());
                 }
             }

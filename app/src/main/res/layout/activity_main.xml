@@ -30,6 +30,7 @@
                 android:layout_margin="@dimen/default_margin"
                 android:background="@color/quantum_white_100"
                 android:drawableStart="@drawable/baseline_search_24"
+                android:drawablePadding="8dp"
                 android:hint="@string/search_restaurants"
                 android:singleLine="true" />
 

@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -40,6 +41,7 @@ public class MapsFragment extends SupportMapFragment {
     private LatLng lastCameraPosition;
     private float lastZoomLevel;
     private ActivityResultLauncher<String> requestPermissionLauncher;
+    private GoogleMap googleMap;
 
     @NonNull
     public static MapsFragment newInstance() {
@@ -60,6 +62,7 @@ public class MapsFragment extends SupportMapFragment {
         });
 
         getMapAsync(googleMap -> {
+            this.googleMap = googleMap;
             googleMap.setOnMarkerClickListener(marker -> {
                 lastCameraPosition = googleMap.getCameraPosition().target;
                 lastZoomLevel = googleMap.getCameraPosition().zoom;
@@ -157,6 +160,18 @@ public class MapsFragment extends SupportMapFragment {
 
         });
     }
+
+    public void zoomToMarker(NearbyRestaurantsEntity selectedRestaurant) {
+        if (selectedRestaurant != null && googleMap != null) {
+            LatLng latLng = new LatLng(selectedRestaurant.getLatitude(), selectedRestaurant.getLongitude());
+
+            lastCameraPosition = googleMap.getCameraPosition().target;
+            lastZoomLevel = googleMap.getCameraPosition().zoom;
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+        }
+    }
+
 
     @Override
     public void onResume() {

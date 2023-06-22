@@ -91,6 +91,6 @@
     <string name="hasnt_decided_yet_in_string">hasn\'t decided yet</string>
     <string name="no_restaurant_selected">No restaurant for lunch</string>
     <string name="your_position">You are here !</string>
-    <string name="search_restaurants">Search restaurants</string>
+    <string name="search_restaurants">Search restaurant</string>
 
 </resources>

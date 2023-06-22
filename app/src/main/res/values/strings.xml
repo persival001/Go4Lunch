@@ -97,5 +97,5 @@
     <string name="hasnt_decided_yet_in_string">ne s\'est pas encore décidé</string>
     <string name="no_restaurant_selected">Pas de restaurant sélectionné</string>
     <string name="your_position">Vous êtes ici !</string>
-    <string name="search_restaurants">Search restaurants</string>
+    <string name="search_restaurants">Rechercher un restaurant</string>
 </resources>
