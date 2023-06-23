@@ -30,10 +30,25 @@
                 android:layout_margin="@dimen/default_margin"
                 android:background="@color/quantum_white_100"
                 android:hint="@string/search_restaurants"
+                android:padding="@dimen/default_text_size_mini"
                 android:singleLine="true"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/text_view"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="@dimen/default_margin"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/im_hungry"
+                android:textColor="@color/quantum_white_100"
+                android:textSize="20sp"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="10dp" />
+
         </androidx.appcompat.widget.Toolbar>
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView"

@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(com.google.android.libraries.places.R.color.quantum_white_100));
 
         // Set up the navigation drawer
         NavigationView navigationView = binding.navView;
@@ -172,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
 
             if (currentFragment instanceof MapsFragment) {
-                // Update the marker on the map
                 ((MapsFragment) currentFragment).zoomToMarker(selectedRestaurant);
             } else if (currentFragment instanceof RestaurantsFragment) {
                 DetailsFragment detailsFragment = DetailsFragment.newInstance(selectedRestaurant.getId());
@@ -182,20 +182,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .commit();
             }
 
-            // Close the soft keyboard
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
             }
 
-            // Clear the search field
             autoCompleteTextView.setText("");
+            autoCompleteTextView.setVisibility(View.GONE);
+            binding.textView.setVisibility(View.VISIBLE);
+            autoCompleteTextView.setVisibility(View.GONE);
         });
 
         binding.searchView.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                // cachez le champ de recherche lorsque l'utilisateur a terminé d'entrer le texte
                 binding.searchView.setVisibility(View.GONE);
                 return true;
             }
@@ -237,20 +237,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_search) {
-            if (binding.searchView.getVisibility() == View.VISIBLE) {
-                binding.searchView.setVisibility(View.GONE);
-            } else {
-                binding.searchView.setVisibility(View.VISIBLE);
+        if (item.getItemId() == R.id.action_search) {
+            binding.textView.setVisibility(View.GONE);
+            AutoCompleteTextView autoCompleteTextView = findViewById(R.id.search_view);
+            autoCompleteTextView.setVisibility(View.VISIBLE);
+            autoCompleteTextView.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(autoCompleteTextView, InputMethodManager.SHOW_IMPLICIT);
             }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 
     private Fragment getSelectedFragment(int itemId) {
         if (itemId == R.id.item_2) {

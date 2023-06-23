@@ -98,4 +98,5 @@
     <string name="no_restaurant_selected">Pas de restaurant sélectionné</string>
     <string name="your_position">Vous êtes ici !</string>
     <string name="search_restaurants">Rechercher un restaurant</string>
+    <string name="im_hungry">I\'m Hungry!</string>
 </resources>

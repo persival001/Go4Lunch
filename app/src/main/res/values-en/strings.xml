@@ -92,5 +92,6 @@
     <string name="no_restaurant_selected">No restaurant for lunch</string>
     <string name="your_position">You are here !</string>
     <string name="search_restaurants">Search restaurant</string>
+    <string name="im_hungry">I\'m Hungry!</string>
 
 </resources>
