@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.persival.go4lunch.domain.location.GetLocationUseCase;
@@ -19,6 +20,7 @@ import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -42,6 +44,7 @@ public class MapsViewModel extends ViewModel {
     private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
     @NonNull
     private final GetParticipantsUseCase getParticipantsUseCase;
+    private final MediatorLiveData<Map<NearbyRestaurantsEntity, Integer>> restaurantsWithParticipants;
 
     @Inject
     public MapsViewModel(
@@ -62,15 +65,33 @@ public class MapsViewModel extends ViewModel {
         this.isGpsActivatedUseCase = isGpsActivatedUseCase;
         this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
         this.getParticipantsUseCase = getParticipantsUseCase;
+        this.restaurantsWithParticipants = new MediatorLiveData<>();
+
+        LiveData<List<NearbyRestaurantsEntity>> restaurantsLiveData = getNearbyRestaurantsUseCase.invoke();
+        LiveData<HashMap<String, Integer>> participantsLiveData = getParticipantsUseCase.invoke();
+
+        restaurantsWithParticipants.addSource(restaurantsLiveData, value -> combineLatestData(restaurantsLiveData, participantsLiveData));
+        restaurantsWithParticipants.addSource(participantsLiveData, value -> combineLatestData(restaurantsLiveData, participantsLiveData));
     }
 
-    public LiveData<HashMap<String, Integer>> getParticipants() {
-        return getParticipantsUseCase.invoke();
+    private void combineLatestData(
+        LiveData<List<NearbyRestaurantsEntity>> restaurantsLiveData,
+        LiveData<HashMap<String, Integer>> participantsLiveData
+    ) {
+        List<NearbyRestaurantsEntity> restaurants = restaurantsLiveData.getValue();
+        HashMap<String, Integer> participants = participantsLiveData.getValue();
+
+        if (restaurants != null && participants != null) {
+            Map<NearbyRestaurantsEntity, Integer> combinedData = new HashMap<>();
+            for (NearbyRestaurantsEntity restaurant : restaurants) {
+                combinedData.put(restaurant, participants.get(restaurant.getId()));
+            }
+            restaurantsWithParticipants.setValue(combinedData);
+        }
     }
 
-    public LiveData<List<NearbyRestaurantsEntity>> getNearbyRestaurants() {
-
-        return getNearbyRestaurantsUseCase.invoke();
+    public LiveData<Map<NearbyRestaurantsEntity, Integer>> getRestaurantsWithParticipants() {
+        return restaurantsWithParticipants;
     }
 
     public LiveData<LocationEntity> getLocationLiveData() {

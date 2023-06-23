@@ -31,6 +31,7 @@ import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -103,39 +104,40 @@ public class MapsFragment extends SupportMapFragment {
                 }
             });
 
-            mapsViewModel.getParticipants().observe(getViewLifecycleOwner(), participants -> {
-
-                mapsViewModel.getNearbyRestaurants().observe(getViewLifecycleOwner(), places -> {
-                    if (places != null) {
-                        // Clear existing markers
-                        for (Marker marker : markers) {
-                            marker.remove();
-                        }
-                        markers.clear();
-
-                        // Create new markers
-                        for (NearbyRestaurantsEntity place : places) {
-                            LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
-                            MarkerOptions markerOptions = new MarkerOptions()
-                                .position(latLng)
-                                .title(place.getName())
-                                .snippet(place.getAddress());
-
-                            // Check if this restaurant is occupied
-                            if (participants.containsKey(place.getId())) {
-                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                            } else {
-                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                            }
-
-                            Marker marker = googleMap.addMarker(markerOptions);
-                            if (marker != null) {
-                                marker.setTag(place.getId());
-                            }
-                            markers.add(marker);
-                        }
+            mapsViewModel.getRestaurantsWithParticipants().observe(getViewLifecycleOwner(), data -> {
+                if (data != null) {
+                    // Clear existing markers
+                    for (Marker marker : markers) {
+                        marker.remove();
                     }
-                });
+                    markers.clear();
+
+                    // Create new markers
+                    for (Map.Entry<NearbyRestaurantsEntity, Integer> entry : data.entrySet()) {
+                        NearbyRestaurantsEntity place = entry.getKey();
+                        Integer participants = entry.getValue();
+
+                        LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
+                        MarkerOptions markerOptions = new MarkerOptions()
+                            .position(latLng)
+                            .title(place.getName())
+                            .snippet(place.getAddress());
+
+                        if (participants != null && participants > 0) {
+                            // If the restaurant is occupied, set the marker color to green
+                            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        } else {
+                            // If the restaurant is not occupied, set the marker color to orange
+                            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        }
+
+                        Marker marker = googleMap.addMarker(markerOptions);
+                        if (marker != null) {
+                            marker.setTag(place.getId());
+                        }
+                        markers.add(marker);
+                    }
+                }
             });
 
             // Navigate to DetailsFragment when clicking on a marker
