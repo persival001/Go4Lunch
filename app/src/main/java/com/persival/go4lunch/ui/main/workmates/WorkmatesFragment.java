@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentUserListBinding;
+import com.persival.go4lunch.ui.main.details.DetailsFragment;
 import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -47,11 +48,20 @@ public class WorkmatesFragment extends Fragment {
 
         RecyclerView recyclerView = binding.userListRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        WorkmatesAdapter adapter = new WorkmatesAdapter();
+        WorkmatesAdapter adapter = new WorkmatesAdapter(restaurantId -> {
+            DetailsFragment detailsFragment = DetailsFragment.newInstance(restaurantId);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerView, detailsFragment)
+                .addToBackStack(null)
+                .commit();
+        });
+
+
         recyclerView.setAdapter(adapter);
 
         viewModel.getViewStateLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
     }
+
 
     @Override
     public void onDestroyView() {

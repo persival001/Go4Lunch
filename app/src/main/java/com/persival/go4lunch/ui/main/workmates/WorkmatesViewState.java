@@ -1,6 +1,7 @@
 package com.persival.go4lunch.ui.main.workmates;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -13,15 +14,19 @@ public class WorkmatesViewState {
     private final String workmatePictureUrl;
     @NonNull
     private final String text;
+    @Nullable
+    private final String restaurantId;
 
     public WorkmatesViewState(
         @NonNull String id,
         @NonNull String workmatePictureUrl,
-        @NonNull String text
+        @NonNull String text,
+        @Nullable String restaurantId
     ) {
         this.id = id;
         this.workmatePictureUrl = workmatePictureUrl;
         this.text = text;
+        this.restaurantId = restaurantId;
     }
 
     @NonNull
@@ -39,6 +44,11 @@ public class WorkmatesViewState {
         return text;
     }
 
+    @Nullable
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -46,12 +56,15 @@ public class WorkmatesViewState {
         if (o == null || getClass() != o.getClass())
             return false;
         WorkmatesViewState that = (WorkmatesViewState) o;
-        return id.equals(that.id) && workmatePictureUrl.equals(that.workmatePictureUrl) && text.equals(that.text);
+        return id.equals(that.id) &&
+            workmatePictureUrl.equals(that.workmatePictureUrl) &&
+            text.equals(that.text) &&
+            Objects.equals(restaurantId, that.restaurantId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, workmatePictureUrl, text);
+        return Objects.hash(id, workmatePictureUrl, text, restaurantId);
     }
 
     @NonNull
@@ -61,6 +74,7 @@ public class WorkmatesViewState {
             "id='" + id + '\'' +
             ", workmatePictureUrl='" + workmatePictureUrl + '\'' +
             ", text='" + text + '\'' +
+            ", restaurantId='" + restaurantId + '\'' +
             '}';
     }
 }

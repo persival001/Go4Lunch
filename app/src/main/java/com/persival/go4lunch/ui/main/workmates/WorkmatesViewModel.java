@@ -48,7 +48,8 @@ public class WorkmatesViewModel extends ViewModel {
             for (UserEatAtRestaurantEntity userEatAtRestaurantEntity : users) {
                 if (userEatAtRestaurantEntity != null &&
                     loggedUserId != null &&
-                    !userEatAtRestaurantEntity.getId().equals(loggedUserId)) {
+                    !userEatAtRestaurantEntity.getId().equals(loggedUserId)
+                ) {
                     workmatesViewState.add(
                         new WorkmatesViewState(
                             userEatAtRestaurantEntity.getId(),
@@ -56,9 +57,8 @@ public class WorkmatesViewModel extends ViewModel {
                             getFormattedName(
                                 userEatAtRestaurantEntity.getName(),
                                 userEatAtRestaurantEntity.getRestaurantName()
-                            )
-
-
+                            ),
+                            userEatAtRestaurantEntity.getRestaurantId()
                         )
                     );
                 }

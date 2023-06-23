@@ -21,9 +21,11 @@ import com.persival.go4lunch.R;
 import java.util.Objects;
 
 public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesAdapter.ViewHolder> {
+    private final OnItemClickListener listener;
 
-    public WorkmatesAdapter() {
+    public WorkmatesAdapter(OnItemClickListener listener) {
         super(new UserListAdapterDiffCallback());
+        this.listener = listener;
     }
 
     @NonNull
@@ -34,7 +36,7 @@ public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesA
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        holder.bind(getItem(position), listener);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -50,7 +52,7 @@ public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesA
             avatarPicture = itemView.findViewById(R.id.avatar_picture);
         }
 
-        public void bind(WorkmatesViewState item) {
+        public void bind(WorkmatesViewState item, OnItemClickListener listener) {
             Glide.with(itemView)
                 .load(item.getWorkmatePictureUrl())
                 .apply(RequestOptions.bitmapTransform(new CircleCrop()))
@@ -65,6 +67,12 @@ public class WorkmatesAdapter extends ListAdapter<WorkmatesViewState, WorkmatesA
             }
 
             avatarName.setText(item.getText());
+            if (item.getRestaurantId() != null) {
+                itemView.setOnClickListener(v -> listener.onItemClick(item.getRestaurantId()));
+            } else {
+                itemView.setOnClickListener(null);
+            }
+
         }
     }
 
