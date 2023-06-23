@@ -103,30 +103,39 @@ public class MapsFragment extends SupportMapFragment {
                 }
             });
 
-            mapsViewModel.getNearbyRestaurants().observe(getViewLifecycleOwner(), places -> {
-                if (places != null) {
-                    // Clear existing markers
-                    for (Marker marker : markers) {
-                        marker.remove();
-                    }
-                    markers.clear();
+            mapsViewModel.getParticipants().observe(getViewLifecycleOwner(), participants -> {
 
-                    // Create new markers
-                    for (NearbyRestaurantsEntity place : places) {
-                        LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
-                        MarkerOptions markerOptions = new MarkerOptions()
-                            .position(latLng)
-                            .title(place.getName())
-                            .snippet(place.getAddress())
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                        Marker marker = googleMap.addMarker(markerOptions);
-                        if (marker != null) {
-                            marker.setTag(place.getId());
+                mapsViewModel.getNearbyRestaurants().observe(getViewLifecycleOwner(), places -> {
+                    if (places != null) {
+                        // Clear existing markers
+                        for (Marker marker : markers) {
+                            marker.remove();
                         }
-                        markers.add(marker);
-                    }
+                        markers.clear();
 
-                }
+                        // Create new markers
+                        for (NearbyRestaurantsEntity place : places) {
+                            LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                .position(latLng)
+                                .title(place.getName())
+                                .snippet(place.getAddress());
+
+                            // Check if this restaurant is occupied
+                            if (participants.containsKey(place.getId())) {
+                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            } else {
+                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                            }
+
+                            Marker marker = googleMap.addMarker(markerOptions);
+                            if (marker != null) {
+                                marker.setTag(place.getId());
+                            }
+                            markers.add(marker);
+                        }
+                    }
+                });
             });
 
             // Navigate to DetailsFragment when clicking on a marker

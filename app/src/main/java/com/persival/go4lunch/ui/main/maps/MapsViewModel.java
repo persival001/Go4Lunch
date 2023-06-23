@@ -14,8 +14,10 @@ import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.permissions.IsLocationPermissionUseCase;
 import com.persival.go4lunch.domain.permissions.RefreshGpsActivationUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
+import com.persival.go4lunch.domain.restaurant.GetParticipantsUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,13 +26,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class MapsViewModel extends ViewModel {
+    @NonNull
     private final GetLocationUseCase getLocationUseCase;
+    @NonNull
     private final StartLocationRequestUseCase startLocationRequestUseCase;
+    @NonNull
     private final StopLocationRequestUseCase stopLocationRequestUseCase;
+    @NonNull
     private final RefreshGpsActivationUseCase refreshGpsActivationUseCase;
+    @NonNull
     private final IsLocationPermissionUseCase isLocationPermissionUseCase;
+    @NonNull
     private final IsGpsActivatedUseCase isGpsActivatedUseCase;
+    @NonNull
     private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
+    @NonNull
+    private final GetParticipantsUseCase getParticipantsUseCase;
 
     @Inject
     public MapsViewModel(
@@ -40,7 +51,8 @@ public class MapsViewModel extends ViewModel {
         @NonNull RefreshGpsActivationUseCase refreshGpsActivationUseCase,
         @NonNull IsLocationPermissionUseCase isLocationPermissionUseCase,
         @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
-        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
+        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase,
+        @NonNull GetParticipantsUseCase getParticipantsUseCase
     ) {
         this.getLocationUseCase = getLocationUseCase;
         this.startLocationRequestUseCase = startLocationRequestUseCase;
@@ -49,9 +61,15 @@ public class MapsViewModel extends ViewModel {
         this.isLocationPermissionUseCase = isLocationPermissionUseCase;
         this.isGpsActivatedUseCase = isGpsActivatedUseCase;
         this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
+        this.getParticipantsUseCase = getParticipantsUseCase;
+    }
+
+    public LiveData<HashMap<String, Integer>> getParticipants() {
+        return getParticipantsUseCase.invoke();
     }
 
     public LiveData<List<NearbyRestaurantsEntity>> getNearbyRestaurants() {
+
         return getNearbyRestaurantsUseCase.invoke();
     }
 

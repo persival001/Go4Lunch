@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -152,15 +151,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
         );
 
-        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.search_view);
+
         ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
             this,
             android.R.layout.simple_dropdown_item_1line,
             new ArrayList<>()
         );
 
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setThreshold(1);
+        binding.searchView.setAdapter(adapter);
+        binding.searchView.setThreshold(1);
 
         viewModel.getFilteredRestaurantsLiveData().observe(MainActivity.this, restaurants -> {
             adapter.clear();
@@ -168,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             adapter.notifyDataSetChanged();
         });
 
-        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
+        binding.searchView.setOnItemClickListener((parent, view, position, id) -> {
             NearbyRestaurantsEntity selectedRestaurant = (NearbyRestaurantsEntity) parent.getItemAtPosition(position);
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
 
@@ -184,13 +183,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
-                imm.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(binding.searchView.getWindowToken(), 0);
             }
 
-            autoCompleteTextView.setText("");
-            autoCompleteTextView.setVisibility(View.GONE);
+            binding.searchView.setText("");
+            binding.searchView.setVisibility(View.GONE);
             binding.textView.setVisibility(View.VISIBLE);
-            autoCompleteTextView.setVisibility(View.GONE);
+            binding.searchView.setVisibility(View.GONE);
         });
 
         binding.searchView.setOnEditorActionListener((v, actionId, event) -> {
@@ -202,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return false;
         });
 
-        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+        binding.searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Not needed
@@ -239,12 +238,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
             binding.textView.setVisibility(View.GONE);
-            AutoCompleteTextView autoCompleteTextView = findViewById(R.id.search_view);
-            autoCompleteTextView.setVisibility(View.VISIBLE);
-            autoCompleteTextView.requestFocus();
+            binding.searchView.setVisibility(View.VISIBLE);
+            binding.searchView.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
-                imm.showSoftInput(autoCompleteTextView, InputMethodManager.SHOW_IMPLICIT);
+                imm.showSoftInput(binding.searchView, InputMethodManager.SHOW_IMPLICIT);
             }
             return true;
         }

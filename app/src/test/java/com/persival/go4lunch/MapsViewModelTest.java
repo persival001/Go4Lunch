@@ -78,8 +78,8 @@ public class MapsViewModelTest {
             refreshGpsActivationUseCase,
             isLocationPermissionUseCase,
             isGpsActivatedUseCase,
-            getNearbyRestaurantsUseCase
-        );
+            getNearbyRestaurantsUseCase,
+            getParticipantsUseCase);
     }
 
     @Test
