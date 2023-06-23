@@ -45,9 +45,13 @@ public class DetailsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+        @NonNull LayoutInflater inflater,
+        @Nullable ViewGroup container,
+        @Nullable Bundle savedInstanceState
+    ) {
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
+        binding.backButton.setOnClickListener(v -> requireActivity().onBackPressed());
 
         // Set up RecyclerView
         DetailsAdapter detailsAdapter = new DetailsAdapter();
@@ -90,8 +94,6 @@ public class DetailsFragment extends Fragment {
                 } else {
                     binding.callButton.setVisibility(View.GONE);
                 }
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + restaurantDetail.getRestaurantPhoneNumber()));
-                startActivity(intent);
             });
 
             // Like this restaurant

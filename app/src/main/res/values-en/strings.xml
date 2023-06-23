@@ -93,5 +93,6 @@
     <string name="your_position">You are here !</string>
     <string name="search_restaurants">Search restaurant</string>
     <string name="im_hungry">I\'m Hungry!</string>
+    <string name="back_button">Back button</string>
 
 </resources>
