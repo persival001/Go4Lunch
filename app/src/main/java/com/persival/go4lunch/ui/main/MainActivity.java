@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
 
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
@@ -187,6 +192,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             autoCompleteTextView.setText("");
         });
 
+        binding.searchView.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                // cachez le champ de recherche lorsque l'utilisateur a terminé d'entrer le texte
+                binding.searchView.setVisibility(View.GONE);
+                return true;
+            }
+            return false;
+        });
 
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -213,6 +227,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_your_lunch);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_search) {
+            if (binding.searchView.getVisibility() == View.VISIBLE) {
+                binding.searchView.setVisibility(View.GONE);
+            } else {
+                binding.searchView.setVisibility(View.VISIBLE);
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private Fragment getSelectedFragment(int itemId) {
         if (itemId == R.id.item_2) {
