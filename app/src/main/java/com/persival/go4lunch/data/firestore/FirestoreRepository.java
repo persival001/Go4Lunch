@@ -155,17 +155,10 @@ public class FirestoreRepository implements UserRepository {
             .collection(USERS)
             .document(userId)
             .update(NAME, newUserName);
-    }
-
-    // ----- Delete account -----
-    public void deleteAccount() {
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser != null) {
-            firebaseFirestore.collection(USERS)
-                .document(firebaseUser.getUid())
-                .delete();
-        }
-        firebaseAuth.signOut();
+        firebaseFirestore
+            .collection(USER_EAT_AT_RESTAURANT)
+            .document(userId)
+            .update(NAME, newUserName);
     }
 
     // ----- Get restaurantId for current user -----
