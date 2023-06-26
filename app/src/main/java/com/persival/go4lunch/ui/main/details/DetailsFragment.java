@@ -96,6 +96,14 @@ public class DetailsFragment extends Fragment {
                 }
             });
 
+
+            // Create the WorkRequest for the RestaurantReminderWorker without delay
+            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class).build();
+
+            // Enqueue the work
+            WorkManager.getInstance(requireContext()).enqueue(workRequest);
+
+
             binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.onChooseRestaurant(restaurantDetail));
 
             // Call the restaurant
