@@ -13,11 +13,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentDetailsBinding;
+import com.persival.go4lunch.ui.notifications.RestaurantReminderWorker;
+
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -78,6 +84,13 @@ public class DetailsFragment extends Fragment {
                 // Change the image of the button based on whether it's chosen or not
                 if (isChosen) {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
+                    // Creation of notification
+                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class)
+                        .setInitialDelay(timeUntilNoon(), TimeUnit.MILLISECONDS)
+                        .build();
+
+                    WorkManager.getInstance(requireContext()).enqueue(workRequest);
+
                 } else {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
                 }
@@ -127,6 +140,15 @@ public class DetailsFragment extends Fragment {
         viewModel.getWorkmateListLiveData().observe(getViewLifecycleOwner(), detailsAdapter::submitList);
 
         return binding.getRoot();
+    }
+
+    public long timeUntilNoon() {
+        Calendar now = Calendar.getInstance();
+        Calendar noon = Calendar.getInstance();
+        noon.set(Calendar.HOUR_OF_DAY, 12);
+        noon.set(Calendar.MINUTE, 0);
+
+        return noon.getTimeInMillis() - now.getTimeInMillis();
     }
 
     @Override

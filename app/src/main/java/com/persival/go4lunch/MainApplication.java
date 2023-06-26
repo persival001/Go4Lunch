@@ -2,6 +2,9 @@ package com.persival.go4lunch;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +19,9 @@ import dagger.hilt.android.HiltAndroidApp;
 @HiltAndroidApp
 public class MainApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
+    private static final String CHANNEL_NAME = "Go4Lunch Notifications";
+    private static final String CHANNEL_DESCRIPTION = "Notifications for Go4Lunch app";
+    private static final String CHANNEL_ID = "GO4LUNCH_CHANNEL_ID";
     @Inject
     PermissionRepository permissionRepository;
 
@@ -24,6 +30,16 @@ public class MainApplication extends Application implements Application.Activity
         super.onCreate();
 
         registerActivityLifecycleCallbacks(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
+            channel.setDescription(CHANNEL_DESCRIPTION);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 
     @Override
