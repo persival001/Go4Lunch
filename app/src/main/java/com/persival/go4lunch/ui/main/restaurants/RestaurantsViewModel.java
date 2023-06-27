@@ -4,6 +4,7 @@ import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
@@ -31,13 +32,16 @@ public class RestaurantsViewModel extends ViewModel {
     private final IsGpsActivatedUseCase isGpsActivatedUseCase;
     @NonNull
     private final LiveData<List<RestaurantsViewState>> restaurantsLiveData;
+    private final MutableLiveData<String> searchStringLiveData = new MutableLiveData<>("");
+
 
     @Inject
     public RestaurantsViewModel(
         @NonNull GetLocationUseCase getLocationUseCase,
         @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
         @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase,
-        @NonNull GetParticipantsUseCase getParticipantsUseCase) {
+        @NonNull GetParticipantsUseCase getParticipantsUseCase
+    ) {
         this.isGpsActivatedUseCase = isGpsActivatedUseCase;
 
         LiveData<LocationEntity> locationLiveData = getLocationUseCase.invoke();
@@ -54,12 +58,27 @@ public class RestaurantsViewModel extends ViewModel {
             )
         );
 
-        restaurantsLiveData = Transformations.map(
-            unsortedRestaurantsLiveData,
-            restaurantList -> sortRestaurantViewStates(restaurantList)
+        restaurantsLiveData = Transformations.switchMap(
+            searchStringLiveData,
+            searchString -> Transformations.map(
+                unsortedRestaurantsLiveData,
+                restaurantList -> {
+                    List<RestaurantsViewState> filteredList = new ArrayList<>();
+                    for (RestaurantsViewState restaurant : restaurantList) {
+                        if (restaurant.getName().toLowerCase().contains(searchString.toLowerCase())) {
+                            filteredList.add(restaurant);
+                        }
+                    }
+                    return sortRestaurantViewStates(filteredList);
+                }
+            )
         );
+
     }
 
+    public void updateSearchString(String searchString) {
+        searchStringLiveData.setValue(searchString);
+    }
 
     private List<RestaurantsViewState> mapPlacesToRestaurantViewStates(
         String location,
@@ -84,7 +103,7 @@ public class RestaurantsViewModel extends ViewModel {
                         restaurant.getLongitude(),
                         location
                     ),
-                    participantCount.toString(),
+                    mapParticipantCount(participantCount),
                     mapRating(restaurant.getRating()),
                     mapPictureUrl(restaurant.getPhotos())
                 )
@@ -173,6 +192,14 @@ public class RestaurantsViewModel extends ViewModel {
 
         return String.format(Locale.getDefault(), "%.0f", distance) + " m";
     }
+
+    public String mapParticipantCount(Integer participantCount) {
+        if (participantCount == 0) {
+            return "";
+        }
+        return Integer.toString(participantCount);
+    }
+
 
     public LiveData<Boolean> isGpsActivatedLiveData() {
         return isGpsActivatedUseCase.invoke();

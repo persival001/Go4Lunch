@@ -85,7 +85,8 @@ public class DetailsFragment extends Fragment {
                 if (isChosen) {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
                     // Creation of notification
-                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class)
+                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(
+                        RestaurantReminderWorker.class)
                         .setInitialDelay(timeUntilNoon(), TimeUnit.MILLISECONDS)
                         .build();
 
@@ -95,14 +96,6 @@ public class DetailsFragment extends Fragment {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
                 }
             });
-
-
-            // Create the WorkRequest for the RestaurantReminderWorker without delay
-            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class).build();
-
-            // Enqueue the work
-            WorkManager.getInstance(requireContext()).enqueue(workRequest);
-
 
             binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.onChooseRestaurant(restaurantDetail));
 

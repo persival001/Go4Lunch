@@ -32,6 +32,16 @@ public class RestaurantsFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            String searchString = getArguments().getString("searchString");
+            RestaurantsViewModel viewModel = new ViewModelProvider(this).get(RestaurantsViewModel.class);
+            viewModel.updateSearchString(searchString);
+        }
+    }
+
+    @Override
     public View onCreateView(
         @NonNull LayoutInflater inflater,
         @Nullable ViewGroup container,
@@ -68,7 +78,10 @@ public class RestaurantsFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        viewModel.getSortedRestaurantsLiveData().observe(getViewLifecycleOwner(), list -> adapter.submitList(list));
+        viewModel.getSortedRestaurantsLiveData().observe(getViewLifecycleOwner(), restaurants -> {
+            adapter.submitList(restaurants);
+        });
+
     }
 
     @Override

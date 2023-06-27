@@ -46,10 +46,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public ListenerRegistration listenerRegistration;
     private ActivityMainBinding binding;
-
+    private String searchString = "";
     private String restaurantId;
-    private ListenerRegistration listenerRegistration;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
         );
 
-
         ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
             this,
             android.R.layout.simple_dropdown_item_1line,
@@ -174,9 +173,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (currentFragment instanceof MapsFragment) {
                 ((MapsFragment) currentFragment).zoomToMarker(selectedRestaurant);
             } else if (currentFragment instanceof RestaurantsFragment) {
-                DetailsFragment detailsFragment = DetailsFragment.newInstance(selectedRestaurant.getId());
+                RestaurantsFragment restaurantsFragment = RestaurantsFragment.newInstance();
+                Bundle bundle = new Bundle();
+                bundle.putString("searchString", searchString);
+                restaurantsFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, detailsFragment)
+                    .replace(R.id.fragmentContainerView, restaurantsFragment)
                     .addToBackStack(null)
                     .commit();
             }
@@ -210,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() >= 1) {
+                    searchString = s.toString();
                     viewModel.updateSearchString(s.toString());
                 }
             }

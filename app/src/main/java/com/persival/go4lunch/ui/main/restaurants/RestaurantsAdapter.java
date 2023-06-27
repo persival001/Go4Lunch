@@ -82,7 +82,14 @@ public class RestaurantsAdapter extends ListAdapter<RestaurantsViewState, Restau
                 restaurantOpeningTime.setTypeface(null, Typeface.BOLD);
             }
             restaurantDistance.setText(item.getDistance());
-            restaurantParticipants.setText(item.getParticipants());
+
+            if (item.getParticipants().equals("")) {
+                restaurantParticipants.setVisibility(View.GONE);
+            } else {
+                restaurantParticipants.setVisibility(View.VISIBLE);
+                restaurantParticipants.setText(item.getParticipants());
+            }
+
             if (item.getRating() == 0F) {
                 restaurantStars.setVisibility(View.GONE);
             } else {

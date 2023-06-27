@@ -41,5 +41,4 @@ public class RestaurantReminderWorker extends Worker {
 
         return Result.success();
     }
-
 }
