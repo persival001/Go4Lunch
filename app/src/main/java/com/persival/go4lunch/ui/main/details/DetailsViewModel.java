@@ -6,6 +6,7 @@ import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
@@ -16,12 +17,15 @@ import com.persival.go4lunch.domain.details.GetLikedRestaurantsUseCase;
 import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
 import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
+import com.persival.go4lunch.domain.details.model.NotificationEntity;
+import com.persival.go4lunch.domain.restaurant.model.PlaceDetailsEntity;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
 import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,6 +37,7 @@ public class DetailsViewModel extends ViewModel {
     public final LiveData<DetailsRestaurantViewState> restaurantViewStateLiveData;
     public final LiveData<List<String>> likedRestaurantsLiveData;
     public final LiveData<List<DetailsWorkmateViewState>> workmatesViewStateLiveData;
+    public final MediatorLiveData<NotificationEntity> notificationLiveData;
     @NonNull
     private final Resources resources;
     @NonNull
@@ -45,6 +50,11 @@ public class DetailsViewModel extends ViewModel {
     private final SetLikedRestaurantUseCase setLikedRestaurantUseCase;
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
+    @NonNull
+    private final GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase;
+    @NonNull
+    private final GetRestaurantDetailsUseCase getRestaurantDetailsUseCase;
+
     private DetailsRestaurantViewState detailsRestaurantViewState;
 
     @Inject
@@ -62,6 +72,8 @@ public class DetailsViewModel extends ViewModel {
         this.setRestaurantChosenToEatUseCase = setRestaurantChosenToEatUseCase;
         this.setLikedRestaurantUseCase = setLikedRestaurantUseCase;
         this.getLoggedUserUseCase = getLoggedUserUseCase;
+        this.getWorkmatesEatAtRestaurantUseCase = getWorkmatesEatAtRestaurantUseCase;
+        this.getRestaurantDetailsUseCase = getRestaurantDetailsUseCase;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
         isRestaurantChosenLiveData = new MutableLiveData<>();
@@ -72,6 +84,7 @@ public class DetailsViewModel extends ViewModel {
         if (restaurantId == null) {
             throw new IllegalStateException("Please use DetailsFragment.newInstance() to launch the Fragment");
         }
+
         likedRestaurantsLiveData = getLikedRestaurantsUseCase.invoke();
 
         workmatesViewStateLiveData = Transformations.map(getWorkmatesEatAtRestaurantUseCase.invoke(), users -> {
@@ -101,7 +114,6 @@ public class DetailsViewModel extends ViewModel {
             return detailsWorkmateViewState;
         });
 
-
         restaurantViewStateLiveData = Transformations.map(
             getRestaurantDetailsUseCase.invoke(restaurantId),
             restaurant -> {
@@ -117,10 +129,50 @@ public class DetailsViewModel extends ViewModel {
                 return detailsRestaurantViewState;
             }
         );
+
+        notificationLiveData = new MediatorLiveData<>();
+        LiveData<PlaceDetailsEntity> restaurantLiveData = getRestaurantDetailsUseCase.invoke(restaurantId);
+        LiveData<List<UserEatAtRestaurantEntity>> workmatesLiveData = getWorkmatesEatAtRestaurantUseCase.invoke();
+
+        notificationLiveData.addSource(restaurantLiveData, restaurant -> {
+            if (restaurant != null && workmatesLiveData.getValue() != null) {
+                notificationLiveData.setValue(mapNotificationEntity(restaurant, workmatesLiveData.getValue()));
+            }
+        });
+
+        notificationLiveData.addSource(workmatesLiveData, workmates -> {
+            if (workmates != null && restaurantLiveData.getValue() != null) {
+                notificationLiveData.setValue(mapNotificationEntity(restaurantLiveData.getValue(), workmates));
+            }
+        });
+
     }
 
     public LiveData<Boolean> getIsRestaurantLiked() {
         return isRestaurantLiked;
+    }
+
+    public LiveData<NotificationEntity> getNotificationLiveData() {
+        return notificationLiveData;
+    }
+
+    private NotificationEntity mapNotificationEntity(
+        PlaceDetailsEntity restaurant,
+        List<UserEatAtRestaurantEntity> workmates
+    ) {
+        List<String> workmateNames = new ArrayList<>();
+        Date dateOfVisit = null;
+        for (UserEatAtRestaurantEntity workmate : workmates) {
+            if (workmate.getRestaurantName() != null &&
+                workmate.getRestaurantName().equals(restaurant.getName())
+            ) {
+                workmateNames.add(workmate.getName());
+                if (workmate.getDateOfVisit() != null) {
+                    dateOfVisit = workmate.getDateOfVisit();
+                }
+            }
+        }
+        return new NotificationEntity(restaurant.getName(), restaurant.getAddress(), workmateNames, dateOfVisit);
     }
 
     public void onChooseRestaurant(DetailsRestaurantViewState detail) {
@@ -165,6 +217,14 @@ public class DetailsViewModel extends ViewModel {
 
     public LiveData<DetailsRestaurantViewState> getDetailViewStateLiveData() {
         return restaurantViewStateLiveData;
+    }
+
+    public void updateIsRestaurantLiked(boolean isLiked) {
+        isRestaurantLiked.setValue(isLiked);
+    }
+
+    public LiveData<Boolean> getIsRestaurantChosenLiveData() {
+        return isRestaurantChosenLiveData;
     }
 
     // Add "is joining!" after the workmate name
@@ -218,15 +278,6 @@ public class DetailsViewModel extends ViewModel {
             return "";
         }
     }
-
-    public void updateIsRestaurantLiked(boolean isLiked) {
-        isRestaurantLiked.setValue(isLiked);
-    }
-
-    public LiveData<Boolean> getIsRestaurantChosenLiveData() {
-        return isRestaurantChosenLiveData;
-    }
-
 
 }
 

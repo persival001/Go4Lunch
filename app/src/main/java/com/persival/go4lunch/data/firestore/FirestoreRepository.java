@@ -10,6 +10,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.UserRepository;
 import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
@@ -38,6 +39,8 @@ public class FirestoreRepository implements UserRepository {
     private final FirebaseFirestore firebaseFirestore;
     @NonNull
     private final FirebaseAuth firebaseAuth;
+    private ListenerRegistration workmatesEatAtRestaurantListener;
+    private ListenerRegistration restaurantIdForCurrentUserListener;
 
     @Inject
     public FirestoreRepository(
@@ -184,6 +187,20 @@ public class FirestoreRepository implements UserRepository {
         }
 
         return restaurantIdLiveData;
+    }
+
+    public void stopWorkmatesEatAtRestaurantListener() {
+        if (workmatesEatAtRestaurantListener != null) {
+            workmatesEatAtRestaurantListener.remove();
+            workmatesEatAtRestaurantListener = null;
+        }
+    }
+
+    public void stopRestaurantIdForCurrentUserListener() {
+        if (restaurantIdForCurrentUserListener != null) {
+            restaurantIdForCurrentUserListener.remove();
+            restaurantIdForCurrentUserListener = null;
+        }
     }
 
 }

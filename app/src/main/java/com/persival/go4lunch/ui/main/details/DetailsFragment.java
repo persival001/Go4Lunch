@@ -1,6 +1,8 @@
 package com.persival.go4lunch.ui.main.details;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import com.persival.go4lunch.databinding.FragmentDetailsBinding;
 import com.persival.go4lunch.ui.notifications.RestaurantReminderWorker;
 
 import java.util.Calendar;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -58,6 +61,8 @@ public class DetailsFragment extends Fragment {
         @Nullable Bundle savedInstanceState
     ) {
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
+
+        // Listener for the -back- button
         binding.backButton.setOnClickListener(v -> requireActivity().onBackPressed());
 
         // Set up RecyclerView
@@ -67,12 +72,6 @@ public class DetailsFragment extends Fragment {
 
         // Update UI with restaurant details
         viewModel.getDetailViewStateLiveData().observe(getViewLifecycleOwner(), restaurantDetail -> {
-            Data myData = new Data.Builder()
-                .putString("restaurantName", restaurantDetail.getRestaurantName())
-                .putString("restaurantAddress", restaurantDetail.getRestaurantAddress())
-                .putString("workmates", "John, Paul, Ringo, George")
-                .build();
-
             Glide.with(binding.detailsPicture)
                 .load(restaurantDetail.getRestaurantPictureUrl())
                 .placeholder(R.drawable.logoresto)
@@ -83,34 +82,55 @@ public class DetailsFragment extends Fragment {
             binding.detailsAddress.setText(restaurantDetail.getRestaurantAddress());
             binding.detailsRatingBar.setRating(restaurantDetail.getRestaurantRating());
 
+
             // Choose this restaurant for lunch
             viewModel.getIsRestaurantChosenLiveData().observe(getViewLifecycleOwner(), isChosen -> {
                 // Update the button state based on the isChosen value.
                 binding.chooseThisRestaurantButton.setSelected(isChosen);
 
                 // Change the image of the button based on whether it's chosen or not
-                if (isChosen) {
+                if (Boolean.TRUE.equals(isChosen)) {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
-                    // Creation of notification
-                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class)
-                        .setInputData(myData)
-                        .setInitialDelay(timeUntilNoon(), TimeUnit.MILLISECONDS)
-                        .build();
 
-                    WorkManager.getInstance(requireContext()).enqueue(workRequest);
+                    // Put information's for the notification worker
+                    viewModel.getNotificationLiveData().observe(getViewLifecycleOwner(), notification -> {
+                        if (notification != null) {
+                            Data myData = new Data.Builder()
+                                .putString("restaurantName", notification.getRestaurantName())
+                                .putString("restaurantAddress", notification.getRestaurantAddress())
+                                .putString("workmates", notification.getWorkmatesNames())
+                                .build();
+
+                            // Creation of notification
+                            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class)
+                                .setInputData(myData)
+                                .setInitialDelay(timeUntilNoon(), TimeUnit.MILLISECONDS)
+                                .build();
+
+                            // Get the UUID of the WorkRequest
+                            UUID workId = workRequest.getId();
+                            // Enqueue the work
+                            WorkManager.getInstance(requireContext()).enqueue(workRequest);
+                            // Save the UUID for future reference
+                            SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("workId", workId.toString());
+                            editor.apply();
+                        }
+                    });
 
                 } else {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
+
+                    // Cancel the work if the restaurant is deselected
+                    SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
+                    String workIdString = sharedPref.getString("workId", null);
+                    if (workIdString != null) {
+                        UUID workId = UUID.fromString(workIdString);
+                        WorkManager.getInstance(requireContext()).cancelWorkById(workId);
+                    }
                 }
             });
-
-
-            // Create the WorkRequest for the RestaurantReminderWorker without delay
-            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class).build();
-
-            // Enqueue the work
-            WorkManager.getInstance(requireContext()).enqueue(workRequest);
-
 
             binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.onChooseRestaurant(restaurantDetail));
 
@@ -132,7 +152,7 @@ public class DetailsFragment extends Fragment {
                 }
             });
             viewModel.getIsRestaurantLiked().observe(getViewLifecycleOwner(), isLiked -> {
-                if (isLiked) {
+                if (Boolean.TRUE.equals(isLiked)) {
                     binding.likeButton.setIconResource(R.drawable.baseline_star_rate_24);
                 } else {
                     binding.likeButton.setIconResource(R.drawable.baseline_star_border_24);

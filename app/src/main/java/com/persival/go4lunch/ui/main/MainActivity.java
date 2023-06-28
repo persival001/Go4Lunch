@@ -28,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
 import com.persival.go4lunch.databinding.NavigationDrawerHeaderBinding;
@@ -48,7 +47,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public ListenerRegistration listenerRegistration;
     private ActivityMainBinding binding;
     private String searchString = "";
     private String restaurantId;
@@ -59,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setSupportActionBar(binding.toolbar);
 
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
@@ -105,12 +102,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(navHeaderBinding.userImage);
         });
 
+        // Observe the restaurantId of the restaurant the user has chosen for lunch
         viewModel.getRestaurantIdForCurrentUserLiveData().observe(
             MainActivity.this,
             restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
         );
 
-        //
+        // Create a list of items found with searchView
         ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
             this,
             android.R.layout.simple_dropdown_item_1line,
@@ -152,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             binding.searchView.setText("");
-            binding.searchView.setVisibility(View.GONE);
             binding.textView.setVisibility(View.VISIBLE);
             binding.searchView.setVisibility(View.GONE);
         });
@@ -192,12 +189,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    getSupportFragmentManager().popBackStack();
+                } else if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    this.setEnabled(false);
+                    onBackPressed();
                 }
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
+
 
         // If there's no saved instance state, load the MapsFragment into the fragment container view
         if (savedInstanceState == null) {
@@ -270,20 +273,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        finish();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (listenerRegistration != null) {
-            listenerRegistration.remove();
-        }
     }
 
 }
