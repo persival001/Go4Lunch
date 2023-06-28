@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentUserListBinding;
 import com.persival.go4lunch.ui.main.details.DetailsFragment;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -60,6 +58,7 @@ public class WorkmatesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         viewModel.getViewStateLiveData().observe(getViewLifecycleOwner(), adapter::submitList);
+
     }
 
 
@@ -67,22 +66,5 @@ public class WorkmatesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().getOnBackPressedDispatcher().addCallback(
-            getViewLifecycleOwner(),
-            new OnBackPressedCallback(true) {
-                @Override
-                public void handleOnBackPressed() {
-                    getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, RestaurantsFragment.newInstance())
-                        .commit();
-                }
-
-            }
-        );
     }
 }

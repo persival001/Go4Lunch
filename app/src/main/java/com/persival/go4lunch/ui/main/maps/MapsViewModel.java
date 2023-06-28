@@ -40,10 +40,6 @@ public class MapsViewModel extends ViewModel {
     private final IsLocationPermissionUseCase isLocationPermissionUseCase;
     @NonNull
     private final IsGpsActivatedUseCase isGpsActivatedUseCase;
-    @NonNull
-    private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
-    @NonNull
-    private final GetParticipantsUseCase getParticipantsUseCase;
     private final MediatorLiveData<Map<NearbyRestaurantsEntity, Integer>> restaurantsWithParticipants;
 
     @Inject
@@ -63,8 +59,6 @@ public class MapsViewModel extends ViewModel {
         this.refreshGpsActivationUseCase = refreshGpsActivationUseCase;
         this.isLocationPermissionUseCase = isLocationPermissionUseCase;
         this.isGpsActivatedUseCase = isGpsActivatedUseCase;
-        this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
-        this.getParticipantsUseCase = getParticipantsUseCase;
         this.restaurantsWithParticipants = new MediatorLiveData<>();
 
         LiveData<List<NearbyRestaurantsEntity>> restaurantsLiveData = getNearbyRestaurantsUseCase.invoke();

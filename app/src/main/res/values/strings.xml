@@ -93,7 +93,7 @@
     <string name="is_joining">%s y va!</string>
     <string name="hasnt_decided_yet">%s ne s\'est pas encore décidé</string>
     <string name="yes">OUI</string>
-    <string name="exit">Voulez-vous vraiment quitter l\'application ?</string>
+    <string name="exit">Appuyez encore sur retour pour quitter</string>
     <string name="hasnt_decided_yet_in_string">ne s\'est pas encore décidé</string>
     <string name="no_restaurant_selected">Pas de restaurant sélectionné</string>
     <string name="your_position">Vous êtes ici !</string>

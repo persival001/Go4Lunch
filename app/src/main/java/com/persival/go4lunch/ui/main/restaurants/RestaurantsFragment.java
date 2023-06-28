@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,7 +16,6 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
 import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 import com.persival.go4lunch.ui.main.details.DetailsFragment;
-import com.persival.go4lunch.ui.main.maps.MapsFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -56,8 +54,9 @@ public class RestaurantsFragment extends Fragment {
 
         RestaurantsViewModel viewModel = new ViewModelProvider(this).get(RestaurantsViewModel.class);
 
+        // Observe the GPS activation
         viewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
-            if (!gps) {
+            if (Boolean.FALSE.equals(gps)) {
                 new GpsDialogFragment().show(
                     requireActivity().getSupportFragmentManager(),
                     "GpsDialogFragment"
@@ -78,31 +77,11 @@ public class RestaurantsFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
+        // Observe and submit the list of restaurants
         viewModel.getSortedRestaurantsLiveData().observe(getViewLifecycleOwner(), restaurants -> {
             adapter.submitList(restaurants);
         });
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().getOnBackPressedDispatcher().addCallback(
-            getViewLifecycleOwner(),
-            new OnBackPressedCallback(true) {
-                @Override
-                public void handleOnBackPressed() {
-                    getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, MapsFragment.newInstance())
-                        .commit();
-                }
-            }
-        );
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     @Override

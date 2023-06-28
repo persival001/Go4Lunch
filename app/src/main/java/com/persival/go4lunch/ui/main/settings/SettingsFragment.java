@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -35,20 +34,24 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(
+        @NonNull LayoutInflater inflater,
+        @Nullable ViewGroup container,
+        @Nullable Bundle savedInstanceState
+    ) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(
+        @NonNull View view,
+        @Nullable Bundle savedInstanceState
+    ) {
         SettingsViewModel viewModel;
         viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
-        setupDoneButtonOnEditText(binding.usernameEditText);
-
+        // Display the logged user information
         viewModel.getLoggedUserLiveData().observe(getViewLifecycleOwner(), user -> {
             binding.usernameEditText.setText(user.getAvatarName());
             binding.emailTextView.setText(user.getEmail());
@@ -60,6 +63,22 @@ public class SettingsFragment extends Fragment {
                 .into(binding.profileImageButton);
         });
 
+        // Clear focus and close the keyboard when the user click on "done"
+        binding.usernameEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+
+                binding.usernameEditText.clearFocus();
+
+                InputMethodManager imm = (InputMethodManager) v.getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                return true;
+            }
+            return false;
+        });
+
+        // Listener of -delete account- button
         binding.deleteButton.setOnClickListener(v -> {
             viewModel.deleteAccount();
             Toast.makeText(getContext()
@@ -68,6 +87,7 @@ public class SettingsFragment extends Fragment {
             startActivity(AuthenticationActivity.navigate(requireContext()));
         });
 
+        // Listener of -change name- button
         binding.updateButton.setOnClickListener(v -> {
             String username = binding.usernameEditText.getText().toString();
 
@@ -81,6 +101,7 @@ public class SettingsFragment extends Fragment {
                     , Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     @Override
@@ -122,21 +143,4 @@ public class SettingsFragment extends Fragment {
         binding = null;
     }
 
-    // Listener for the edit text name (when the user click on done button on the keyboard)
-    public void setupDoneButtonOnEditText(EditText editText) {
-        editText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // Clear focus
-                editText.clearFocus();
-
-                // Close keyboard
-                InputMethodManager imm = (InputMethodManager) v.getContext()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-                return true;
-            }
-            return false;
-        });
-    }
 }

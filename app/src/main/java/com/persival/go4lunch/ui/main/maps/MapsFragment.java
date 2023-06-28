@@ -4,8 +4,8 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -27,11 +27,13 @@ import com.persival.go4lunch.R;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 import com.persival.go4lunch.ui.main.details.DetailsFragment;
-import com.persival.go4lunch.ui.main.settings.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -55,15 +57,26 @@ public class MapsFragment extends SupportMapFragment {
 
         mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
 
+        // Check GPS activation
+        mapsViewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
+            if (Boolean.FALSE.equals(gps)) {
+                new GpsDialogFragment().show(
+                    requireActivity().getSupportFragmentManager(),
+                    "GpsDialogFragment"
+                );
+            }
+        });
+
         // Initialize requestPermissionLauncher
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
+            if (Boolean.TRUE.equals(isGranted)) {
                 mapsViewModel.onResume();
             }
         });
 
-        getMapAsync(googleMap -> {
-            this.googleMap = googleMap;
+        // Markers listener for zoom and camera position
+        getMapAsync(googleMapLocal -> {
+            this.googleMap = googleMapLocal;
             googleMap.setOnMarkerClickListener(marker -> {
                 lastCameraPosition = googleMap.getCameraPosition().target;
                 lastZoomLevel = googleMap.getCameraPosition().zoom;
@@ -74,17 +87,18 @@ public class MapsFragment extends SupportMapFragment {
                 return true;
             });
 
+            // Map listener for get the last zoom and camera position
             googleMap.setOnMapClickListener(latLng -> {
                 if (lastCameraPosition != null) {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastCameraPosition, lastZoomLevel));
                 }
             });
 
+            // Add marker for user position
             mapsViewModel.getLocationLiveData().observe(getViewLifecycleOwner(), location -> {
                 if (location != null) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    // Ajoutez un marqueur à la position de l'utilisateur
                     MarkerOptions userMarkerOptions = new MarkerOptions()
                         .position(latLng)
                         .title(getString(R.string.your_position))
@@ -104,6 +118,7 @@ public class MapsFragment extends SupportMapFragment {
                 }
             });
 
+            // Add markers for nearby restaurants
             mapsViewModel.getRestaurantsWithParticipants().observe(getViewLifecycleOwner(), data -> {
                 if (data != null) {
                     // Clear existing markers
@@ -156,19 +171,6 @@ public class MapsFragment extends SupportMapFragment {
                 }
             });
 
-            // Check GPS activation
-            mapsViewModel.isGpsActivatedLiveData().observe(getViewLifecycleOwner(), gps -> {
-                if (!gps) {
-                    Log.d("MapsFragment", "GPS DEACTIVATED");
-                    new GpsDialogFragment().show(
-                        requireActivity().getSupportFragmentManager(),
-                        "GpsDialogFragment"
-                    );
-                } else {
-                    Log.d("MapsFragment", "GPS ACTIVATED");
-                }
-            });
-
         });
     }
 
@@ -183,9 +185,9 @@ public class MapsFragment extends SupportMapFragment {
         }
     }
 
-
     @Override
     public void onResume() {
+        // Refresh GPS activation and location permission
         mapsViewModel.refreshGpsActivation();
         mapsViewModel.onResume();
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -193,16 +195,26 @@ public class MapsFragment extends SupportMapFragment {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
         super.onResume();
+
+        // Double back press to exit
+        final boolean[] wasBackPressed = {false};
+
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
         requireActivity().getOnBackPressedDispatcher().addCallback(
             getViewLifecycleOwner(),
             new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
-                    getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, SettingsFragment.newInstance())
-                        .commit();
+                    if (wasBackPressed[0]) {
+                        this.setEnabled(false);
+                        requireActivity().finishAffinity();
+                    } else {
+                        wasBackPressed[0] = true;
+                        Toast.makeText(requireContext(), getString(R.string.exit), Toast.LENGTH_SHORT).show();
+                        executorService.schedule(() -> wasBackPressed[0] = false, 2, TimeUnit.SECONDS);
+                    }
                 }
-
             }
         );
     }

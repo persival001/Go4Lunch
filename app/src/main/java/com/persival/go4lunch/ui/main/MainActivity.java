@@ -15,10 +15,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -50,6 +52,169 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActivityMainBinding binding;
     private String searchString = "";
     private String restaurantId;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
+
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        // Set up the bottom navigation bar and handle item selection
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = getSelectedFragment(item.getItemId());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, selectedFragment).commit();
+            return true;
+        });
+
+        // Set the toolbar and disable its title
+        setSupportActionBar(binding.toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
+        // Set up the action bar drawer toggle
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.open_nav,
+            R.string.close_nav
+        );
+        binding.drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, com.google.android.libraries.places.R.color.quantum_white_100));
+
+        // Set up the navigation drawer
+        NavigationView navigationView = binding.navView;
+        navigationView.setNavigationItemSelectedListener(this);
+        // Inflate the header view of the navigation drawer at runtime
+        View headerView = navigationView.getHeaderView(0);
+        NavigationDrawerHeaderBinding navHeaderBinding = NavigationDrawerHeaderBinding.bind(headerView);
+
+        // Observe the user data from the ViewModel and display it in the navigation drawer header
+        viewModel.getAuthenticatedUserLiveData().observe(MainActivity.this, user -> {
+            navHeaderBinding.userName.setText(user.getAvatarName());
+            navHeaderBinding.userEmail.setText(user.getEmail());
+            Glide.with(navHeaderBinding.userImage)
+                .load(user.getAvatarPictureUrl())
+                .placeholder(R.drawable.ic_anon_user_48dp)
+                .error(R.drawable.ic_anon_user_48dp)
+                .circleCrop()
+                .into(navHeaderBinding.userImage);
+        });
+
+        viewModel.getRestaurantIdForCurrentUserLiveData().observe(
+            MainActivity.this,
+            restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
+        );
+
+        //
+        ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            new ArrayList<>()
+        );
+
+        binding.searchView.setAdapter(adapter);
+        binding.searchView.setThreshold(1);
+
+        viewModel.getFilteredRestaurantsLiveData().observe(MainActivity.this, restaurants -> {
+            adapter.clear();
+            adapter.addAll(restaurants);
+            adapter.notifyDataSetChanged();
+        });
+
+        // Execute the search in the opened fragment
+        binding.searchView.setOnItemClickListener((parent, view, position, id) -> {
+            NearbyRestaurantsEntity selectedRestaurant = (NearbyRestaurantsEntity) parent.getItemAtPosition(position);
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+
+            if (currentFragment instanceof MapsFragment) {
+                ((MapsFragment) currentFragment).zoomToMarker(selectedRestaurant);
+            }
+
+            if (currentFragment instanceof RestaurantsFragment) {
+                RestaurantsFragment restaurantsFragment = RestaurantsFragment.newInstance();
+                Bundle bundle = new Bundle();
+                bundle.putString("searchString", searchString);
+                restaurantsFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, restaurantsFragment)
+                    .addToBackStack(null)
+                    .commit();
+            }
+
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(binding.searchView.getWindowToken(), 0);
+            }
+
+            binding.searchView.setText("");
+            binding.searchView.setVisibility(View.GONE);
+            binding.textView.setVisibility(View.VISIBLE);
+            binding.searchView.setVisibility(View.GONE);
+        });
+
+        // Close the search view when the user clicks on the done button
+        binding.searchView.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                binding.searchView.setVisibility(View.GONE);
+                return true;
+            }
+            return false;
+        });
+
+        // Start searching when the user types at least 2 characters
+        binding.searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() >= 2) {
+                    searchString = s.toString();
+                    viewModel.updateSearchString(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed
+            }
+        });
+
+        // Close drawer when back button is pressed
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
+        // If there's no saved instance state, load the MapsFragment into the fragment container view
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new MapsFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_your_lunch);
+        }
+    }
+
+    private Fragment getSelectedFragment(int itemId) {
+        if (itemId == R.id.item_2) {
+            return RestaurantsFragment.newInstance();
+        } else if (itemId == R.id.item_3) {
+            return WorkmatesFragment.newInstance();
+        } else {
+            return MapsFragment.newInstance();
+        }
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -86,151 +251,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        setSupportActionBar(binding.toolbar);
-
-        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-        // Set up the bottom navigation bar and handle item selection
-        binding.bottomNavigation.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = getSelectedFragment(item.getItemId());
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, selectedFragment).commit();
-            return true;
-        });
-
-        // Set the toolbar and disable its title
-        setSupportActionBar(binding.toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-
-        // Set up the action bar drawer toggle
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this,
-            binding.drawerLayout,
-            binding.toolbar,
-            R.string.open_nav,
-            R.string.close_nav
-        );
-        binding.drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(com.google.android.libraries.places.R.color.quantum_white_100));
-
-        // Set up the navigation drawer
-        NavigationView navigationView = binding.navView;
-        navigationView.setNavigationItemSelectedListener(this);
-        // Inflate the header view of the navigation drawer at runtime
-        View headerView = navigationView.getHeaderView(0);
-        NavigationDrawerHeaderBinding navHeaderBinding = NavigationDrawerHeaderBinding.bind(headerView);
-
-        // Observe the user data from the ViewModel and display it in the navigation drawer header
-        viewModel.getAuthenticatedUserLiveData().observe(MainActivity.this, user -> {
-            navHeaderBinding.userName.setText(user.getAvatarName());
-            navHeaderBinding.userEmail.setText(user.getEmail());
-            Glide.with(navHeaderBinding.userImage)
-                .load(user.getAvatarPictureUrl())
-                .placeholder(R.drawable.ic_anon_user_48dp)
-                .error(R.drawable.ic_anon_user_48dp)
-                .circleCrop()
-                .into(navHeaderBinding.userImage);
-        });
-
-        viewModel.getRestaurantIdForCurrentUserLiveData().observe(
-            MainActivity.this,
-            restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
-        );
-
-        ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
-            this,
-            android.R.layout.simple_dropdown_item_1line,
-            new ArrayList<>()
-        );
-
-        binding.searchView.setAdapter(adapter);
-        binding.searchView.setThreshold(1);
-
-        viewModel.getFilteredRestaurantsLiveData().observe(MainActivity.this, restaurants -> {
-            adapter.clear();
-            adapter.addAll(restaurants);
-            adapter.notifyDataSetChanged();
-        });
-
-        binding.searchView.setOnItemClickListener((parent, view, position, id) -> {
-            NearbyRestaurantsEntity selectedRestaurant = (NearbyRestaurantsEntity) parent.getItemAtPosition(position);
-            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-
-            if (currentFragment instanceof MapsFragment) {
-                ((MapsFragment) currentFragment).zoomToMarker(selectedRestaurant);
-            } else if (currentFragment instanceof RestaurantsFragment) {
-                RestaurantsFragment restaurantsFragment = RestaurantsFragment.newInstance();
-                Bundle bundle = new Bundle();
-                bundle.putString("searchString", searchString);
-                restaurantsFragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, restaurantsFragment)
-                    .addToBackStack(null)
-                    .commit();
-            }
-
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(binding.searchView.getWindowToken(), 0);
-            }
-
-            binding.searchView.setText("");
-            binding.searchView.setVisibility(View.GONE);
-            binding.textView.setVisibility(View.VISIBLE);
-            binding.searchView.setVisibility(View.GONE);
-        });
-
-        binding.searchView.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE ||
-                (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                binding.searchView.setVisibility(View.GONE);
-                return true;
-            }
-            return false;
-        });
-
-        binding.searchView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Not needed
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() >= 1) {
-                    searchString = s.toString();
-                    viewModel.updateSearchString(s.toString());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // Not needed
-            }
-        });
-
-        // If there's no saved instance state, load the MapsFragment into the fragment container view
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new MapsFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_your_lunch);
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_menu, menu);
@@ -250,16 +270,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private Fragment getSelectedFragment(int itemId) {
-        if (itemId == R.id.item_2) {
-            return RestaurantsFragment.newInstance();
-        } else if (itemId == R.id.item_3) {
-            return WorkmatesFragment.newInstance();
-        } else {
-            return MapsFragment.newInstance();
-        }
     }
 
     @Override
