@@ -1,19 +1,15 @@
 package com.persival.go4lunch.ui.notifications;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.persival.go4lunch.R;
-
 
 public class RestaurantReminderWorker extends Worker {
-
-    private static final String CHANNEL_ID = "GO4LUNCH_CHANNEL_ID";
 
     public RestaurantReminderWorker(
         @NonNull Context context,
@@ -26,18 +22,26 @@ public class RestaurantReminderWorker extends Worker {
     @Override
     public Result doWork() {
 
+        // Retrieve the data
+        String restaurantName = getInputData().getString("restaurantName");
+        String restaurantAddress = getInputData().getString("restaurantAddress");
+        String workmates = getInputData().getString("workmates");
+
+        // Create a new NotificationHelper
+        NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
+
+        // Create the notification channel
+        notificationHelper.createNotificationChannel();
+
+        // Build the notification
+        Notification notification = notificationHelper.createNotification(restaurantName, restaurantAddress, workmates);
+
+        // Get the NotificationManager
         NotificationManager notificationManager = (NotificationManager)
             getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Build the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-            .setSmallIcon(R.drawable.baseline_lunch_dining_24)
-            .setContentTitle("Restaurant Reminder")
-            .setContentText("Don't forget to go to your chosen restaurant!")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
         // Show the notification
-        notificationManager.notify(0, builder.build());
+        notificationManager.notify(0, notification);
 
         return Result.success();
     }

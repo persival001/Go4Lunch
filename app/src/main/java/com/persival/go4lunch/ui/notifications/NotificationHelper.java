@@ -34,14 +34,18 @@ public class NotificationHelper {
         }
     }
 
-    public Notification createNotification(String restaurantName) {
+    public Notification createNotification(String restaurantName, String restaurantAddress, String workmates) {
+        String contentText = context.getString(R.string.notification_container, restaurantName, restaurantAddress, workmates);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("It's lunch time!")
-            .setContentText("You're dining at " + restaurantName)
+            .setSmallIcon(R.drawable.baseline_lunch_dining_24)
+            .setContentTitle(context.getString(R.string.notification_title))
+            .setContentText(contentText)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         return builder.build();
     }
+
 }
 

@@ -6,7 +6,7 @@
     <string name="login">Login</string>
 
     <!-- NOTIFICATION SERVICE -->
-    <string name="notification_title">You have a new notification</string>
+    <string name="notification_title">It\'s time to Go4Lunch</string>
 
     <!-- CONNECTION ACTIVITY -->
     <string name="error_not_connected">Please log in first</string>
@@ -94,5 +94,6 @@
     <string name="search_restaurants">Search restaurant</string>
     <string name="im_hungry">I\'m Hungry!</string>
     <string name="back_button">Back button</string>
+    <string name="notification_container">"You eat at %s, %s with %s"</string>
 
 </resources>

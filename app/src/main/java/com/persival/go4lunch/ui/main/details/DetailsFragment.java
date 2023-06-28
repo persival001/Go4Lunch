@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
@@ -66,6 +67,12 @@ public class DetailsFragment extends Fragment {
 
         // Update UI with restaurant details
         viewModel.getDetailViewStateLiveData().observe(getViewLifecycleOwner(), restaurantDetail -> {
+            Data myData = new Data.Builder()
+                .putString("restaurantName", restaurantDetail.getRestaurantName())
+                .putString("restaurantAddress", restaurantDetail.getRestaurantAddress())
+                .putString("workmates", "John, Paul, Ringo, George")
+                .build();
+
             Glide.with(binding.detailsPicture)
                 .load(restaurantDetail.getRestaurantPictureUrl())
                 .placeholder(R.drawable.logoresto)
@@ -85,8 +92,8 @@ public class DetailsFragment extends Fragment {
                 if (isChosen) {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
                     // Creation of notification
-                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(
-                        RestaurantReminderWorker.class)
+                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class)
+                        .setInputData(myData)
                         .setInitialDelay(timeUntilNoon(), TimeUnit.MILLISECONDS)
                         .build();
 
@@ -96,6 +103,14 @@ public class DetailsFragment extends Fragment {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
                 }
             });
+
+
+            // Create the WorkRequest for the RestaurantReminderWorker without delay
+            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class).build();
+
+            // Enqueue the work
+            WorkManager.getInstance(requireContext()).enqueue(workRequest);
+
 
             binding.chooseThisRestaurantButton.setOnClickListener(view -> viewModel.onChooseRestaurant(restaurantDetail));
 

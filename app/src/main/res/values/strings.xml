@@ -11,7 +11,7 @@
 
     <!-- NOTIFICATION SERVICE -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
-    <string name="notification_title">"Vous avez reçu une notification"</string>
+    <string name="notification_title">"Rappel"</string>
 
     <!-- CONNECTION ACTIVITY -->
     <string name="error_not_connected">Vous devez vous connecter !</string>
@@ -100,4 +100,5 @@
     <string name="search_restaurants">Rechercher un restaurant</string>
     <string name="im_hungry">I\'m Hungry!</string>
     <string name="back_button">Back button</string>
+    <string name="notification_container">"Vous mangez au %s, %s avec %s "</string>
 </resources>
