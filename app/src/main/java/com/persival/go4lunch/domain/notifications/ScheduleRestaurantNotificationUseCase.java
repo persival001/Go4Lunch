@@ -54,8 +54,8 @@ public class ScheduleRestaurantNotificationUseCase {
     public long timeUntilNoon() {
         Calendar now = Calendar.getInstance();
         Calendar noon = Calendar.getInstance();
-        noon.set(Calendar.HOUR_OF_DAY, 14);
-        noon.set(Calendar.MINUTE, 35);
+        noon.set(Calendar.HOUR_OF_DAY, 12);
+        noon.set(Calendar.MINUTE, 0);
 
         long delay = noon.getTimeInMillis() - now.getTimeInMillis();
 
