@@ -12,7 +12,8 @@ public class IsGpsActivatedUseCase {
 
     @Inject
     public IsGpsActivatedUseCase(
-        @NonNull GpsPermissionRepository gpsPermissionRepository) {
+        @NonNull GpsPermissionRepository gpsPermissionRepository
+    ) {
         this.gpsPermissionRepository = gpsPermissionRepository;
     }
 

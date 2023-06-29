@@ -2,7 +2,6 @@ package com.persival.go4lunch.domain.details.model;
 
 import androidx.annotation.NonNull;
 
-import java.util.Date;
 import java.util.Objects;
 
 public class NotificationEntity {
@@ -13,19 +12,15 @@ public class NotificationEntity {
     private final String restaurantAddress;
     @NonNull
     private final String workmatesNames;
-    @NonNull
-    private final Date dateOfVisit;
 
     public NotificationEntity(
         @NonNull String restaurantName,
         @NonNull String restaurantAddress,
-        @NonNull String workmatesNames,
-        @NonNull Date dateOfVisit
+        @NonNull String workmatesNames
     ) {
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.workmatesNames = workmatesNames;
-        this.dateOfVisit = dateOfVisit;
     }
 
     @NonNull
@@ -43,11 +38,6 @@ public class NotificationEntity {
         return workmatesNames;
     }
 
-    @NonNull
-    public Date getDateOfVisit() {
-        return dateOfVisit;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -57,13 +47,12 @@ public class NotificationEntity {
         NotificationEntity that = (NotificationEntity) o;
         return restaurantName.equals(that.restaurantName) &&
             restaurantAddress.equals(that.restaurantAddress) &&
-            workmatesNames.equals(that.workmatesNames) &&
-            dateOfVisit.equals(that.dateOfVisit);
+            workmatesNames.equals(that.workmatesNames);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(restaurantName, restaurantAddress, workmatesNames, dateOfVisit);
+        return Objects.hash(restaurantName, restaurantAddress, workmatesNames);
     }
 
     @NonNull
@@ -73,7 +62,6 @@ public class NotificationEntity {
             "restaurantName='" + restaurantName + '\'' +
             ", restaurantAddress='" + restaurantAddress + '\'' +
             ", workmatesNames='" + workmatesNames + '\'' +
-            ", dateOfVisit=" + dateOfVisit +
             '}';
     }
 }

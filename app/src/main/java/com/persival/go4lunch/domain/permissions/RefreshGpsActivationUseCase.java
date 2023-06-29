@@ -10,7 +10,8 @@ public class RefreshGpsActivationUseCase {
 
     @Inject
     public RefreshGpsActivationUseCase(
-        @NonNull GpsPermissionRepository gpsPermissionRepository) {
+        @NonNull GpsPermissionRepository gpsPermissionRepository
+    ) {
         this.gpsPermissionRepository = gpsPermissionRepository;
     }
 

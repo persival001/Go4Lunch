@@ -18,6 +18,8 @@ import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
 import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
 import com.persival.go4lunch.domain.details.model.NotificationEntity;
+import com.persival.go4lunch.domain.notifications.CancelRestaurantNotificationUseCase;
+import com.persival.go4lunch.domain.notifications.ScheduleRestaurantNotificationUseCase;
 import com.persival.go4lunch.domain.restaurant.model.PlaceDetailsEntity;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
@@ -25,7 +27,6 @@ import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
 import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -51,6 +52,10 @@ public class DetailsViewModel extends ViewModel {
     private final SetLikedRestaurantUseCase setLikedRestaurantUseCase;
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
+    @NonNull
+    private final ScheduleRestaurantNotificationUseCase scheduleRestaurantNotificationUseCase;
+    @NonNull
+    private final CancelRestaurantNotificationUseCase cancelRestaurantNotificationUseCase;
 
     private DetailsRestaurantViewState detailsRestaurantViewState;
 
@@ -63,12 +68,16 @@ public class DetailsViewModel extends ViewModel {
         @NonNull GetLikedRestaurantsUseCase getLikedRestaurantsUseCase,
         @NonNull SetLikedRestaurantUseCase setLikedRestaurantUseCase,
         @NonNull GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase,
-        @NonNull GetLoggedUserUseCase getLoggedUserUseCase
+        @NonNull GetLoggedUserUseCase getLoggedUserUseCase,
+        @NonNull ScheduleRestaurantNotificationUseCase scheduleRestaurantNotificationUseCase,
+        @NonNull CancelRestaurantNotificationUseCase cancelRestaurantNotificationUseCase
     ) {
         this.resources = resources;
         this.setRestaurantChosenToEatUseCase = setRestaurantChosenToEatUseCase;
         this.setLikedRestaurantUseCase = setLikedRestaurantUseCase;
         this.getLoggedUserUseCase = getLoggedUserUseCase;
+        this.scheduleRestaurantNotificationUseCase = scheduleRestaurantNotificationUseCase;
+        this.cancelRestaurantNotificationUseCase = cancelRestaurantNotificationUseCase;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
         isRestaurantChosenLiveData = new MutableLiveData<>();
@@ -149,6 +158,16 @@ public class DetailsViewModel extends ViewModel {
 
     }
 
+    private NotificationEntity mapNotificationEntity(
+        PlaceDetailsEntity restaurant,
+        List<String> workmates
+    ) {
+
+        String workmateNamesString = String.join(", ", workmates);
+
+        return new NotificationEntity(restaurant.getName(), restaurant.getAddress(), workmateNamesString);
+    }
+
     public LiveData<Boolean> getIsRestaurantLiked() {
         return isRestaurantLiked;
     }
@@ -156,18 +175,6 @@ public class DetailsViewModel extends ViewModel {
     public LiveData<NotificationEntity> getNotificationLiveData() {
         return notificationLiveData;
     }
-
-    private NotificationEntity mapNotificationEntity(
-        PlaceDetailsEntity restaurant,
-        List<String> workmates
-    ) {
-        Date dateOfVisit = null;
-
-        String workmateNamesString = String.join(", ", workmates);
-
-        return new NotificationEntity(restaurant.getName(), restaurant.getAddress(), workmateNamesString, dateOfVisit);
-    }
-
 
     public void onChooseRestaurant(DetailsRestaurantViewState detail) {
         // Toggle the chosen state
@@ -219,6 +226,14 @@ public class DetailsViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsRestaurantChosenLiveData() {
         return isRestaurantChosenLiveData;
+    }
+
+    public void scheduleRestaurantNotification(String restaurantName, String restaurantAddress, String workmates) {
+        scheduleRestaurantNotificationUseCase.invoke(restaurantName, restaurantAddress, workmates);
+    }
+
+    public void cancelRestaurantNotification() {
+        cancelRestaurantNotificationUseCase.invoke();
     }
 
     // Add "is joining!" after the workmate name

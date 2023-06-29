@@ -1,15 +1,19 @@
 package com.persival.go4lunch.di;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
+import androidx.work.WorkManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.persival.go4lunch.data.places.GooglePlacesApi;
+import com.persival.go4lunch.data.shared_prefs.SharedPreferencesRepository;
+import com.persival.go4lunch.domain.notifications.PreferencesRepository;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,12 +22,14 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 
 @Module
 @InstallIn(SingletonComponent.class)
@@ -81,4 +87,21 @@ public class AppModule {
         return application.getResources();
     }
 
+    @Provides
+    @Singleton
+    public static WorkManager provideWorkManager(@ApplicationContext Context context) {
+        return WorkManager.getInstance(context);
+    }
+
+    @Provides
+    @Singleton
+    public static Context provideContext(Application application) {
+        return application.getApplicationContext();
+    }
+
+    @Provides
+    @Singleton
+    public static PreferencesRepository providePreferencesRepository(Application application) {
+        return new SharedPreferencesRepository(application);
+    }
 }
