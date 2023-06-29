@@ -21,8 +21,7 @@ public class GetWorkmatesEatAtRestaurantUseCase {
         this.userRepository = userRepository;
     }
 
-    // Sort the list of workmates by restaurant name.
-    // If the restaurant name is null, the workmate will be at the end of the list
+    // The workmates who have chosen a restaurant will be at the beginning of the list.
     public LiveData<List<UserEatAtRestaurantEntity>> invoke() {
         LiveData<List<UserEatAtRestaurantEntity>> workmatesEatAtRestaurantLiveData = userRepository.getWorkmatesEatAtRestaurantLiveData();
         MediatorLiveData<List<UserEatAtRestaurantEntity>> sortedLiveData = new MediatorLiveData<>();

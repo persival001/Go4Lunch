@@ -38,6 +38,7 @@ public class DetailsViewModel extends ViewModel {
     public final LiveData<List<String>> likedRestaurantsLiveData;
     public final LiveData<List<DetailsWorkmateViewState>> workmatesViewStateLiveData;
     public final MediatorLiveData<NotificationEntity> notificationLiveData;
+    public final MutableLiveData<List<String>> workmatesGoToThisRestaurantLiveData;
     @NonNull
     private final Resources resources;
     @NonNull
@@ -50,10 +51,6 @@ public class DetailsViewModel extends ViewModel {
     private final SetLikedRestaurantUseCase setLikedRestaurantUseCase;
     @NonNull
     private final GetLoggedUserUseCase getLoggedUserUseCase;
-    @NonNull
-    private final GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase;
-    @NonNull
-    private final GetRestaurantDetailsUseCase getRestaurantDetailsUseCase;
 
     private DetailsRestaurantViewState detailsRestaurantViewState;
 
@@ -72,12 +69,11 @@ public class DetailsViewModel extends ViewModel {
         this.setRestaurantChosenToEatUseCase = setRestaurantChosenToEatUseCase;
         this.setLikedRestaurantUseCase = setLikedRestaurantUseCase;
         this.getLoggedUserUseCase = getLoggedUserUseCase;
-        this.getWorkmatesEatAtRestaurantUseCase = getWorkmatesEatAtRestaurantUseCase;
-        this.getRestaurantDetailsUseCase = getRestaurantDetailsUseCase;
         isRestaurantLiked = new MutableLiveData<>();
         isRestaurantLiked.setValue(false);
         isRestaurantChosenLiveData = new MutableLiveData<>();
         isRestaurantChosenLiveData.setValue(false);
+        workmatesGoToThisRestaurantLiveData = new MutableLiveData<>();
 
         String restaurantId = savedStateHandle.get(DetailsFragment.KEY_RESTAURANT_ID);
 
@@ -89,6 +85,7 @@ public class DetailsViewModel extends ViewModel {
 
         workmatesViewStateLiveData = Transformations.map(getWorkmatesEatAtRestaurantUseCase.invoke(), users -> {
             List<DetailsWorkmateViewState> detailsWorkmateViewState = new ArrayList<>();
+            List<String> workmatesGoToThisRestaurant = new ArrayList<>();
             LoggedUserEntity loggedUser = this.getLoggedUserUseCase.invoke();
             String loggedInUserId = loggedUser != null ? loggedUser.getId() : null;
 
@@ -96,6 +93,8 @@ public class DetailsViewModel extends ViewModel {
                 if (userEatAtRestaurantEntity != null &&
                     userEatAtRestaurantEntity.getRestaurantId() != null &&
                     userEatAtRestaurantEntity.getRestaurantId().equals(restaurantId)) {
+
+                    workmatesGoToThisRestaurant.add(userEatAtRestaurantEntity.getName());
 
                     detailsWorkmateViewState.add(
                         new DetailsWorkmateViewState(
@@ -110,6 +109,8 @@ public class DetailsViewModel extends ViewModel {
                     }
                 }
             }
+
+            workmatesGoToThisRestaurantLiveData.setValue(workmatesGoToThisRestaurant);
 
             return detailsWorkmateViewState;
         });
@@ -132,7 +133,7 @@ public class DetailsViewModel extends ViewModel {
 
         notificationLiveData = new MediatorLiveData<>();
         LiveData<PlaceDetailsEntity> restaurantLiveData = getRestaurantDetailsUseCase.invoke(restaurantId);
-        LiveData<List<UserEatAtRestaurantEntity>> workmatesLiveData = getWorkmatesEatAtRestaurantUseCase.invoke();
+        LiveData<List<String>> workmatesLiveData = workmatesGoToThisRestaurantLiveData;
 
         notificationLiveData.addSource(restaurantLiveData, restaurant -> {
             if (restaurant != null && workmatesLiveData.getValue() != null) {
@@ -158,22 +159,15 @@ public class DetailsViewModel extends ViewModel {
 
     private NotificationEntity mapNotificationEntity(
         PlaceDetailsEntity restaurant,
-        List<UserEatAtRestaurantEntity> workmates
+        List<String> workmates
     ) {
-        List<String> workmateNames = new ArrayList<>();
         Date dateOfVisit = null;
-        for (UserEatAtRestaurantEntity workmate : workmates) {
-            if (workmate.getRestaurantName() != null &&
-                workmate.getRestaurantName().equals(restaurant.getName())
-            ) {
-                workmateNames.add(workmate.getName());
-                if (workmate.getDateOfVisit() != null) {
-                    dateOfVisit = workmate.getDateOfVisit();
-                }
-            }
-        }
-        return new NotificationEntity(restaurant.getName(), restaurant.getAddress(), workmateNames, dateOfVisit);
+
+        String workmateNamesString = String.join(", ", workmates);
+
+        return new NotificationEntity(restaurant.getName(), restaurant.getAddress(), workmateNamesString, dateOfVisit);
     }
+
 
     public void onChooseRestaurant(DetailsRestaurantViewState detail) {
         // Toggle the chosen state

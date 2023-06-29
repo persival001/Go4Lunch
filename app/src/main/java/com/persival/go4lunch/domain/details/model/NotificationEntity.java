@@ -3,7 +3,6 @@ package com.persival.go4lunch.domain.details.model;
 import androidx.annotation.NonNull;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 public class NotificationEntity {
@@ -13,14 +12,14 @@ public class NotificationEntity {
     @NonNull
     private final String restaurantAddress;
     @NonNull
-    private final List<String> workmatesNames;
+    private final String workmatesNames;
     @NonNull
     private final Date dateOfVisit;
 
     public NotificationEntity(
         @NonNull String restaurantName,
         @NonNull String restaurantAddress,
-        @NonNull List<String> workmatesNames,
+        @NonNull String workmatesNames,
         @NonNull Date dateOfVisit
     ) {
         this.restaurantName = restaurantName;
@@ -40,7 +39,7 @@ public class NotificationEntity {
     }
 
     @NonNull
-    public List<String> getWorkmatesNames() {
+    public String getWorkmatesNames() {
         return workmatesNames;
     }
 
@@ -67,12 +66,13 @@ public class NotificationEntity {
         return Objects.hash(restaurantName, restaurantAddress, workmatesNames, dateOfVisit);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "NotificationEntity{" +
             "restaurantName='" + restaurantName + '\'' +
             ", restaurantAddress='" + restaurantAddress + '\'' +
-            ", workmatesNames=" + workmatesNames +
+            ", workmatesNames='" + workmatesNames + '\'' +
             ", dateOfVisit=" + dateOfVisit +
             '}';
     }

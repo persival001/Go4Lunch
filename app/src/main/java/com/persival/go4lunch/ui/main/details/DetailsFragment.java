@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
@@ -109,8 +110,10 @@ public class DetailsFragment extends Fragment {
 
                             // Get the UUID of the WorkRequest
                             UUID workId = workRequest.getId();
+
                             // Enqueue the work
-                            WorkManager.getInstance(requireContext()).enqueue(workRequest);
+                            WorkManager.getInstance(requireContext()).enqueueUniqueWork("RestaurantReminder", ExistingWorkPolicy.REPLACE, workRequest);
+
                             // Save the UUID for future reference
                             SharedPreferences sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
@@ -184,7 +187,15 @@ public class DetailsFragment extends Fragment {
         noon.set(Calendar.HOUR_OF_DAY, 12);
         noon.set(Calendar.MINUTE, 0);
 
-        return noon.getTimeInMillis() - now.getTimeInMillis();
+        long delay = noon.getTimeInMillis() - now.getTimeInMillis();
+
+        // If the current time is after noon, schedule for next day
+        if (delay < 0) {
+            // Add 24 hours to the delay
+            delay += 24 * 60 * 60 * 1000;
+        }
+
+        return delay;
     }
 
     @Override
