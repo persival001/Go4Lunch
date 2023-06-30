@@ -88,7 +88,7 @@
     <string name="activer">Activer</string>
     <string name="gps_off">Le GPS est désactivé</string>
     <string name="please_activate_gps">Pour faire fonctionner cette application avec toutes ses fonctionnalités, nous avons besoin que vous activiez votre Gps avec la localisation précise.
-        \nNe vous inquiètez pas, nous ne stockons aucune de vos données.</string>
+        \nNe vous inquiètez pas, nous ne collectons aucune de vos données.</string>
     <string name="is_eating_at">%s mange au %s</string>
     <string name="is_joining">%s y va!</string>
     <string name="hasnt_decided_yet">%s ne s\'est pas encore décidé</string>
@@ -98,7 +98,7 @@
     <string name="no_restaurant_selected">Pas de restaurant sélectionné</string>
     <string name="your_position">Vous êtes ici !</string>
     <string name="search_restaurants">Rechercher un restaurant</string>
-    <string name="im_hungry">I\'m Hungry!</string>
-    <string name="back_button">Back button</string>
+    <string name="im_hungry">J\'ai Faim!</string>
+    <string name="back_button">Boutton retour</string>
     <string name="notification_container">"Vous mangez au %s, %s avec %s "</string>
 </resources>

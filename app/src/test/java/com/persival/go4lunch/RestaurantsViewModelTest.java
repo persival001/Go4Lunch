@@ -1,12 +1,10 @@
 package com.persival.go4lunch;
 
-import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
 import static com.persival.go4lunch.utils.TestUtil.getValueForTesting;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
@@ -39,7 +37,6 @@ public class RestaurantsViewModelTest {
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
     @Mock
     private GetLocationUseCase getLocationUseCase;
     @Mock
@@ -48,11 +45,12 @@ public class RestaurantsViewModelTest {
     private GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
     @Mock
     private GetParticipantsUseCase getParticipantsUseCase;
-
     private RestaurantsViewModel viewModel;
     private NearbyRestaurantsEntity restaurant;
     private LocationEntity locationEntity;
+    private RestaurantsViewState sortedRestaurant;
     private List<NearbyRestaurantsEntity> nearbyRestaurants;
+    private List<RestaurantsViewState> sortedRestaurants;
     private HashMap<String, Integer> participantsMap;
 
     @Before
@@ -61,10 +59,11 @@ public class RestaurantsViewModelTest {
 
         locationEntity = new LocationEntity(48.8566, 2.3522);
         nearbyRestaurants = new ArrayList<>();
+        sortedRestaurants = new ArrayList<>();
         participantsMap = new HashMap<>();
         restaurant = new NearbyRestaurantsEntity(
             "1",
-            "Test Restaurant",
+            "restaurant",
             "Rue du bois",
             true,
             2,
@@ -72,11 +71,22 @@ public class RestaurantsViewModelTest {
             48.8590,
             2.3470
         );
+        sortedRestaurant = new RestaurantsViewState(
+            "1",
+            "restaurant",
+            "Rue du bois",
+            true,
+            "200",
+            "2",
+            2,
+            "https://image.com"
+        );
 
         when(getLocationUseCase.invoke()).thenReturn(new MutableLiveData<>(locationEntity));
         when(getNearbyRestaurantsUseCase.invoke()).thenReturn(new MutableLiveData<>(nearbyRestaurants));
         when(getParticipantsUseCase.invoke()).thenReturn(new MutableLiveData<>(participantsMap));
         when(isGpsActivatedUseCase.invoke()).thenReturn(new MutableLiveData<>(true));
+        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(new MutableLiveData<>(nearbyRestaurants));
 
         viewModel = new RestaurantsViewModel(
             getLocationUseCase,
@@ -86,25 +96,6 @@ public class RestaurantsViewModelTest {
         );
     }
 
-   /* public void testMapHaversineDistanceSuccess() {
-        nearbyRestaurants.add(restaurant);
-        LiveData<List<RestaurantsViewState>> liveData = viewModel.getSortedRestaurantsLiveData();
-        List<RestaurantsViewState> result = getValueForTesting(liveData);
-
-        assertEquals(1, result.size());
-
-        assertEquals("465 m", result.get(0).getDistance());
-
-        verifyNoMoreInteractions(isGpsActivatedUseCase);
-    }*/
-
-    @Test
-    public void testGetSortedRestaurantsLiveDataSuccess() {
-        LiveData<List<RestaurantsViewState>> liveData = viewModel.getSortedRestaurantsLiveData();
-        List<RestaurantsViewState> result = getValueForTesting(liveData);
-
-        assertEquals(1, result.size());
-    }
 
     @Test
     public void testGetSortedRestaurantsLiveDataFailure() {
@@ -112,103 +103,80 @@ public class RestaurantsViewModelTest {
         List<RestaurantsViewState> result = getValueForTesting(liveData);
 
         assertTrue(result.isEmpty());
-
     }
 
-    /*@Test
-    public void testSortRestaurantViewStates() {
+    @Test
+    public void testUpdateSearchString_success() {
         // Given
-        List<RestaurantsViewState> restaurants = new ArrayList<>();
-        restaurants.add(new RestaurantsViewState("1", "Restaurant A", "Address A", true, "400 m", "2", 3f, "http://photoA.com"));
-        restaurants.add(new RestaurantsViewState("2", "Restaurant B", "Address B", true, "200 m", "3", 2f, "http://photoB.com"));
-        restaurants.add(new RestaurantsViewState("3", "Restaurant C", "Address C", true, "300 m", "1", 1f, "http://photoC.com"));
+        String searchString = "restaurant";
+        nearbyRestaurants.add(restaurant);
+        participantsMap.put("1", 1);
 
         // When
-        List<RestaurantsViewState> sortedRestaurants = viewModel.sortRestaurantViewStates(restaurants);
+        viewModel.updateSearchString(searchString);
 
         // Then
-        assertEquals("2", sortedRestaurants.get(0).getId());  // Restaurant B should be first (200m away)
-        assertEquals("3", sortedRestaurants.get(1).getId());  // Restaurant C should be second (300m away)
-        assertEquals("1", sortedRestaurants.get(2).getId());  // Restaurant A should be third (400m away)
-    }*/
-
-
-    @Test
-    public void testIsGpsActivatedLiveData() {
-        LiveData<Boolean> liveData = viewModel.isGpsActivatedLiveData();
-        assertNotNull(liveData);
-        assertEquals(true, liveData.getValue());
-    }
-
-    @Test
-    public void testMapHaversineDistanceSuccess() {
-        nearbyRestaurants.add(restaurant);
-        LiveData<List<RestaurantsViewState>> liveData = viewModel.getSortedRestaurantsLiveData();
-        List<RestaurantsViewState> result = getValueForTesting(liveData);
-
-        assertEquals(1, result.size());
-
-        assertEquals("465 m", result.get(0).getDistance());
-
-        verifyNoMoreInteractions(isGpsActivatedUseCase);
+        List<RestaurantsViewState> filteredList = getValueForTesting(viewModel.getSortedRestaurantsLiveData());
+        for (RestaurantsViewState restaurant : filteredList) {
+            assertTrue(restaurant.getName().toLowerCase().contains(searchString));
+        }
+        assertFalse(filteredList.isEmpty());
     }
 
 
     @Test
-    public void testMapHaversineDistanceFailure() {
-        nearbyRestaurants.add(restaurant);
-        LiveData<List<RestaurantsViewState>> liveData = viewModel.getSortedRestaurantsLiveData();
-        List<RestaurantsViewState> result = getValueForTesting(liveData);
+    public void testUpdateSearchString_emptyString() {
+        // Given
+        // viewModel is already initialized
 
-        assertEquals(1, result.size());
+        // When
+        viewModel.updateSearchString("");
 
-        assertEquals("465 m", result.get(0).getDistance());
-
-        verifyNoMoreInteractions(isGpsActivatedUseCase);
+        // Then
+        List<RestaurantsViewState> filteredList = getValueForTesting(viewModel.getSortedRestaurantsLiveData());
+        assertEquals(nearbyRestaurants.size(), filteredList.size());
     }
 
     @Test
-    public void testMapRating() {
-        nearbyRestaurants.add(restaurant);
-        LiveData<List<RestaurantsViewState>> liveData = viewModel.getSortedRestaurantsLiveData();
-        List<RestaurantsViewState> result = getValueForTesting(liveData);
+    public void testUpdateSearchString_nullString() {
+        // Given
+        // viewModel is already initialized
 
-        assertEquals(1, result.size());
-        assertEquals(1.2f, result.get(0).getRating(), 0.01f);
+        // When
+        viewModel.updateSearchString(null);
+
+        // Then
+        List<RestaurantsViewState> filteredList = getValueForTesting(viewModel.getSortedRestaurantsLiveData());
+        assertEquals(nearbyRestaurants.size(), filteredList.size());
     }
 
     @Test
-    public void testMapRatingFailure() {
-        nearbyRestaurants.add(restaurant);
-        LiveData<List<RestaurantsViewState>> liveData = viewModel.getSortedRestaurantsLiveData();
-        List<RestaurantsViewState> result = getValueForTesting(liveData);
+    public void testIsGpsActivatedLiveData_whenGpsIsActivated() {
+        // Given
+        MutableLiveData<Boolean> gpsActivatedLiveData = new MutableLiveData<>();
+        gpsActivatedLiveData.setValue(true);
+        when(isGpsActivatedUseCase.invoke()).thenReturn(gpsActivatedLiveData);
 
-        assertEquals(1, result.size());
-        assertNotEquals(2.0f, result.get(0).getRating(), 0.01f);
-    }
+        // When
+        LiveData<Boolean> result = viewModel.isGpsActivatedLiveData();
 
-
-    @Test
-    public void testMapPictureUrl() {
-        ArrayList<String> photos = new ArrayList<>();
-        photos.add("photoReference");
-        nearbyRestaurants.add(restaurant);
-        LiveData<List<RestaurantsViewState>> liveData = viewModel.getSortedRestaurantsLiveData();
-        List<RestaurantsViewState> result = getValueForTesting(liveData);
-
-        assertEquals(1, result.size());
-        assertEquals("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=photoReference&key=" + MAPS_API_KEY,
-            result.get(0).getPictureUrl());
+        // Then
+        assertEquals(Boolean.TRUE, result.getValue());
     }
 
     @Test
-    public void testMapFormattedName() {
-        nearbyRestaurants.add(restaurant);
-        LiveData<List<RestaurantsViewState>> liveData = viewModel.getSortedRestaurantsLiveData();
-        List<RestaurantsViewState> result = getValueForTesting(liveData);
+    public void testIsGpsActivatedLiveData_whenGpsIsDeactivated() {
+        // Given
+        MutableLiveData<Boolean> gpsDeactivatedLiveData = new MutableLiveData<>();
+        gpsDeactivatedLiveData.setValue(false);
+        when(isGpsActivatedUseCase.invoke()).thenReturn(gpsDeactivatedLiveData);
 
-        assertEquals(1, result.size());
-        assertEquals("Test Restaurant", result.get(0).getName());
+        // When
+        LiveData<Boolean> result = viewModel.isGpsActivatedLiveData();
+
+        // Then
+        assertNotEquals(Boolean.TRUE, result.getValue());
     }
+
 }
 

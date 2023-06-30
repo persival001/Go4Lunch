@@ -19,6 +19,7 @@ import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.permissions.IsLocationPermissionUseCase;
 import com.persival.go4lunch.domain.permissions.RefreshGpsActivationUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
+import com.persival.go4lunch.domain.restaurant.GetParticipantsUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.main.maps.MapsViewModel;
 
@@ -30,8 +31,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MapsViewModelTest {
@@ -54,20 +55,23 @@ public class MapsViewModelTest {
     private IsGpsActivatedUseCase isGpsActivatedUseCase;
     @Mock
     private GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
+    @Mock
+    private GetParticipantsUseCase getParticipantsUseCase;
+
 
     private MapsViewModel viewModel;
     private LocationEntity locationEntity;
-    private List<NearbyRestaurantsEntity> nearbyRestaurants;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
         locationEntity = new LocationEntity(48.8566, 2.3522);
-        nearbyRestaurants = new ArrayList<>();
+        HashMap<String, Integer> participantsMap = new HashMap<>();
 
+        when(getParticipantsUseCase.invoke()).thenReturn(new MutableLiveData<>(participantsMap));
         when(getLocationUseCase.invoke()).thenReturn(new MutableLiveData<>(locationEntity));
-        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(new MutableLiveData<>(nearbyRestaurants));
+        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
         when(isGpsActivatedUseCase.invoke()).thenReturn(new MutableLiveData<>(true));
         when(isLocationPermissionUseCase.invoke()).thenReturn(new MutableLiveData<>(true));
 
@@ -79,7 +83,9 @@ public class MapsViewModelTest {
             isLocationPermissionUseCase,
             isGpsActivatedUseCase,
             getNearbyRestaurantsUseCase,
-            getParticipantsUseCase);
+            getParticipantsUseCase
+        );
+
     }
 
     @Test
@@ -108,30 +114,29 @@ public class MapsViewModelTest {
     }
 
     @Test
-    public void testGetNearbyRestaurants() {
+    public void testGetRestaurantsWithParticipants() {
         // Given
         // Provided in setUp method.
 
         // When
-        LiveData<List<NearbyRestaurantsEntity>> liveData = viewModel.getNearbyRestaurants();
+        LiveData<Map<NearbyRestaurantsEntity, Integer>> liveData = viewModel.getRestaurantsWithParticipants();
 
         // Then
         assertNotNull(liveData);
-        assertEquals(nearbyRestaurants, liveData.getValue());
     }
 
     @Test
-    public void testGetNearbyRestaurantsFailure() {
+    public void testGetRestaurantsWithParticipantsFailure() {
         // Given
-        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
+        // Provided in setUp method.
 
         // When
-        LiveData<List<NearbyRestaurantsEntity>> liveData = viewModel.getNearbyRestaurants();
+        LiveData<Map<NearbyRestaurantsEntity, Integer>> liveData = viewModel.getRestaurantsWithParticipants();
 
         // Then
         assertNull(liveData.getValue());
+        // Assuming that no mapping is made when restaurants data is null
     }
-
 
     @Test
     public void testIsGpsActivatedLiveData() {

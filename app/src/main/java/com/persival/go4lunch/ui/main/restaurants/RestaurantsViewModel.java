@@ -133,6 +133,10 @@ public class RestaurantsViewModel extends ViewModel {
         return restaurantsLiveData;
     }
 
+    public LiveData<Boolean> isGpsActivatedLiveData() {
+        return isGpsActivatedUseCase.invoke();
+    }
+
     // Convert rating from 5 to 3 stars
     private float mapRating(Float rating) {
         if (rating != null) {
@@ -166,7 +170,7 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     // Get a photo reference if it exists and convert it to a picture url
-    public String mapPictureUrl(List<String> photos) {
+    private String mapPictureUrl(List<String> photos) {
         if (photos != null && !photos.isEmpty()) {
             String photoReference = photos.get(0);
             return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
@@ -177,7 +181,7 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     // Get the distance between two points
-    public String mapHaversineDistance(double restaurantLatitude, double restaurantLongitude, String gpsLocation) {
+    private String mapHaversineDistance(double restaurantLatitude, double restaurantLongitude, String gpsLocation) {
         String[] locationSplit = gpsLocation.split(",");
         double gpsLatitude = Double.parseDouble(locationSplit[0]);
         double gpsLongitude = Double.parseDouble(locationSplit[1]);
@@ -193,16 +197,11 @@ public class RestaurantsViewModel extends ViewModel {
         return String.format(Locale.getDefault(), "%.0f", distance) + " m";
     }
 
-    public String mapParticipantCount(Integer participantCount) {
+    private String mapParticipantCount(Integer participantCount) {
         if (participantCount == 0) {
             return "";
         }
         return Integer.toString(participantCount);
-    }
-
-
-    public LiveData<Boolean> isGpsActivatedLiveData() {
-        return isGpsActivatedUseCase.invoke();
     }
 
 }
