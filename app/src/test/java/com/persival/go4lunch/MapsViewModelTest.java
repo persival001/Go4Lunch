@@ -39,8 +39,7 @@ public class MapsViewModelTest {
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
-    // Mocking use cases
+    
     @Mock
     private GetLocationUseCase getLocationUseCase;
     @Mock

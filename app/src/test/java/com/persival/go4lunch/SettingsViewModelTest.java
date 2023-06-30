@@ -24,7 +24,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class SettingsViewModelTest {
 
@@ -44,6 +43,7 @@ public class SettingsViewModelTest {
     @Before
     public void setUp() {
         loggedUserEntity = new LoggedUserEntity("id", "name", "email", "url");
+
         when(getLoggedUserUseCase.invoke()).thenReturn(loggedUserEntity);
 
         viewModel = new SettingsViewModel(getLoggedUserUseCase, setNewUserNameUseCase, deleteAccountUseCase);

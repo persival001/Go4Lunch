@@ -278,7 +278,7 @@ public class DetailsViewModel extends ViewModel {
     }
 
     // Get a photo reference if it exists and convert it to a picture url
-    public String getPictureUrl(List<String> photos) {
+    private String getPictureUrl(List<String> photos) {
         if (photos != null && !photos.isEmpty()) {
             String photoReference = photos.get(0);
             return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +

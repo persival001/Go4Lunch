@@ -77,7 +77,11 @@ public class RestaurantsViewModel extends ViewModel {
     }
 
     public void updateSearchString(String searchString) {
-        searchStringLiveData.setValue(searchString);
+        if (searchString != null) {
+            searchStringLiveData.setValue(searchString);
+        } else {
+            searchStringLiveData.setValue("");
+        }
     }
 
     private List<RestaurantsViewState> mapPlacesToRestaurantViewStates(

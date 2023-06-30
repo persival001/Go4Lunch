@@ -47,19 +47,15 @@ public class RestaurantsViewModelTest {
     private GetParticipantsUseCase getParticipantsUseCase;
     private RestaurantsViewModel viewModel;
     private NearbyRestaurantsEntity restaurant;
-    private LocationEntity locationEntity;
-    private RestaurantsViewState sortedRestaurant;
     private List<NearbyRestaurantsEntity> nearbyRestaurants;
-    private List<RestaurantsViewState> sortedRestaurants;
     private HashMap<String, Integer> participantsMap;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        locationEntity = new LocationEntity(48.8566, 2.3522);
+        LocationEntity locationEntity = new LocationEntity(48.8566, 2.3522);
         nearbyRestaurants = new ArrayList<>();
-        sortedRestaurants = new ArrayList<>();
         participantsMap = new HashMap<>();
         restaurant = new NearbyRestaurantsEntity(
             "1",
@@ -70,16 +66,6 @@ public class RestaurantsViewModelTest {
             new ArrayList<>(),
             48.8590,
             2.3470
-        );
-        sortedRestaurant = new RestaurantsViewState(
-            "1",
-            "restaurant",
-            "Rue du bois",
-            true,
-            "200",
-            "2",
-            2,
-            "https://image.com"
         );
 
         when(getLocationUseCase.invoke()).thenReturn(new MutableLiveData<>(locationEntity));
@@ -127,10 +113,12 @@ public class RestaurantsViewModelTest {
     @Test
     public void testUpdateSearchString_emptyString() {
         // Given
-        // viewModel is already initialized
+        String searchString = "";
+        nearbyRestaurants.add(restaurant);
+        participantsMap.put("1", 1);
 
         // When
-        viewModel.updateSearchString("");
+        viewModel.updateSearchString(searchString);
 
         // Then
         List<RestaurantsViewState> filteredList = getValueForTesting(viewModel.getSortedRestaurantsLiveData());
@@ -140,10 +128,12 @@ public class RestaurantsViewModelTest {
     @Test
     public void testUpdateSearchString_nullString() {
         // Given
-        // viewModel is already initialized
+        String searchString = null;
+        nearbyRestaurants.add(restaurant);
+        participantsMap.put("1", 1);
 
         // When
-        viewModel.updateSearchString(null);
+        viewModel.updateSearchString(searchString);
 
         // Then
         List<RestaurantsViewState> filteredList = getValueForTesting(viewModel.getSortedRestaurantsLiveData());
