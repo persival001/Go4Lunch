@@ -71,34 +71,24 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/colorPrimary">
-
-        <ImageView
-            android:id="@+id/bottom_icon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/default_large_margin"
-            android:contentDescription="@string/illustrative_picture"
-            android:src="@drawable/baseline_lunch_dining_24" />
+        android:fillViewport="true">
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:background="@android:color/transparent"
+            android:background="@color/colorPrimary"
             app:headerLayout="@layout/navigation_drawer_header"
             app:itemIconTint="@color/quantum_white_100"
             app:itemTextColor="@color/quantum_white_100"
             app:menu="@menu/navigation_drawer_menu" />
 
-    </RelativeLayout>
+    </ScrollView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
 

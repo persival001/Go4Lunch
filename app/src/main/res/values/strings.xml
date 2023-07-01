@@ -101,4 +101,7 @@
     <string name="im_hungry">J\'ai Faim!</string>
     <string name="back_button">Boutton retour</string>
     <string name="notification_container">"Vous mangez au %s, %s avec %s "</string>
+    <string name="notifications">Activer ou désactiver les notifications</string>
+    <string name="on">Non</string>
+    <string name="off">Oui</string>
 </resources>

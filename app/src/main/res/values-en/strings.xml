@@ -95,5 +95,8 @@
     <string name="im_hungry">I\'m Hungry!</string>
     <string name="back_button">Back button</string>
     <string name="notification_container">"You eat at %s, %s with %s"</string>
+    <string name="notifications">Enable or disable notifications</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
 
 </resources>

@@ -1,7 +1,10 @@
 package com.persival.go4lunch.ui.main.settings;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +79,20 @@ public class SettingsFragment extends Fragment {
                 return true;
             }
             return false;
+        });
+        
+        // Notifications button
+        binding.notificationButton.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().getPackageName());
+            } else {
+                intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+                intent.putExtra("app_package", requireContext().getPackageName());
+                intent.putExtra("app_uid", requireContext().getApplicationInfo().uid);
+            }
+            startActivity(intent);
         });
 
         // Listener of -delete account- button
