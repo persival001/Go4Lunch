@@ -3,6 +3,7 @@ package com.persival.go4lunch.ui.main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -64,8 +65,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = getSelectedFragment(item.getItemId());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, selectedFragment).commit();
+            new Handler().postDelayed(this::invalidateOptionsMenu, 100);
             return true;
         });
+
 
         // Set the toolbar and disable its title
         setSupportActionBar(binding.toolbar);
@@ -220,6 +223,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+        searchItem.setVisible(!(currentFragment instanceof WorkmatesFragment));
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
@@ -233,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .replace(R.id.fragmentContainerView, detailsFragment)
                     .addToBackStack(null)
                     .commit();
+                new Handler().postDelayed(this::invalidateOptionsMenu, 100);
             }
 
         } else if (itemId == R.id.nav_settings) {
@@ -250,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         binding.drawerLayout.closeDrawer(GravityCompat.START);
+        invalidateOptionsMenu();
         return true;
     }
 
