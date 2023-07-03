@@ -6,7 +6,6 @@ import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
@@ -17,10 +16,8 @@ import com.persival.go4lunch.domain.details.GetLikedRestaurantsUseCase;
 import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
 import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
-import com.persival.go4lunch.domain.details.model.NotificationEntity;
 import com.persival.go4lunch.domain.notifications.CancelRestaurantNotificationUseCase;
 import com.persival.go4lunch.domain.notifications.ScheduleRestaurantNotificationUseCase;
-import com.persival.go4lunch.domain.restaurant.model.PlaceDetailsEntity;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
@@ -38,14 +35,9 @@ public class DetailsViewModel extends ViewModel {
     public final LiveData<DetailsRestaurantViewState> restaurantViewStateLiveData;
     public final LiveData<List<String>> likedRestaurantsLiveData;
     public final LiveData<List<DetailsWorkmateViewState>> workmatesViewStateLiveData;
-    public final MediatorLiveData<NotificationEntity> notificationLiveData;
     public final MutableLiveData<List<String>> workmatesGoToThisRestaurantLiveData;
     @NonNull
     private final Resources resources;
-    @NonNull
-    private final MutableLiveData<Boolean> isRestaurantLiked;
-    @NonNull
-    private final MutableLiveData<Boolean> isRestaurantChosenLiveData;
     @NonNull
     private final SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase;
     @NonNull
@@ -56,8 +48,11 @@ public class DetailsViewModel extends ViewModel {
     private final ScheduleRestaurantNotificationUseCase scheduleRestaurantNotificationUseCase;
     @NonNull
     private final CancelRestaurantNotificationUseCase cancelRestaurantNotificationUseCase;
-
-    private DetailsRestaurantViewState detailsRestaurantViewState;
+    @NonNull
+    public MutableLiveData<Boolean> isRestaurantLiked;
+    @NonNull
+    public MutableLiveData<Boolean> isRestaurantChosenLiveData;
+    public DetailsRestaurantViewState detailsRestaurantViewState;
 
     @Inject
     public DetailsViewModel(
@@ -139,41 +134,10 @@ public class DetailsViewModel extends ViewModel {
                 return detailsRestaurantViewState;
             }
         );
-
-        notificationLiveData = new MediatorLiveData<>();
-        LiveData<PlaceDetailsEntity> restaurantLiveData = getRestaurantDetailsUseCase.invoke(restaurantId);
-        LiveData<List<String>> workmatesLiveData = workmatesGoToThisRestaurantLiveData;
-
-        notificationLiveData.addSource(restaurantLiveData, restaurant -> {
-            if (restaurant != null && workmatesLiveData.getValue() != null) {
-                notificationLiveData.setValue(mapNotificationEntity(restaurant, workmatesLiveData.getValue()));
-            }
-        });
-
-        notificationLiveData.addSource(workmatesLiveData, workmates -> {
-            if (workmates != null && restaurantLiveData.getValue() != null) {
-                notificationLiveData.setValue(mapNotificationEntity(restaurantLiveData.getValue(), workmates));
-            }
-        });
-
-    }
-
-    private NotificationEntity mapNotificationEntity(
-        PlaceDetailsEntity restaurant,
-        List<String> workmates
-    ) {
-
-        String workmateNamesString = String.join(", ", workmates);
-
-        return new NotificationEntity(restaurant.getName(), restaurant.getAddress(), workmateNamesString);
     }
 
     public LiveData<Boolean> getIsRestaurantLiked() {
         return isRestaurantLiked;
-    }
-
-    public LiveData<NotificationEntity> getNotificationLiveData() {
-        return notificationLiveData;
     }
 
     public void onChooseRestaurant(DetailsRestaurantViewState detail) {
@@ -184,16 +148,29 @@ public class DetailsViewModel extends ViewModel {
 
         // Check if the restaurant is chosen
         if (isRestaurantChosenLiveData.getValue() != null && isRestaurantChosenLiveData.getValue()) {
+
             // Restaurant is chosen - update detailsRestaurantViewState, restaurantId and restaurantName
             this.detailsRestaurantViewState = detail;
             setRestaurantChosenToEatUseCase.invoke(
                 detailsRestaurantViewState.getId(),
                 detailsRestaurantViewState.getRestaurantName()
             );
+
+            // Schedule the notification
+            scheduleRestaurantNotificationUseCase.invoke(
+                detailsRestaurantViewState.getRestaurantName(),
+                detailsRestaurantViewState.getRestaurantAddress(),
+                mapWorkmatesGoToThisRestaurantLiveData()
+            );
+
         } else {
-            // Restaurant is unchosen - set everything to null
+
+            // Restaurant is not chosen - set everything to null
             this.detailsRestaurantViewState = null;
             setRestaurantChosenToEatUseCase.invoke(null, null);
+
+            // Cancel the notification
+            cancelRestaurantNotificationUseCase.invoke();
         }
     }
 
@@ -226,14 +203,6 @@ public class DetailsViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsRestaurantChosenLiveData() {
         return isRestaurantChosenLiveData;
-    }
-
-    public void scheduleRestaurantNotification(String restaurantName, String restaurantAddress, String workmates) {
-        scheduleRestaurantNotificationUseCase.invoke(restaurantName, restaurantAddress, workmates);
-    }
-
-    public void cancelRestaurantNotification() {
-        cancelRestaurantNotificationUseCase.invoke();
     }
 
     // Add "is joining!" after the workmate name
@@ -286,6 +255,15 @@ public class DetailsViewModel extends ViewModel {
         } else {
             return "";
         }
+    }
+
+    // Join the workmates names (separated by a comma)
+    private String mapWorkmatesGoToThisRestaurantLiveData() {
+        if (workmatesGoToThisRestaurantLiveData.getValue() != null) {
+            return String.join(", ", workmatesGoToThisRestaurantLiveData.getValue());
+        }
+
+        return "";
     }
 
 }

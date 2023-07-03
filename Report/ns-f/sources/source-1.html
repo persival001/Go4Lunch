@@ -1,0 +1,224 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MapsViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.persival.go4lunch.ui.main.maps</a>
+</div>
+
+<h1>Coverage Summary for Class: MapsViewModel (com.persival.go4lunch.ui.main.maps)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MapsViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,5%
+  </span>
+  <span class="absValue">
+    (7/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72,4%
+  </span>
+  <span class="absValue">
+    (21/29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.persival.go4lunch.ui.main.maps;
+&nbsp;
+&nbsp;import android.annotation.SuppressLint;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MediatorLiveData;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.persival.go4lunch.domain.location.GetLocationUseCase;
+&nbsp;import com.persival.go4lunch.domain.location.StartLocationRequestUseCase;
+&nbsp;import com.persival.go4lunch.domain.location.StopLocationRequestUseCase;
+&nbsp;import com.persival.go4lunch.domain.location.model.LocationEntity;
+&nbsp;import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
+&nbsp;import com.persival.go4lunch.domain.permissions.IsLocationPermissionUseCase;
+&nbsp;import com.persival.go4lunch.domain.permissions.RefreshGpsActivationUseCase;
+&nbsp;import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
+&nbsp;import com.persival.go4lunch.domain.restaurant.GetParticipantsUseCase;
+&nbsp;import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import javax.inject.Inject;
+&nbsp;
+&nbsp;import dagger.hilt.android.lifecycle.HiltViewModel;
+&nbsp;
+&nbsp;@HiltViewModel
+&nbsp;public class MapsViewModel extends ViewModel {
+&nbsp;    @NonNull
+&nbsp;    private final GetLocationUseCase getLocationUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final StartLocationRequestUseCase startLocationRequestUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final StopLocationRequestUseCase stopLocationRequestUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final RefreshGpsActivationUseCase refreshGpsActivationUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final IsLocationPermissionUseCase isLocationPermissionUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final IsGpsActivatedUseCase isGpsActivatedUseCase;
+&nbsp;    private final MediatorLiveData&lt;Map&lt;NearbyRestaurantsEntity, Integer&gt;&gt; restaurantsWithParticipants;
+&nbsp;
+&nbsp;    @Inject
+&nbsp;    public MapsViewModel(
+&nbsp;        @NonNull GetLocationUseCase getLocationUseCase,
+&nbsp;        @NonNull StartLocationRequestUseCase startLocationRequestUseCase,
+&nbsp;        @NonNull StopLocationRequestUseCase stopLocationRequestUseCase,
+&nbsp;        @NonNull RefreshGpsActivationUseCase refreshGpsActivationUseCase,
+&nbsp;        @NonNull IsLocationPermissionUseCase isLocationPermissionUseCase,
+&nbsp;        @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
+&nbsp;        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase,
+&nbsp;        @NonNull GetParticipantsUseCase getParticipantsUseCase
+<b class="fc">&nbsp;    ) {</b>
+<b class="fc">&nbsp;        this.getLocationUseCase = getLocationUseCase;</b>
+<b class="fc">&nbsp;        this.startLocationRequestUseCase = startLocationRequestUseCase;</b>
+<b class="fc">&nbsp;        this.stopLocationRequestUseCase = stopLocationRequestUseCase;</b>
+<b class="fc">&nbsp;        this.refreshGpsActivationUseCase = refreshGpsActivationUseCase;</b>
+<b class="fc">&nbsp;        this.isLocationPermissionUseCase = isLocationPermissionUseCase;</b>
+<b class="fc">&nbsp;        this.isGpsActivatedUseCase = isGpsActivatedUseCase;</b>
+<b class="fc">&nbsp;        this.restaurantsWithParticipants = new MediatorLiveData&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;        LiveData&lt;List&lt;NearbyRestaurantsEntity&gt;&gt; restaurantsLiveData = getNearbyRestaurantsUseCase.invoke();</b>
+<b class="fc">&nbsp;        LiveData&lt;HashMap&lt;String, Integer&gt;&gt; participantsLiveData = getParticipantsUseCase.invoke();</b>
+&nbsp;
+<b class="fc">&nbsp;        restaurantsWithParticipants.addSource(restaurantsLiveData, value -&gt; combineLatestData(restaurantsLiveData, participantsLiveData));</b>
+<b class="fc">&nbsp;        restaurantsWithParticipants.addSource(participantsLiveData, value -&gt; combineLatestData(restaurantsLiveData, participantsLiveData));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void combineLatestData(
+&nbsp;        LiveData&lt;List&lt;NearbyRestaurantsEntity&gt;&gt; restaurantsLiveData,
+&nbsp;        LiveData&lt;HashMap&lt;String, Integer&gt;&gt; participantsLiveData
+&nbsp;    ) {
+<b class="nc">&nbsp;        List&lt;NearbyRestaurantsEntity&gt; restaurants = restaurantsLiveData.getValue();</b>
+<b class="nc">&nbsp;        HashMap&lt;String, Integer&gt; participants = participantsLiveData.getValue();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (restaurants != null &amp;&amp; participants != null) {</b>
+<b class="nc">&nbsp;            Map&lt;NearbyRestaurantsEntity, Integer&gt; combinedData = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;            for (NearbyRestaurantsEntity restaurant : restaurants) {</b>
+<b class="nc">&nbsp;                combinedData.put(restaurant, participants.get(restaurant.getId()));</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;            restaurantsWithParticipants.setValue(combinedData);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;Map&lt;NearbyRestaurantsEntity, Integer&gt;&gt; getRestaurantsWithParticipants() {
+<b class="fc">&nbsp;        return restaurantsWithParticipants;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;LocationEntity&gt; getLocationLiveData() {
+<b class="fc">&nbsp;        return getLocationUseCase.invoke();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;Boolean&gt; isGpsActivatedLiveData() {
+<b class="fc">&nbsp;        return isGpsActivatedUseCase.invoke();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void refreshGpsActivation() {
+<b class="fc">&nbsp;        refreshGpsActivationUseCase.invoke();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @SuppressLint(&quot;MissingPermission&quot;)
+&nbsp;    public void stopLocation() {
+<b class="fc">&nbsp;        stopLocationRequestUseCase.invoke();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @SuppressLint(&quot;MissingPermission&quot;)
+&nbsp;    public void onResume() {
+<b class="fc">&nbsp;        boolean hasGpsPermission = Boolean.TRUE.equals(isLocationPermissionUseCase.invoke().getValue());</b>
+&nbsp;
+<b class="fc">&nbsp;        if (hasGpsPermission) {</b>
+<b class="fc">&nbsp;            startLocationRequestUseCase.invoke();</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            stopLocationRequestUseCase.invoke();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-03 20:18</div>
+</div>
+</body>
+</html>

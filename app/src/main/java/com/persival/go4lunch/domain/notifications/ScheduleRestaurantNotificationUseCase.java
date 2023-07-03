@@ -37,10 +37,24 @@ public class ScheduleRestaurantNotificationUseCase {
             .putString("workmates", workmates)
             .build();
 
+        // Calculate the remaining time before the next notification
+        Calendar now = Calendar.getInstance();
+        Calendar noon = Calendar.getInstance();
+        noon.set(Calendar.HOUR_OF_DAY, 20);
+        noon.set(Calendar.MINUTE, 10);
+
+        long delay = noon.getTimeInMillis() - now.getTimeInMillis();
+
+        // If the current time is after noon, schedule for next day
+        if (delay < 0) {
+            // Add 24 hours to the delay
+            delay += 24 * 60 * 60 * 1000;
+        }
+
         // Create notification
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class)
             .setInputData(myData)
-            .setInitialDelay(timeUntilNoon(), TimeUnit.MILLISECONDS)
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .build();
 
         // Get the UUID of the WorkRequest
@@ -51,20 +65,4 @@ public class ScheduleRestaurantNotificationUseCase {
         preferencesRepository.saveWorkId(workId.toString());
     }
 
-    public long timeUntilNoon() {
-        Calendar now = Calendar.getInstance();
-        Calendar noon = Calendar.getInstance();
-        noon.set(Calendar.HOUR_OF_DAY, 12);
-        noon.set(Calendar.MINUTE, 0);
-
-        long delay = noon.getTimeInMillis() - now.getTimeInMillis();
-
-        // If the current time is after noon, schedule for next day
-        if (delay < 0) {
-            // Add 24 hours to the delay
-            delay += 24 * 60 * 60 * 1000;
-        }
-
-        return delay;
-    }
 }

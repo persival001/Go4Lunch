@@ -1,0 +1,316 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RestaurantsViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.persival.go4lunch.ui.main.restaurants</a>
+</div>
+
+<h1>Coverage Summary for Class: RestaurantsViewModel (com.persival.go4lunch.ui.main.restaurants)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RestaurantsViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,1%
+  </span>
+  <span class="absValue">
+    (16/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,9%
+  </span>
+  <span class="absValue">
+    (73/85)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.persival.go4lunch.ui.main.restaurants;
+&nbsp;
+&nbsp;import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.Transformations;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.persival.go4lunch.domain.location.GetLocationUseCase;
+&nbsp;import com.persival.go4lunch.domain.location.model.LocationEntity;
+&nbsp;import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
+&nbsp;import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
+&nbsp;import com.persival.go4lunch.domain.restaurant.GetParticipantsUseCase;
+&nbsp;import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Locale;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import javax.inject.Inject;
+&nbsp;
+&nbsp;import dagger.hilt.android.lifecycle.HiltViewModel;
+&nbsp;
+&nbsp;@HiltViewModel
+&nbsp;public class RestaurantsViewModel extends ViewModel {
+&nbsp;    @NonNull
+&nbsp;    private final IsGpsActivatedUseCase isGpsActivatedUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final LiveData&lt;List&lt;RestaurantsViewState&gt;&gt; restaurantsLiveData;
+<b class="fc">&nbsp;    private final MutableLiveData&lt;String&gt; searchStringLiveData = new MutableLiveData&lt;&gt;(&quot;&quot;);</b>
+&nbsp;
+&nbsp;
+&nbsp;    @Inject
+&nbsp;    public RestaurantsViewModel(
+&nbsp;        @NonNull GetLocationUseCase getLocationUseCase,
+&nbsp;        @NonNull IsGpsActivatedUseCase isGpsActivatedUseCase,
+&nbsp;        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase,
+&nbsp;        @NonNull GetParticipantsUseCase getParticipantsUseCase
+<b class="fc">&nbsp;    ) {</b>
+<b class="fc">&nbsp;        this.isGpsActivatedUseCase = isGpsActivatedUseCase;</b>
+&nbsp;
+<b class="fc">&nbsp;        LiveData&lt;LocationEntity&gt; locationLiveData = getLocationUseCase.invoke();</b>
+<b class="fc">&nbsp;        LiveData&lt;HashMap&lt;String, Integer&gt;&gt; participantsLiveData = getParticipantsUseCase.invoke();</b>
+&nbsp;
+<b class="fc">&nbsp;        LiveData&lt;List&lt;RestaurantsViewState&gt;&gt; unsortedRestaurantsLiveData = Transformations.switchMap(</b>
+&nbsp;            locationLiveData,
+<b class="fc">&nbsp;            location -&gt; Transformations.switchMap(</b>
+<b class="fc">&nbsp;                getNearbyRestaurantsUseCase.invoke(),</b>
+<b class="fc">&nbsp;                places -&gt; Transformations.map(</b>
+&nbsp;                    participantsLiveData,
+<b class="fc">&nbsp;                    participants -&gt; mapPlacesToRestaurantViewStates(location.getLatitude() + &quot;,&quot; + location.getLongitude(), places, participants)</b>
+&nbsp;                )
+&nbsp;            )
+&nbsp;        );
+&nbsp;
+<b class="fc">&nbsp;        restaurantsLiveData = Transformations.switchMap(</b>
+&nbsp;            searchStringLiveData,
+<b class="fc">&nbsp;            searchString -&gt; Transformations.map(</b>
+&nbsp;                unsortedRestaurantsLiveData,
+&nbsp;                restaurantList -&gt; {
+<b class="fc">&nbsp;                    List&lt;RestaurantsViewState&gt; filteredList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;                    for (RestaurantsViewState restaurant : restaurantList) {</b>
+<b class="fc">&nbsp;                        if (restaurant.getName().toLowerCase().contains(searchString.toLowerCase())) {</b>
+<b class="fc">&nbsp;                            filteredList.add(restaurant);</b>
+&nbsp;                        }
+<b class="fc">&nbsp;                    }</b>
+<b class="fc">&nbsp;                    return sortRestaurantViewStates(filteredList);</b>
+&nbsp;                }
+&nbsp;            )
+&nbsp;        );
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public void updateSearchString(String searchString) {
+<b class="fc">&nbsp;        if (searchString != null) {</b>
+<b class="fc">&nbsp;            searchStringLiveData.setValue(searchString);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            searchStringLiveData.setValue(&quot;&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private List&lt;RestaurantsViewState&gt; mapPlacesToRestaurantViewStates(
+&nbsp;        String location,
+&nbsp;        List&lt;NearbyRestaurantsEntity&gt; places,
+&nbsp;        Map&lt;String, Integer&gt; placeIdsCount
+&nbsp;    ) {
+<b class="fc">&nbsp;        List&lt;RestaurantsViewState&gt; restaurantsList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (NearbyRestaurantsEntity restaurant : places) {</b>
+<b class="fc">&nbsp;            Integer participantCount = 0;</b>
+<b class="fc">&nbsp;            if (placeIdsCount.containsKey(restaurant.getId())) {</b>
+<b class="fc">&nbsp;                participantCount = placeIdsCount.get(restaurant.getId());</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            restaurantsList.add(</b>
+&nbsp;                new RestaurantsViewState(
+<b class="fc">&nbsp;                    restaurant.getId(),</b>
+<b class="fc">&nbsp;                    mapFormattedName(restaurant.getName()),</b>
+<b class="fc">&nbsp;                    restaurant.getAddress(),</b>
+<b class="fc">&nbsp;                    restaurant.isOpeningHours(),</b>
+<b class="fc">&nbsp;                    mapHaversineDistance(</b>
+<b class="fc">&nbsp;                        restaurant.getLatitude(),</b>
+<b class="fc">&nbsp;                        restaurant.getLongitude(),</b>
+&nbsp;                        location
+&nbsp;                    ),
+<b class="fc">&nbsp;                    mapParticipantCount(participantCount),</b>
+<b class="fc">&nbsp;                    mapRating(restaurant.getRating()),</b>
+<b class="fc">&nbsp;                    mapPictureUrl(restaurant.getPhotos())</b>
+&nbsp;                )
+&nbsp;            );
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return restaurantsList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private List&lt;RestaurantsViewState&gt; sortRestaurantViewStates(List&lt;RestaurantsViewState&gt; restaurantsList) {
+<b class="fc">&nbsp;        if (restaurantsList == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        List&lt;RestaurantsViewState&gt; sortedRestaurantsList = new ArrayList&lt;&gt;(restaurantsList);</b>
+<b class="fc">&nbsp;        Collections.sort(sortedRestaurantsList, (r1, r2) -&gt; {</b>
+<b class="nc">&nbsp;            String distance1Str = r1.getDistance().replaceAll(&quot;\\s+m&quot;, &quot;&quot;);</b>
+<b class="nc">&nbsp;            String distance2Str = r2.getDistance().replaceAll(&quot;\\s+m&quot;, &quot;&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            double distance1 = Double.parseDouble(distance1Str);</b>
+<b class="nc">&nbsp;            double distance2 = Double.parseDouble(distance2Str);</b>
+&nbsp;
+<b class="nc">&nbsp;            return Double.compare(distance1, distance2);</b>
+&nbsp;        });
+<b class="fc">&nbsp;        return sortedRestaurantsList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;List&lt;RestaurantsViewState&gt;&gt; getSortedRestaurantsLiveData() {
+<b class="fc">&nbsp;        return restaurantsLiveData;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;Boolean&gt; isGpsActivatedLiveData() {
+<b class="fc">&nbsp;        return isGpsActivatedUseCase.invoke();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Convert rating from 5 to 3 stars
+&nbsp;    private float mapRating(Float rating) {
+<b class="fc">&nbsp;        if (rating != null) {</b>
+<b class="fc">&nbsp;            return rating * 3F / 5F;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return 0F;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Convert a string to title case like &quot;Restaurant Name&quot;
+&nbsp;    private String mapFormattedName(String name) {
+<b class="fc">&nbsp;        if (name != null) {</b>
+<b class="fc">&nbsp;            StringBuilder titleCase = new StringBuilder();</b>
+<b class="fc">&nbsp;            boolean nextTitleCase = true;</b>
+&nbsp;
+<b class="fc">&nbsp;            for (char c : name.toLowerCase().toCharArray()) {</b>
+<b class="fc">&nbsp;                if (Character.isSpaceChar(c)) {</b>
+<b class="nc">&nbsp;                    nextTitleCase = true;</b>
+<b class="fc">&nbsp;                } else if (nextTitleCase) {</b>
+<b class="fc">&nbsp;                    c = Character.toTitleCase(c);</b>
+<b class="fc">&nbsp;                    nextTitleCase = false;</b>
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                titleCase.append(c);</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            return titleCase.toString();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return &quot;&quot;;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get a photo reference if it exists and convert it to a picture url
+&nbsp;    private String mapPictureUrl(List&lt;String&gt; photos) {
+<b class="fc">&nbsp;        if (photos != null &amp;&amp; !photos.isEmpty()) {</b>
+<b class="nc">&nbsp;            String photoReference = photos.get(0);</b>
+<b class="nc">&nbsp;            return &quot;https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&amp;photoreference=&quot; +</b>
+&nbsp;                photoReference + &quot;&amp;key=&quot; + MAPS_API_KEY;
+&nbsp;        } else {
+<b class="fc">&nbsp;            return &quot;&quot;;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get the distance between two points
+&nbsp;    private String mapHaversineDistance(double restaurantLatitude, double restaurantLongitude, String gpsLocation) {
+<b class="fc">&nbsp;        String[] locationSplit = gpsLocation.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;        double gpsLatitude = Double.parseDouble(locationSplit[0]);</b>
+<b class="fc">&nbsp;        double gpsLongitude = Double.parseDouble(locationSplit[1]);</b>
+<b class="fc">&nbsp;        final int R = 6371_000; // Radius of the earth in meters</b>
+<b class="fc">&nbsp;        double latDistance = Math.toRadians(gpsLatitude - restaurantLatitude);</b>
+<b class="fc">&nbsp;        double lonDistance = Math.toRadians(gpsLongitude - restaurantLongitude);</b>
+<b class="fc">&nbsp;        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)</b>
+<b class="fc">&nbsp;            + Math.cos(Math.toRadians(restaurantLatitude)) * Math.cos(Math.toRadians(gpsLatitude))</b>
+<b class="fc">&nbsp;            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);</b>
+<b class="fc">&nbsp;        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));</b>
+<b class="fc">&nbsp;        double distance = R * c;</b>
+&nbsp;
+<b class="fc">&nbsp;        return String.format(Locale.getDefault(), &quot;%.0f&quot;, distance) + &quot; m&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String mapParticipantCount(Integer participantCount) {
+<b class="fc">&nbsp;        if (participantCount == 0) {</b>
+<b class="nc">&nbsp;            return &quot;&quot;;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return Integer.toString(participantCount);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-03 20:18</div>
+</div>
+</body>
+</html>

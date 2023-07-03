@@ -1,0 +1,146 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GetLikedRestaurantsUseCase</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.persival.go4lunch.domain.details</a>
+</div>
+
+<h1>Coverage Summary for Class: GetLikedRestaurantsUseCase (com.persival.go4lunch.domain.details)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GetLikedRestaurantsUseCase</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,5%
+  </span>
+  <span class="absValue">
+    (7/8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.persival.go4lunch.domain.details;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;
+&nbsp;import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
+&nbsp;import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
+&nbsp;import com.persival.go4lunch.domain.workmate.UserRepository;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import javax.inject.Inject;
+&nbsp;
+&nbsp;public class GetLikedRestaurantsUseCase {
+&nbsp;
+&nbsp;    @NonNull
+&nbsp;    private final UserRepository userRepository;
+&nbsp;    @NonNull
+&nbsp;    private final GetLoggedUserUseCase getLoggedUserUseCase;
+&nbsp;
+&nbsp;    @Inject
+&nbsp;    public GetLikedRestaurantsUseCase(
+&nbsp;        @NonNull UserRepository userRepository,
+&nbsp;        @NonNull GetLoggedUserUseCase getLoggedUserUseCase
+<b class="fc">&nbsp;    ) {</b>
+<b class="fc">&nbsp;        this.userRepository = userRepository;</b>
+<b class="fc">&nbsp;        this.getLoggedUserUseCase = getLoggedUserUseCase;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;List&lt;String&gt;&gt; invoke() {
+<b class="fc">&nbsp;        LoggedUserEntity user = getLoggedUserUseCase.invoke();</b>
+<b class="fc">&nbsp;        if (user != null) {</b>
+<b class="fc">&nbsp;            String userId = user.getId();</b>
+<b class="fc">&nbsp;            return userRepository.getLikedRestaurantsForUser(userId);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return new MutableLiveData&lt;&gt;(new ArrayList&lt;&gt;());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-03 20:18</div>
+</div>
+</body>
+</html>

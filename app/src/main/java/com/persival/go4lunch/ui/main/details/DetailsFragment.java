@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class DetailsFragment extends Fragment {
 
-    static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
+    public static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
     private FragmentDetailsBinding binding;
     private DetailsViewModel viewModel;
 
@@ -75,27 +75,12 @@ public class DetailsFragment extends Fragment {
 
             // Choose this restaurant for lunch
             viewModel.getIsRestaurantChosenLiveData().observe(getViewLifecycleOwner(), isChosen -> {
-                // Update the button state based on the isChosen value.
                 binding.chooseThisRestaurantButton.setSelected(isChosen);
 
-                // Change the image of the button based on whether it's chosen or not
                 if (Boolean.TRUE.equals(isChosen)) {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_ok);
-
-                    // Schedule a notification to remind the user to go to the restaurant
-                    viewModel.getNotificationLiveData().observe(getViewLifecycleOwner(), notification -> {
-                        if (notification != null) {
-                            viewModel.scheduleRestaurantNotification(
-                                notification.getRestaurantName(),
-                                notification.getRestaurantAddress(),
-                                notification.getWorkmatesNames()
-                            );
-                        }
-                    });
-
                 } else {
                     binding.chooseThisRestaurantButton.setImageResource(R.drawable.ic_go_fab);
-                    viewModel.cancelRestaurantNotification();
                 }
             });
 

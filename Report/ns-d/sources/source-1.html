@@ -1,0 +1,192 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MainViewModel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.persival.go4lunch.ui.main</a>
+</div>
+
+<h1>Coverage Summary for Class: MainViewModel (com.persival.go4lunch.ui.main)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainViewModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96%
+  </span>
+  <span class="absValue">
+    (24/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.persival.go4lunch.ui.main;
+&nbsp;
+&nbsp;import androidx.annotation.NonNull;
+&nbsp;import androidx.lifecycle.LiveData;
+&nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.Transformations;
+&nbsp;import androidx.lifecycle.ViewModel;
+&nbsp;
+&nbsp;import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
+&nbsp;import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
+&nbsp;import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
+&nbsp;import com.persival.go4lunch.domain.user.GetUserNameChangedUseCase;
+&nbsp;import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import javax.inject.Inject;
+&nbsp;
+&nbsp;import dagger.hilt.android.lifecycle.HiltViewModel;
+&nbsp;
+&nbsp;@HiltViewModel
+&nbsp;public class MainViewModel extends ViewModel {
+&nbsp;
+&nbsp;    private final LiveData&lt;MainViewState&gt; mainViewStateLiveData;
+<b class="fc">&nbsp;    private final MutableLiveData&lt;String&gt; searchStringLiveData = new MutableLiveData&lt;&gt;();</b>
+&nbsp;
+&nbsp;    @NonNull
+&nbsp;    private final GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
+&nbsp;
+&nbsp;    @Inject
+&nbsp;    public MainViewModel(
+&nbsp;        @NonNull GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase,
+&nbsp;        @NonNull GetUserNameChangedUseCase getUserNameChangedUseCase,
+&nbsp;        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
+<b class="fc">&nbsp;    ) {</b>
+<b class="fc">&nbsp;        this.getRestaurantIdForCurrentUserUseCase = getRestaurantIdForCurrentUserUseCase;</b>
+<b class="fc">&nbsp;        this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;</b>
+&nbsp;
+<b class="fc">&nbsp;        mainViewStateLiveData = Transformations.map(getUserNameChangedUseCase.invoke(), this::mapToMainViewState);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private MainViewState mapToMainViewState(LoggedUserEntity loggedUserEntity) {
+<b class="fc">&nbsp;        if (loggedUserEntity == null) {</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return new MainViewState(</b>
+<b class="fc">&nbsp;            loggedUserEntity.getId(),</b>
+<b class="fc">&nbsp;            loggedUserEntity.getName(),</b>
+<b class="fc">&nbsp;            loggedUserEntity.getEmailAddress(),</b>
+<b class="fc">&nbsp;            loggedUserEntity.getPictureUrl()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;List&lt;NearbyRestaurantsEntity&gt;&gt; getFilteredRestaurantsLiveData() {
+<b class="fc">&nbsp;        return Transformations.switchMap(searchStringLiveData, searchString -&gt; {</b>
+<b class="fc">&nbsp;            if (searchString.length() &gt;= 2) {</b>
+<b class="fc">&nbsp;                return Transformations.switchMap(getNearbyRestaurantsUseCase.invoke(), restaurants -&gt; {</b>
+&nbsp;
+<b class="fc">&nbsp;                    List&lt;NearbyRestaurantsEntity&gt; filteredRestaurants = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;                    for (NearbyRestaurantsEntity restaurant : restaurants) {</b>
+<b class="fc">&nbsp;                        if (restaurant.getName().toLowerCase().contains(searchString.toLowerCase())) {</b>
+<b class="fc">&nbsp;                            filteredRestaurants.add(restaurant);</b>
+&nbsp;                        }
+<b class="fc">&nbsp;                    }</b>
+<b class="fc">&nbsp;                    return new MutableLiveData&lt;&gt;(filteredRestaurants);</b>
+&nbsp;                });
+&nbsp;            } else {
+<b class="nc">&nbsp;                return new MutableLiveData&lt;&gt;(new ArrayList&lt;&gt;());</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    public void updateSearchString(String newSearchString) {
+<b class="fc">&nbsp;        searchStringLiveData.setValue(newSearchString);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;MainViewState&gt; getAuthenticatedUserLiveData() {
+<b class="fc">&nbsp;        return mainViewStateLiveData;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;String&gt; getRestaurantIdForCurrentUserLiveData() {
+<b class="fc">&nbsp;        return getRestaurantIdForCurrentUserUseCase.invoke();</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-03 20:18</div>
+</div>
+</body>
+</html>

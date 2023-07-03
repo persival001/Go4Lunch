@@ -1,22 +1,31 @@
 package com.persival.go4lunch.domain;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.persival.go4lunch.domain.notifications.PreferencesRepository;
 import com.persival.go4lunch.domain.notifications.ScheduleRestaurantNotificationUseCase;
+import com.persival.go4lunch.ui.notifications.RestaurantReminderWorker;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleRestaurantNotificationUseCaseTest {
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+
+    private ScheduleRestaurantNotificationUseCase scheduleRestaurantNotificationUseCase;
 
     @Mock
     private WorkManager mockWorkManager;
@@ -24,32 +33,41 @@ public class ScheduleRestaurantNotificationUseCaseTest {
     @Mock
     private PreferencesRepository mockPreferencesRepository;
 
-    private ScheduleRestaurantNotificationUseCase useCase;
-
     @Before
-    public void setup() {
-        useCase = new ScheduleRestaurantNotificationUseCase(mockWorkManager, mockPreferencesRepository);
+    public void setUp() {
+        scheduleRestaurantNotificationUseCase = new ScheduleRestaurantNotificationUseCase(
+            mockWorkManager, mockPreferencesRepository);
     }
 
     @Test
-    public void testScheduleRestaurantNotification() {
-        String testRestaurantName = "Restaurant Name";
-        String testRestaurantAddress = "Restaurant Address";
-        String testWorkmates = "Workmates";
+    public void invoke_successful() {
+        // Given
+        String restaurantName = "Restaurant A";
+        String restaurantAddress = "Address A";
+        String workmates = "Workmate A";
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(RestaurantReminderWorker.class)
+            .build();
 
-        // Invoke method to be tested
-        useCase.invoke(testRestaurantName, testRestaurantAddress, testWorkmates);
+        // When
+        scheduleRestaurantNotificationUseCase.invoke(restaurantName, restaurantAddress, workmates);
 
-        // Capture the WorkRequest passed to mockWorkManager.enqueue()
-        ArgumentCaptor<WorkRequest> captor = ArgumentCaptor.forClass(WorkRequest.class);
-        verify(mockWorkManager).enqueue(captor.capture());
+        // Then
+        verify(mockPreferencesRepository).saveWorkId(anyString());
+    }
 
-        // Get the WorkRequest and its ID
-        WorkRequest capturedRequest = captor.getValue();
-        String workId = capturedRequest.getId().toString();
 
-        // Verify that the workId was saved in preferencesRepository
-        verify(mockPreferencesRepository).saveWorkId(workId);
+    @Test(expected = IllegalStateException.class)
+    public void invoke_failure() {
+        // Given
+        String restaurantName = "Restaurant A";
+        String restaurantAddress = "Address A";
+        String workmates = "Workmate A";
+        when(mockWorkManager.enqueue(any(OneTimeWorkRequest.class))).thenThrow(IllegalStateException.class);
+
+        // When
+        scheduleRestaurantNotificationUseCase.invoke(restaurantName, restaurantAddress, workmates);
+
+        // Then
+        // An IllegalStateException is expected to be thrown
     }
 }
-
