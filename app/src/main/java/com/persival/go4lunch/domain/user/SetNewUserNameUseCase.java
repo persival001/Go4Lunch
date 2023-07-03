@@ -13,19 +13,16 @@ public class SetNewUserNameUseCase {
     @NonNull
     private final LoggedUserRepository loggedUserRepository;
     @NonNull
-    private final GetLoggedUserUseCase getLoggedUserUseCase;
-    @NonNull
     private final FirebaseAuth firebaseAuth;
 
     @Inject
     public SetNewUserNameUseCase(
         @NonNull UserRepository userRepository,
         @NonNull LoggedUserRepository loggedUserRepository,
-        @NonNull GetLoggedUserUseCase getLoggedUserUseCase, @NonNull FirebaseAuth firebaseAuth
+        @NonNull FirebaseAuth firebaseAuth
     ) {
         this.userRepository = userRepository;
         this.loggedUserRepository = loggedUserRepository;
-        this.getLoggedUserUseCase = getLoggedUserUseCase;
         this.firebaseAuth = firebaseAuth;
     }
 

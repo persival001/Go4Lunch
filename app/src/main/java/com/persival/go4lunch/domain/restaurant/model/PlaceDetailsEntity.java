@@ -95,6 +95,7 @@ public class PlaceDetailsEntity {
         return Objects.hash(id, photoUrl, name, rating, address, phoneNumber, website);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "PlaceDetailsEntity{" +

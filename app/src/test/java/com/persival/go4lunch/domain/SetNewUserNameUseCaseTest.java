@@ -2,7 +2,6 @@ package com.persival.go4lunch.domain;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.LoggedUserRepository;
 import com.persival.go4lunch.domain.user.SetNewUserNameUseCase;
 import com.persival.go4lunch.domain.workmate.UserRepository;
@@ -23,9 +22,6 @@ public class SetNewUserNameUseCaseTest {
     LoggedUserRepository mockLoggedUserRepository;
 
     @Mock
-    GetLoggedUserUseCase mockGetLoggedUserUseCase;
-
-    @Mock
     FirebaseAuth mockFirebaseAuth;
 
     @Mock
@@ -35,7 +31,7 @@ public class SetNewUserNameUseCaseTest {
 
     @Before
     public void setUp() {
-        useCase = new SetNewUserNameUseCase(mockUserRepository, mockLoggedUserRepository, mockGetLoggedUserUseCase, mockFirebaseAuth);
+        useCase = new SetNewUserNameUseCase(mockUserRepository, mockLoggedUserRepository, mockFirebaseAuth);
     }
 
     @Test
