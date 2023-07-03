@@ -1,4 +1,4 @@
-package com.persival.go4lunch;
+package com.persival.go4lunch.ui;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -39,7 +39,7 @@ public class MapsViewModelTest {
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-    
+
     @Mock
     private GetLocationUseCase getLocationUseCase;
     @Mock

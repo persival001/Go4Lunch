@@ -6,7 +6,6 @@ import androidx.lifecycle.MediatorLiveData;
 
 import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,18 +26,20 @@ public class GetWorkmatesEatAtRestaurantUseCase {
         MediatorLiveData<List<UserEatAtRestaurantEntity>> sortedLiveData = new MediatorLiveData<>();
 
         sortedLiveData.addSource(workmatesEatAtRestaurantLiveData, workmates -> {
-            Collections.sort(workmates, (workmate1, workmate2) -> {
-                if (workmate1.getRestaurantName() == null && workmate2.getRestaurantName() == null) {
+            if (workmates != null) {
+                workmates.sort((workmate1, workmate2) -> {
+                    if (workmate1.getRestaurantName() == null && workmate2.getRestaurantName() == null) {
+                        return 0;
+                    }
+                    if (workmate1.getRestaurantName() == null) {
+                        return 1;
+                    }
+                    if (workmate2.getRestaurantName() == null) {
+                        return -1;
+                    }
                     return 0;
-                }
-                if (workmate1.getRestaurantName() == null) {
-                    return 1;
-                }
-                if (workmate2.getRestaurantName() == null) {
-                    return -1;
-                }
-                return 0;
-            });
+                });
+            }
             sortedLiveData.setValue(workmates);
         });
 

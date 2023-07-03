@@ -1,4 +1,4 @@
-package com.persival.go4lunch;
+package com.persival.go4lunch.ui;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -34,6 +34,7 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class DetailsViewModelTest {
 
+    static final String KEY_RESTAURANT_ID = "KEY_RESTAURANT_ID";
     private final MutableLiveData<DetailsRestaurantViewState> detailsRestaurantViewStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<PlaceDetailsEntity> placeDetailsEntityLiveData = new MutableLiveData<>();
     @Rule
@@ -62,20 +63,40 @@ public class DetailsViewModelTest {
 
     @Before
     public void setup() {
-        String restaurantId = "1";
         List<String> photos = new ArrayList<>();
 
-        DetailsRestaurantViewState restaurantDetails = new DetailsRestaurantViewState("1", "https://resto.com", "resto", 3.4f, "rue du resto", "1234", "https://resto.com");
+        DetailsRestaurantViewState restaurantDetails = new DetailsRestaurantViewState(
+            "1",
+            "https://resto.com",
+            "resto",
+            3.4f,
+            "rue du resto",
+            "1234",
+            "https://resto.com"
+        );
         detailsRestaurantViewStateLiveData.setValue(restaurantDetails);
 
-        PlaceDetailsEntity placeDetailsEntity = new PlaceDetailsEntity("1", photos, "resto", 3.4f, "rue du resto", "1234", "https://resto.com");
+        PlaceDetailsEntity placeDetailsEntity = new PlaceDetailsEntity(
+            "1",
+            photos,
+            "resto",
+            3.4f,
+            "rue du resto",
+            "1234",
+            "https://resto.com"
+        );
         placeDetailsEntityLiveData.setValue(placeDetailsEntity);
 
-        LoggedUserEntity loggedUserEntity = new LoggedUserEntity("1", "Emilie", "https://image.com", "001");
+        LoggedUserEntity loggedUserEntity = new LoggedUserEntity(
+            "1",
+            "Emilie",
+            "https://image.com",
+            "001"
+        );
 
         when(getLoggedUserUseCase.invoke()).thenReturn(loggedUserEntity);
         when(getLikedRestaurantsUseCase.invoke()).thenReturn(new MutableLiveData<>(new ArrayList<>()));
-        when(savedStateHandle.get(anyString())).thenReturn(restaurantId);
+        when(savedStateHandle.get("key")).thenReturn(KEY_RESTAURANT_ID);
         when(getRestaurantDetailsUseCase.invoke(anyString())).thenReturn(placeDetailsEntityLiveData);
 
 
@@ -95,3 +116,5 @@ public class DetailsViewModelTest {
 
 
 }
+
+

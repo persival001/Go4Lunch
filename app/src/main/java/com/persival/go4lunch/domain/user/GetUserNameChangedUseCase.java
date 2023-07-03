@@ -7,13 +7,13 @@ import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import javax.inject.Inject;
 
-public class GetUserNameChangedLiveData {
+public class GetUserNameChangedUseCase {
 
     @NonNull
     private final LoggedUserRepository loggedUserRepository;
 
     @Inject
-    public GetUserNameChangedLiveData(
+    public GetUserNameChangedUseCase(
         @NonNull LoggedUserRepository loggedUserRepository
     ) {
         this.loggedUserRepository = loggedUserRepository;

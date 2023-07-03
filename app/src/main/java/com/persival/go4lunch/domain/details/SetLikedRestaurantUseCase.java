@@ -3,6 +3,7 @@ package com.persival.go4lunch.domain.details;
 import androidx.annotation.NonNull;
 
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
+import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.UserRepository;
 
 import javax.inject.Inject;
@@ -23,10 +24,13 @@ public class SetLikedRestaurantUseCase {
     }
 
     public void invoke(boolean isAdded, String restaurantId) {
-        userRepository.updateLikedRestaurants(
-            getLoggedUserUseCase.invoke(),
-            isAdded,
-            restaurantId
-        );
+        LoggedUserEntity user = getLoggedUserUseCase.invoke();
+        if (user != null) {
+            userRepository.updateLikedRestaurants(
+                user,
+                isAdded,
+                restaurantId
+            );
+        }
     }
 }

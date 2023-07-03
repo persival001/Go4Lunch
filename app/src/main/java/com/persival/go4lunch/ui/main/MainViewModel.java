@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
-import com.persival.go4lunch.domain.user.GetUserNameChangedLiveData;
+import com.persival.go4lunch.domain.user.GetUserNameChangedUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 
 import java.util.ArrayList;
@@ -33,13 +33,13 @@ public class MainViewModel extends ViewModel {
     @Inject
     public MainViewModel(
         @NonNull GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase,
-        @NonNull GetUserNameChangedLiveData getUserNameChangedLiveData,
+        @NonNull GetUserNameChangedUseCase getUserNameChangedUseCase,
         @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
     ) {
         this.getRestaurantIdForCurrentUserUseCase = getRestaurantIdForCurrentUserUseCase;
         this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
 
-        mainViewStateLiveData = Transformations.map(getUserNameChangedLiveData.invoke(), this::mapToMainViewState);
+        mainViewStateLiveData = Transformations.map(getUserNameChangedUseCase.invoke(), this::mapToMainViewState);
 
     }
 

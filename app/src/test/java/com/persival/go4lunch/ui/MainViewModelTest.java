@@ -1,4 +1,4 @@
-package com.persival.go4lunch;
+package com.persival.go4lunch.ui;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
-import com.persival.go4lunch.domain.user.GetUserNameChangedLiveData;
+import com.persival.go4lunch.domain.user.GetUserNameChangedUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.ui.main.MainViewModel;
 import com.persival.go4lunch.ui.main.MainViewState;
@@ -36,7 +36,7 @@ public class MainViewModelTest {
     @Mock
     private GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase;
     @Mock
-    private GetUserNameChangedLiveData getUserNameChangedLiveData;
+    private GetUserNameChangedUseCase getUserNameChangedUseCase;
     @Mock
     private GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
     private MainViewModel viewModel;
@@ -50,11 +50,11 @@ public class MainViewModelTest {
         restaurantList.add(new NearbyRestaurantsEntity("2", "Not Matching", "Image 2", false, 4f, photos, 48.2, 2.2));
         restaurantList.add(new NearbyRestaurantsEntity("3", "Restaurant 3", "Image 3", true, 5f, photos, 48.4, 2.4));
 
-        when(getUserNameChangedLiveData.invoke()).thenReturn(new MutableLiveData<>(loggedUserEntity));
+        when(getUserNameChangedUseCase.invoke()).thenReturn(new MutableLiveData<>(loggedUserEntity));
         when(getRestaurantIdForCurrentUserUseCase.invoke()).thenReturn(new MutableLiveData<>("123"));
         when(getNearbyRestaurantsUseCase.invoke()).thenReturn(nearbyRestaurants);
 
-        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedLiveData, getNearbyRestaurantsUseCase);
+        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase);
     }
 
     @Test
@@ -74,8 +74,8 @@ public class MainViewModelTest {
     @Test
     public void testGetAuthenticatedUserLiveDataFailure() {
         // Given
-        when(getUserNameChangedLiveData.invoke()).thenReturn(new MutableLiveData<>(null));
-        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedLiveData, getNearbyRestaurantsUseCase);
+        when(getUserNameChangedUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
+        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase);
 
         // When
         MainViewState result = TestUtil.getValueForTesting(viewModel.getAuthenticatedUserLiveData());
@@ -101,7 +101,7 @@ public class MainViewModelTest {
     public void testGetRestaurantIdForCurrentUserLiveDataFailure() {
         // Given
         when(getRestaurantIdForCurrentUserUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
-        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedLiveData, getNearbyRestaurantsUseCase);
+        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase);
 
         // When
         String result = TestUtil.getValueForTesting(viewModel.getRestaurantIdForCurrentUserLiveData());

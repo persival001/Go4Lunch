@@ -23,7 +23,8 @@ import javax.inject.Singleton;
 @Singleton
 public class LocationDataRepository implements LocationRepository {
     private static final int SMALLEST_DISPLACEMENT_THRESHOLD_METER = 250;
-
+    private static final long INTERVAL = 10000;
+    private static final long FASTEST_INTERVAL = INTERVAL / 2;
     @NonNull
     private final FusedLocationProviderClient fusedLocationProviderClient;
     @NonNull
@@ -91,7 +92,10 @@ public class LocationDataRepository implements LocationRepository {
             };
         }
 
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY)
+        LocationRequest locationRequest = new LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, INTERVAL
+        )
+            .setMinUpdateIntervalMillis(FASTEST_INTERVAL)
             .setMinUpdateDistanceMeters(SMALLEST_DISPLACEMENT_THRESHOLD_METER)
             .build();
 

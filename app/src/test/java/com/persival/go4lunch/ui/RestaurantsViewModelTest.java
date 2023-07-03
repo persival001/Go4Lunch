@@ -1,4 +1,4 @@
-package com.persival.go4lunch;
+package com.persival.go4lunch.ui;
 
 import static com.persival.go4lunch.utils.TestUtil.getValueForTesting;
 import static org.junit.Assert.assertEquals;
