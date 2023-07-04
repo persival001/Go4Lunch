@@ -104,4 +104,7 @@
     <string name="notifications">Activer ou désactiver les notifications</string>
     <string name="on">Non</string>
     <string name="off">Oui</string>
+    <string name="no_network">Pas de connexion internet</string>
+    <string name="unknown_error">Erreur inconnue</string>
+    <string name="invalid_credentials">Connexion impossible</string>
 </resources>
