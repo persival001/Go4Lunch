@@ -98,5 +98,8 @@
     <string name="notifications">Enable or disable notifications</string>
     <string name="on">On</string>
     <string name="off">Off</string>
+    <string name="no_network">No network available</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="invalid_credentials">Invalid credentials</string>
 
 </resources>
