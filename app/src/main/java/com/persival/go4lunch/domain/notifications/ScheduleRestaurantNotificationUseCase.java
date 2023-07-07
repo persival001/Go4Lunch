@@ -40,8 +40,8 @@ public class ScheduleRestaurantNotificationUseCase {
         // Calculate the remaining time before the next notification
         Calendar now = Calendar.getInstance();
         Calendar noon = Calendar.getInstance();
-        noon.set(Calendar.HOUR_OF_DAY, 20);
-        noon.set(Calendar.MINUTE, 10);
+        noon.set(Calendar.HOUR_OF_DAY, 12);
+        noon.set(Calendar.MINUTE, 0);
 
         long delay = noon.getTimeInMillis() - now.getTimeInMillis();
 
