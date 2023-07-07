@@ -20,26 +20,29 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.jvm.functions.Function1;
 
 @HiltViewModel
 public class MainViewModel extends ViewModel {
 
     private final LiveData<MainViewState> mainViewStateLiveData;
     private final MutableLiveData<String> searchStringLiveData = new MutableLiveData<>();
-
     @NonNull
     private final GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase;
     @NonNull
+    private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
+    @NonNull
     private final GetAutocompletesUseCase getAutocompletesUseCase;
+    private final MutableLiveData<MainViewStateAutocomplete> selectedAutocompleteItem = new MutableLiveData<>();
 
     @Inject
     public MainViewModel(
         @NonNull GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase,
         @NonNull GetUserNameChangedUseCase getUserNameChangedUseCase,
+        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase,
         @NonNull GetAutocompletesUseCase getAutocompletesUseCase
     ) {
         this.getRestaurantIdForCurrentUserUseCase = getRestaurantIdForCurrentUserUseCase;
+        this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
         this.getAutocompletesUseCase = getAutocompletesUseCase;
 
         mainViewStateLiveData = Transformations.map(getUserNameChangedUseCase.invoke(), this::mapToMainViewState);
@@ -61,28 +64,42 @@ public class MainViewModel extends ViewModel {
     public LiveData<List<MainViewStateAutocomplete>> getAutocompletesLiveData() {
         return Transformations.switchMap(searchStringLiveData, searchString -> {
             if (searchString.length() >= 2) {
-                return Transformations.map(getAutocompletesUseCase.invoke(searchString), new Function1<List<AutocompleteEntity>, List<MainViewStateAutocomplete>>() {
-                    @Override
-                    public List<MainViewStateAutocomplete> invoke(List<AutocompleteEntity> autocompleteEntities) {
-                        List<MainViewStateAutocomplete> autocompletes = new ArrayList<>();
+                return Transformations.map(getAutocompletesUseCase.invoke(searchString), autocompleteEntities -> {
+                    List<MainViewStateAutocomplete> autocompletes = new ArrayList<>();
 
-                        for (AutocompleteEntity autocompleteEntity : autocompleteEntities) {
-                            autocompletes.add(
-                                new MainViewStateAutocomplete(
-                                    autocompleteEntity.getPlaceId(),
-                                    autocompleteEntity.getName()
-                                )
-                            );
-                        }
-
-                        return autocompletes;
+                    for (AutocompleteEntity autocompleteEntity : autocompleteEntities) {
+                        autocompletes.add(
+                            new MainViewStateAutocomplete(
+                                autocompleteEntity.getPlaceId(),
+                                autocompleteEntity.getName()
+                            )
+                        );
                     }
+
+                    return autocompletes;
                 });
             } else {
                 return new MutableLiveData<>(new ArrayList<>());
             }
         });
     }
+
+    public LiveData<NearbyRestaurantsEntity> getSelectedRestaurantLiveData() {
+        return Transformations.switchMap(selectedAutocompleteItem, selectedAutocomplete -> {
+            if (selectedAutocomplete != null) {
+                return Transformations.switchMap(getNearbyRestaurantsUseCase.invoke(), restaurants -> {
+                    for (NearbyRestaurantsEntity restaurant : restaurants) {
+                        if (restaurant.getId().equals(selectedAutocomplete.getPlaceId())) {
+                            return new MutableLiveData<>(restaurant);
+                        }
+                    }
+                    return new MutableLiveData<>(null);
+                });
+            }
+            return new MutableLiveData<>(null);
+        });
+    }
+
 
     public void updateSearchString(String newSearchString) {
         searchStringLiveData.setValue(newSearchString);
@@ -97,7 +114,8 @@ public class MainViewModel extends ViewModel {
     }
 
     public void onAutocompleteSelected(MainViewStateAutocomplete mainViewStateAutocomplete) {
-        // TODO PERSIVAL
+        selectedAutocompleteItem.setValue(mainViewStateAutocomplete);
     }
+
 }
 

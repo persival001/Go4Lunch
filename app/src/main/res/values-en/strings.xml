@@ -101,5 +101,6 @@
     <string name="no_network">No network available</string>
     <string name="unknown_error">Unknown error</string>
     <string name="invalid_credentials">Invalid credentials</string>
+    <string name="no_restaurant_found">No restaurant found</string>
 
 </resources>

@@ -14,14 +14,17 @@ import android.content.res.Resources;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.SavedStateHandle;
 
+import com.persival.go4lunch.domain.autocomplete.GetAutocompletesUseCase;
 import com.persival.go4lunch.domain.details.GetLikedRestaurantsUseCase;
 import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
 import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
 import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
 import com.persival.go4lunch.domain.notifications.CancelRestaurantNotificationUseCase;
 import com.persival.go4lunch.domain.notifications.ScheduleRestaurantNotificationUseCase;
+import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.model.PlaceDetailsEntity;
 import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
@@ -31,6 +34,7 @@ import com.persival.go4lunch.ui.details.DetailsFragment;
 import com.persival.go4lunch.ui.details.DetailsRestaurantViewState;
 import com.persival.go4lunch.ui.details.DetailsViewModel;
 import com.persival.go4lunch.ui.details.DetailsWorkmateViewState;
+import com.persival.go4lunch.utils.TestUtil;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,7 +52,6 @@ public class DetailsViewModelTest {
     private final LiveData<PlaceDetailsEntity> placeDetailsEntities = new MutableLiveData<>();
     private final LiveData<List<UserEatAtRestaurantEntity>> workmatesLiveData = new MutableLiveData<>();
     private final LiveData<List<String>> likedRestaurantsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isRestaurantLikedLiveData = new MutableLiveData<>();
     private final String restaurantId = "1";
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -63,6 +66,8 @@ public class DetailsViewModelTest {
     @Mock
     private GetLikedRestaurantsUseCase getLikedRestaurantsUseCase;
     @Mock
+    private GetAutocompletesUseCase getAutocompletesUseCase;
+    @Mock
     private SetLikedRestaurantUseCase setLikedRestaurantUseCase;
     @Mock
     private GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase;
@@ -72,6 +77,8 @@ public class DetailsViewModelTest {
     private ScheduleRestaurantNotificationUseCase scheduleRestaurantNotificationUseCase;
     @Mock
     private CancelRestaurantNotificationUseCase cancelRestaurantNotificationUseCase;
+    @Mock
+    private GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
     @Mock
     private SavedStateHandle savedStateHandle;
 
@@ -309,6 +316,29 @@ public class DetailsViewModelTest {
         verify(setRestaurantChosenToEatUseCase, times(1)).invoke(anyString(), anyString());
         verify(scheduleRestaurantNotificationUseCase, times(1)).invoke(anyString(), anyString(), anyString());
     }
+
+    @Test
+    public void transformMapsRatingCorrectly() {
+        // Given
+        Float originalRating = 5F;
+        Float expectedRating = 3F;
+
+        // When
+        PlaceDetailsEntity restaurant = mock(PlaceDetailsEntity.class);
+        when(restaurant.getRating()).thenReturn(originalRating);
+
+        Observer<DetailsRestaurantViewState> observer = new Observer<DetailsRestaurantViewState>() {
+            @Override
+            public void onChanged(DetailsRestaurantViewState detailsRestaurantViewState) {
+                assertEquals(expectedRating, detailsRestaurantViewState.getRestaurantRating(), 0.01F);
+                detailsViewModel.getDetailViewStateLiveData().removeObserver(this);
+            }
+        };
+
+        // Then
+        TestUtil.observeForTesting(detailsViewModel.getDetailViewStateLiveData(), observer);
+    }
+
 
 }
 

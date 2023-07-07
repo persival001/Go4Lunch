@@ -1,12 +1,16 @@
 package com.persival.go4lunch.ui;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
+import com.persival.go4lunch.domain.autocomplete.AutocompleteEntity;
+import com.persival.go4lunch.domain.autocomplete.GetAutocompletesUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
@@ -14,6 +18,7 @@ import com.persival.go4lunch.domain.user.GetUserNameChangedUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.ui.main.MainViewModel;
 import com.persival.go4lunch.ui.main.MainViewState;
+import com.persival.go4lunch.ui.main.MainViewStateAutocomplete;
 import com.persival.go4lunch.utils.TestUtil;
 
 import org.junit.Before;
@@ -39,6 +44,8 @@ public class MainViewModelTest {
     private GetUserNameChangedUseCase getUserNameChangedUseCase;
     @Mock
     private GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
+    @Mock
+    private GetAutocompletesUseCase getAutocompletesUseCase;
     private MainViewModel viewModel;
 
     @Before
@@ -52,9 +59,13 @@ public class MainViewModelTest {
 
         when(getUserNameChangedUseCase.invoke()).thenReturn(new MutableLiveData<>(loggedUserEntity));
         when(getRestaurantIdForCurrentUserUseCase.invoke()).thenReturn(new MutableLiveData<>("123"));
-        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(nearbyRestaurants);
 
-        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase);
+        viewModel = new MainViewModel(
+            getRestaurantIdForCurrentUserUseCase,
+            getUserNameChangedUseCase,
+            getNearbyRestaurantsUseCase,
+            getAutocompletesUseCase
+        );
     }
 
     @Test
@@ -75,7 +86,7 @@ public class MainViewModelTest {
     public void testGetAuthenticatedUserLiveDataFailure() {
         // Given
         when(getUserNameChangedUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
-        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase);
+        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase, getAutocompletesUseCase);
 
         // When
         MainViewState result = TestUtil.getValueForTesting(viewModel.getAuthenticatedUserLiveData());
@@ -101,7 +112,7 @@ public class MainViewModelTest {
     public void testGetRestaurantIdForCurrentUserLiveDataFailure() {
         // Given
         when(getRestaurantIdForCurrentUserUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
-        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase);
+        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase, getAutocompletesUseCase);
 
         // When
         String result = TestUtil.getValueForTesting(viewModel.getRestaurantIdForCurrentUserLiveData());
@@ -111,33 +122,41 @@ public class MainViewModelTest {
     }
 
     @Test
-    public void testGetFilteredRestaurantsLiveDataWithFilter() {
+    public void testGetAutocompletesLiveDataSuccess() {
         // Given
-        nearbyRestaurants.setValue(restaurantList);
-
-        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(nearbyRestaurants);
+        MutableLiveData<List<AutocompleteEntity>> autocompleteLiveData = new MutableLiveData<>();
+        List<AutocompleteEntity> autocompleteEntities = new ArrayList<>();
+        autocompleteEntities.add(new AutocompleteEntity("1", "Restaurant 1"));
+        autocompleteEntities.add(new AutocompleteEntity("2", "Restaurant 2"));
+        autocompleteLiveData.setValue(autocompleteEntities);
+        when(getAutocompletesUseCase.invoke(anyString())).thenReturn(autocompleteLiveData);
+        viewModel.updateSearchString("Res");
 
         // When
-        viewModel.updateSearchString("Restaurant");
-        List<NearbyRestaurantsEntity> result = TestUtil.getValueForTesting(viewModel.getAutocompletesLiveData());
+        List<MainViewStateAutocomplete> result = TestUtil.getValueForTesting(viewModel.getAutocompletesLiveData());
 
         // Then
         assertEquals(2, result.size());
+        assertEquals("1", result.get(0).getPlaceId());
+        assertEquals("Restaurant 1", result.get(0).getName());
+        assertEquals("2", result.get(1).getPlaceId());
+        assertEquals("Restaurant 2", result.get(1).getName());
     }
 
     @Test
-    public void testGetFilteredRestaurantsLiveDataWithoutFilter() {
+    public void testGetSelectedRestaurantLiveDataSuccess() {
         // Given
-        nearbyRestaurants.setValue(restaurantList);
-
-        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(nearbyRestaurants);
+        MutableLiveData<List<NearbyRestaurantsEntity>> nearbyRestaurantsLiveData = new MutableLiveData<>(restaurantList);
+        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(nearbyRestaurantsLiveData);
+        viewModel.onAutocompleteSelected(new MainViewStateAutocomplete("1", "Restaurant 1"));
 
         // When
-        viewModel.updateSearchString("Not Existing");
-        List<NearbyRestaurantsEntity> result = TestUtil.getValueForTesting(viewModel.getAutocompletesLiveData());
+        NearbyRestaurantsEntity result = TestUtil.getValueForTesting(viewModel.getSelectedRestaurantLiveData());
 
         // Then
-        assertEquals(0, result.size());
+        assertNotNull(result);
+        assertEquals("1", result.getId());
+        assertEquals("Restaurant 1", result.getName());
     }
 
 }

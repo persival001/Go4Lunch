@@ -31,7 +31,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
 import com.persival.go4lunch.databinding.NavigationDrawerHeaderBinding;
-import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
 import com.persival.go4lunch.ui.details.DetailsFragment;
 import com.persival.go4lunch.ui.maps.MapsFragment;
@@ -59,24 +58,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
+        // Set up autocomplete
+        MainAutocompleteAdapter autocompleteAdapter = new MainAutocompleteAdapter(
+            mainViewStateAutocomplete -> viewModel.onAutocompleteSelected(mainViewStateAutocomplete)
+        );
 
-        MainAutocompleteAdapter autocompleteAdapter = new MainAutocompleteAdapter(new OnAutocompleteClickedListener() {
-            @Override
-            public void onAutocompleteClicked(MainViewStateAutocomplete mainViewStateAutocomplete) {
-                viewModel.onAutocompleteSelected(mainViewStateAutocomplete);
-            }
-        });
         binding.mainRecyclerviewAutocomplete.setAdapter(autocompleteAdapter);
-
-//        // Create a list of items found with searchView
-//        ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
-//            this,
-//            android.R.layout.simple_dropdown_item_1line,
-//            new ArrayList<>()
-//        );
-
-//        binding.searchView.setAdapter(adapter);
-//        binding.searchView.setThreshold(1);
 
         viewModel.getAutocompletesLiveData().observe(this, viewStates -> {
             autocompleteAdapter.submitList(viewStates);
@@ -133,13 +120,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
         );
 
-        // Execute the search in the opened fragment
-        binding.searchView.setOnItemClickListener((parent, view, position, id) -> {
-            NearbyRestaurantsEntity selectedRestaurant = (NearbyRestaurantsEntity) parent.getItemAtPosition(position);
+        // Execute the research in the opened fragment
+        viewModel.getSelectedRestaurantLiveData().observe(this, item -> {
+            searchString = item.getName();
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
 
             if (currentFragment instanceof MapsFragment) {
-                ((MapsFragment) currentFragment).zoomToMarker(selectedRestaurant);
+                ((MapsFragment) currentFragment).zoomToMarker(item);
+
+                setSearchViewGone();
             }
 
             if (currentFragment instanceof RestaurantsFragment) {
@@ -151,16 +140,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .replace(R.id.fragmentContainerView, restaurantsFragment)
                     .addToBackStack(null)
                     .commit();
-            }
 
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(binding.searchView.getWindowToken(), 0);
+                setSearchViewGone();
             }
-
-            binding.searchView.setText("");
-            binding.textView.setVisibility(View.VISIBLE);
-            binding.searchView.setVisibility(View.GONE);
         });
 
         // Close the search view when the user clicks on the done button
@@ -282,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
+            binding.mainRecyclerviewAutocomplete.setVisibility(View.VISIBLE);
             binding.textView.setVisibility(View.GONE);
             binding.searchView.setVisibility(View.VISIBLE);
             binding.searchView.requestFocus();
@@ -292,6 +275,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setSearchViewGone() {
+        //Close keyboard and search view
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(binding.searchView.getWindowToken(), 0);
+        }
+
+        binding.searchView.setText("");
+        binding.textView.setVisibility(View.VISIBLE);
+        binding.searchView.setVisibility(View.GONE);
+        binding.mainRecyclerviewAutocomplete.setVisibility(View.GONE);
     }
 
 }

@@ -51,18 +51,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    6,2%
+    50%
   </span>
   <span class="absValue">
-    (1/16)
+    (8/16)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    15,5%
+    46,4%
   </span>
   <span class="absValue">
-    (15/97)
+    (45/97)
   </span>
 </td>
 </tr>
@@ -158,12 +158,12 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc">&nbsp;        String restaurantId = savedStateHandle.get(DetailsFragment.KEY_RESTAURANT_ID);</b>
 &nbsp;
 <b class="fc">&nbsp;        if (restaurantId == null) {</b>
-<b class="fc">&nbsp;            throw new IllegalStateException(&quot;Please use DetailsFragment.newInstance() to launch the Fragment&quot;);</b>
+<b class="nc">&nbsp;            throw new IllegalStateException(&quot;Please use DetailsFragment.newInstance() to launch the Fragment&quot;);</b>
 &nbsp;        }
 &nbsp;
-<b class="nc">&nbsp;        likedRestaurantsLiveData = getLikedRestaurantsUseCase.invoke();</b>
+<b class="fc">&nbsp;        likedRestaurantsLiveData = getLikedRestaurantsUseCase.invoke();</b>
 &nbsp;
-<b class="nc">&nbsp;        workmatesViewStateLiveData = Transformations.map(getWorkmatesEatAtRestaurantUseCase.invoke(), users -&gt; {</b>
+<b class="fc">&nbsp;        workmatesViewStateLiveData = Transformations.map(getWorkmatesEatAtRestaurantUseCase.invoke(), users -&gt; {</b>
 <b class="nc">&nbsp;            List&lt;DetailsWorkmateViewState&gt; detailsWorkmateViewState = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;            List&lt;String&gt; workmatesGoToThisRestaurant = new ArrayList&lt;&gt;();</b>
 <b class="nc">&nbsp;            LoggedUserEntity loggedUser = this.getLoggedUserUseCase.invoke();</b>
@@ -195,8 +195,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;            return detailsWorkmateViewState;</b>
 &nbsp;        });
 &nbsp;
-<b class="nc">&nbsp;        restaurantViewStateLiveData = Transformations.map(</b>
-<b class="nc">&nbsp;            getRestaurantDetailsUseCase.invoke(restaurantId),</b>
+<b class="fc">&nbsp;        restaurantViewStateLiveData = Transformations.map(</b>
+<b class="fc">&nbsp;            getRestaurantDetailsUseCase.invoke(restaurantId),</b>
 &nbsp;            restaurant -&gt; {
 <b class="nc">&nbsp;                detailsRestaurantViewState = new DetailsRestaurantViewState(</b>
 <b class="nc">&nbsp;                    restaurant.getId(),</b>
@@ -218,67 +218,67 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    public void onChooseRestaurant(DetailsRestaurantViewState detail) {
 &nbsp;        // Toggle the chosen state
-<b class="nc">&nbsp;        if (isRestaurantChosenLiveData.getValue() != null) {</b>
-<b class="nc">&nbsp;            isRestaurantChosenLiveData.setValue(!isRestaurantChosenLiveData.getValue());</b>
+<b class="fc">&nbsp;        if (isRestaurantChosenLiveData.getValue() != null) {</b>
+<b class="fc">&nbsp;            isRestaurantChosenLiveData.setValue(!isRestaurantChosenLiveData.getValue());</b>
 &nbsp;        }
 &nbsp;
 &nbsp;        // Check if the restaurant is chosen
-<b class="nc">&nbsp;        if (isRestaurantChosenLiveData.getValue() != null &amp;&amp; isRestaurantChosenLiveData.getValue()) {</b>
+<b class="fc">&nbsp;        if (isRestaurantChosenLiveData.getValue() != null &amp;&amp; isRestaurantChosenLiveData.getValue()) {</b>
 &nbsp;
 &nbsp;            // Restaurant is chosen - update detailsRestaurantViewState, restaurantId and restaurantName
-<b class="nc">&nbsp;            this.detailsRestaurantViewState = detail;</b>
-<b class="nc">&nbsp;            setRestaurantChosenToEatUseCase.invoke(</b>
-<b class="nc">&nbsp;                detailsRestaurantViewState.getId(),</b>
-<b class="nc">&nbsp;                detailsRestaurantViewState.getRestaurantName()</b>
+<b class="fc">&nbsp;            this.detailsRestaurantViewState = detail;</b>
+<b class="fc">&nbsp;            setRestaurantChosenToEatUseCase.invoke(</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getId(),</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getRestaurantName()</b>
 &nbsp;            );
 &nbsp;
 &nbsp;            // Schedule the notification
-<b class="nc">&nbsp;            scheduleRestaurantNotificationUseCase.invoke(</b>
-<b class="nc">&nbsp;                detailsRestaurantViewState.getRestaurantName(),</b>
-<b class="nc">&nbsp;                detailsRestaurantViewState.getRestaurantAddress(),</b>
-<b class="nc">&nbsp;                mapWorkmatesGoToThisRestaurantLiveData()</b>
+<b class="fc">&nbsp;            scheduleRestaurantNotificationUseCase.invoke(</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getRestaurantName(),</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getRestaurantAddress(),</b>
+<b class="fc">&nbsp;                mapWorkmatesGoToThisRestaurantLiveData()</b>
 &nbsp;            );
 &nbsp;
 &nbsp;        } else {
 &nbsp;
 &nbsp;            // Restaurant is not chosen - set everything to null
-<b class="nc">&nbsp;            this.detailsRestaurantViewState = null;</b>
-<b class="nc">&nbsp;            setRestaurantChosenToEatUseCase.invoke(null, null);</b>
+<b class="fc">&nbsp;            this.detailsRestaurantViewState = null;</b>
+<b class="fc">&nbsp;            setRestaurantChosenToEatUseCase.invoke(null, null);</b>
 &nbsp;
 &nbsp;            // Cancel the notification
-<b class="nc">&nbsp;            cancelRestaurantNotificationUseCase.invoke();</b>
+<b class="fc">&nbsp;            cancelRestaurantNotificationUseCase.invoke();</b>
 &nbsp;        }
 &nbsp;    }
 &nbsp;
 &nbsp;    public void onToggleLikeRestaurant() {
 &nbsp;        // Toggle the like state
-<b class="nc">&nbsp;        if (isRestaurantLiked.getValue() != null) {</b>
-<b class="nc">&nbsp;            isRestaurantLiked.setValue(!isRestaurantLiked.getValue());</b>
+<b class="fc">&nbsp;        if (isRestaurantLiked.getValue() != null) {</b>
+<b class="fc">&nbsp;            isRestaurantLiked.setValue(!isRestaurantLiked.getValue());</b>
 &nbsp;        }
 &nbsp;        // Check if the restaurant is liked
-<b class="nc">&nbsp;        if (detailsRestaurantViewState != null) {</b>
-<b class="nc">&nbsp;            setLikedRestaurantUseCase.invoke(</b>
-<b class="nc">&nbsp;                isRestaurantLiked.getValue() != null &amp;&amp;</b>
-<b class="nc">&nbsp;                    isRestaurantLiked.getValue(),</b>
-<b class="nc">&nbsp;                detailsRestaurantViewState.getId()</b>
+<b class="fc">&nbsp;        if (detailsRestaurantViewState != null) {</b>
+<b class="fc">&nbsp;            setLikedRestaurantUseCase.invoke(</b>
+<b class="fc">&nbsp;                isRestaurantLiked.getValue() != null &amp;&amp;</b>
+<b class="fc">&nbsp;                    isRestaurantLiked.getValue(),</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getId()</b>
 &nbsp;            );
 &nbsp;        }
 &nbsp;    }
 &nbsp;
 &nbsp;    public LiveData&lt;List&lt;DetailsWorkmateViewState&gt;&gt; getWorkmateListLiveData() {
-<b class="nc">&nbsp;        return workmatesViewStateLiveData;</b>
+<b class="fc">&nbsp;        return workmatesViewStateLiveData;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public LiveData&lt;DetailsRestaurantViewState&gt; getDetailViewStateLiveData() {
-<b class="nc">&nbsp;        return restaurantViewStateLiveData;</b>
+<b class="fc">&nbsp;        return restaurantViewStateLiveData;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public void updateIsRestaurantLiked(boolean isLiked) {
-<b class="nc">&nbsp;        isRestaurantLiked.setValue(isLiked);</b>
+<b class="fc">&nbsp;        isRestaurantLiked.setValue(isLiked);</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    public LiveData&lt;Boolean&gt; getIsRestaurantChosenLiveData() {
-<b class="nc">&nbsp;        return isRestaurantChosenLiveData;</b>
+<b class="fc">&nbsp;        return isRestaurantChosenLiveData;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;    // Add &quot;is joining!&quot; after the workmate name
@@ -335,11 +335,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    // Join the workmates names (separated by a comma)
 &nbsp;    private String mapWorkmatesGoToThisRestaurantLiveData() {
-<b class="nc">&nbsp;        if (workmatesGoToThisRestaurantLiveData.getValue() != null) {</b>
+<b class="fc">&nbsp;        if (workmatesGoToThisRestaurantLiveData.getValue() != null) {</b>
 <b class="nc">&nbsp;            return String.join(&quot;, &quot;, workmatesGoToThisRestaurantLiveData.getValue());</b>
 &nbsp;        }
 &nbsp;
-<b class="nc">&nbsp;        return &quot;&quot;;</b>
+<b class="fc">&nbsp;        return &quot;&quot;;</b>
 &nbsp;    }
 &nbsp;
 &nbsp;}
@@ -369,7 +369,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-07-03 20:18</div>
+    <div style="float:right;">generated on 2023-07-04 09:57</div>
 </div>
 </body>
 </html>

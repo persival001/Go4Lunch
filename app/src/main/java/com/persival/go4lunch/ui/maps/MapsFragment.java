@@ -25,8 +25,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
-import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 import com.persival.go4lunch.ui.details.DetailsFragment;
+import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,6 +182,8 @@ public class MapsFragment extends SupportMapFragment {
             lastZoomLevel = googleMap.getCameraPosition().zoom;
 
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+        } else {
+            Toast.makeText(requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
         }
     }
 
