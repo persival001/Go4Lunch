@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html id="htmlId">
 <head>
-  <title>Coverage Report > MainViewModel</title>
+  <title>Coverage Report > DetailsViewModel</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -18,10 +18,10 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.persival.go4lunch.ui.main</a>
+    <a href="../index.html">com.persival.go4lunch.ui.details</a>
 </div>
 
-<h1>Coverage Summary for Class: MainViewModel (com.persival.go4lunch.ui.main)</h1>
+<h1>Coverage Summary for Class: DetailsViewModel (com.persival.go4lunch.ui.details)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -40,7 +40,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">MainViewModel</td>
+  <td class="name">DetailsViewModel</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -51,18 +51,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    50%
   </span>
   <span class="absValue">
-    (8/8)
+    (8/16)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    96%
+    46,4%
   </span>
   <span class="absValue">
-    (24/25)
+    (45/97)
   </span>
 </td>
 </tr>
@@ -74,19 +74,30 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.persival.go4lunch.ui.main;
+<code class="sourceCode" id="sourceCode">&nbsp;package com.persival.go4lunch.ui.details;
+&nbsp;
+&nbsp;import static com.persival.go4lunch.BuildConfig.MAPS_API_KEY;
+&nbsp;
+&nbsp;import android.content.res.Resources;
 &nbsp;
 &nbsp;import androidx.annotation.NonNull;
 &nbsp;import androidx.lifecycle.LiveData;
 &nbsp;import androidx.lifecycle.MutableLiveData;
+&nbsp;import androidx.lifecycle.SavedStateHandle;
 &nbsp;import androidx.lifecycle.Transformations;
 &nbsp;import androidx.lifecycle.ViewModel;
 &nbsp;
-&nbsp;import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
-&nbsp;import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
-&nbsp;import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
-&nbsp;import com.persival.go4lunch.domain.user.GetUserNameChangedUseCase;
+&nbsp;import com.persival.go4lunch.R;
+&nbsp;import com.persival.go4lunch.domain.details.GetLikedRestaurantsUseCase;
+&nbsp;import com.persival.go4lunch.domain.details.GetRestaurantDetailsUseCase;
+&nbsp;import com.persival.go4lunch.domain.details.SetLikedRestaurantUseCase;
+&nbsp;import com.persival.go4lunch.domain.details.SetRestaurantChosenToEatUseCase;
+&nbsp;import com.persival.go4lunch.domain.notifications.CancelRestaurantNotificationUseCase;
+&nbsp;import com.persival.go4lunch.domain.notifications.ScheduleRestaurantNotificationUseCase;
+&nbsp;import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 &nbsp;import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
+&nbsp;import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
+&nbsp;import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
 &nbsp;
 &nbsp;import java.util.ArrayList;
 &nbsp;import java.util.List;
@@ -96,72 +107,244 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;import dagger.hilt.android.lifecycle.HiltViewModel;
 &nbsp;
 &nbsp;@HiltViewModel
-&nbsp;public class MainViewModel extends ViewModel {
-&nbsp;
-&nbsp;    private final LiveData&lt;MainViewState&gt; mainViewStateLiveData;
-<b class="fc">&nbsp;    private final MutableLiveData&lt;String&gt; searchStringLiveData = new MutableLiveData&lt;&gt;();</b>
-&nbsp;
+&nbsp;public class DetailsViewModel extends ViewModel {
+&nbsp;    public final LiveData&lt;DetailsRestaurantViewState&gt; restaurantViewStateLiveData;
+&nbsp;    public final LiveData&lt;List&lt;String&gt;&gt; likedRestaurantsLiveData;
+&nbsp;    public final LiveData&lt;List&lt;DetailsWorkmateViewState&gt;&gt; workmatesViewStateLiveData;
+&nbsp;    public final MutableLiveData&lt;List&lt;String&gt;&gt; workmatesGoToThisRestaurantLiveData;
 &nbsp;    @NonNull
-&nbsp;    private final GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase;
+&nbsp;    private final Resources resources;
 &nbsp;    @NonNull
-&nbsp;    private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
+&nbsp;    private final SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final SetLikedRestaurantUseCase setLikedRestaurantUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final GetLoggedUserUseCase getLoggedUserUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final ScheduleRestaurantNotificationUseCase scheduleRestaurantNotificationUseCase;
+&nbsp;    @NonNull
+&nbsp;    private final CancelRestaurantNotificationUseCase cancelRestaurantNotificationUseCase;
+&nbsp;    @NonNull
+&nbsp;    public MutableLiveData&lt;Boolean&gt; isRestaurantLiked;
+&nbsp;    @NonNull
+&nbsp;    public MutableLiveData&lt;Boolean&gt; isRestaurantChosenLiveData;
+&nbsp;    public DetailsRestaurantViewState detailsRestaurantViewState;
 &nbsp;
 &nbsp;    @Inject
-&nbsp;    public MainViewModel(
-&nbsp;        @NonNull GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase,
-&nbsp;        @NonNull GetUserNameChangedUseCase getUserNameChangedUseCase,
-&nbsp;        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
+&nbsp;    public DetailsViewModel(
+&nbsp;        @NonNull Resources resources,
+&nbsp;        @NonNull GetRestaurantDetailsUseCase getRestaurantDetailsUseCase,
+&nbsp;        @NonNull SavedStateHandle savedStateHandle,
+&nbsp;        @NonNull SetRestaurantChosenToEatUseCase setRestaurantChosenToEatUseCase,
+&nbsp;        @NonNull GetLikedRestaurantsUseCase getLikedRestaurantsUseCase,
+&nbsp;        @NonNull SetLikedRestaurantUseCase setLikedRestaurantUseCase,
+&nbsp;        @NonNull GetWorkmatesEatAtRestaurantUseCase getWorkmatesEatAtRestaurantUseCase,
+&nbsp;        @NonNull GetLoggedUserUseCase getLoggedUserUseCase,
+&nbsp;        @NonNull ScheduleRestaurantNotificationUseCase scheduleRestaurantNotificationUseCase,
+&nbsp;        @NonNull CancelRestaurantNotificationUseCase cancelRestaurantNotificationUseCase
 <b class="fc">&nbsp;    ) {</b>
-<b class="fc">&nbsp;        this.getRestaurantIdForCurrentUserUseCase = getRestaurantIdForCurrentUserUseCase;</b>
-<b class="fc">&nbsp;        this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;</b>
+<b class="fc">&nbsp;        this.resources = resources;</b>
+<b class="fc">&nbsp;        this.setRestaurantChosenToEatUseCase = setRestaurantChosenToEatUseCase;</b>
+<b class="fc">&nbsp;        this.setLikedRestaurantUseCase = setLikedRestaurantUseCase;</b>
+<b class="fc">&nbsp;        this.getLoggedUserUseCase = getLoggedUserUseCase;</b>
+<b class="fc">&nbsp;        this.scheduleRestaurantNotificationUseCase = scheduleRestaurantNotificationUseCase;</b>
+<b class="fc">&nbsp;        this.cancelRestaurantNotificationUseCase = cancelRestaurantNotificationUseCase;</b>
+<b class="fc">&nbsp;        isRestaurantLiked = new MutableLiveData&lt;&gt;();</b>
+<b class="fc">&nbsp;        isRestaurantLiked.setValue(false);</b>
+<b class="fc">&nbsp;        isRestaurantChosenLiveData = new MutableLiveData&lt;&gt;();</b>
+<b class="fc">&nbsp;        isRestaurantChosenLiveData.setValue(false);</b>
+<b class="fc">&nbsp;        workmatesGoToThisRestaurantLiveData = new MutableLiveData&lt;&gt;();</b>
 &nbsp;
-<b class="fc">&nbsp;        mainViewStateLiveData = Transformations.map(getUserNameChangedUseCase.invoke(), this::mapToMainViewState);</b>
+<b class="fc">&nbsp;        String restaurantId = savedStateHandle.get(DetailsFragment.KEY_RESTAURANT_ID);</b>
 &nbsp;
-&nbsp;    }
-&nbsp;
-&nbsp;    private MainViewState mapToMainViewState(LoggedUserEntity loggedUserEntity) {
-<b class="fc">&nbsp;        if (loggedUserEntity == null) {</b>
-<b class="fc">&nbsp;            return null;</b>
+<b class="fc">&nbsp;        if (restaurantId == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalStateException(&quot;Please use DetailsFragment.newInstance() to launch the Fragment&quot;);</b>
 &nbsp;        }
-<b class="fc">&nbsp;        return new MainViewState(</b>
-<b class="fc">&nbsp;            loggedUserEntity.getId(),</b>
-<b class="fc">&nbsp;            loggedUserEntity.getName(),</b>
-<b class="fc">&nbsp;            loggedUserEntity.getEmailAddress(),</b>
-<b class="fc">&nbsp;            loggedUserEntity.getPictureUrl()</b>
+&nbsp;
+<b class="fc">&nbsp;        likedRestaurantsLiveData = getLikedRestaurantsUseCase.invoke();</b>
+&nbsp;
+<b class="fc">&nbsp;        workmatesViewStateLiveData = Transformations.map(getWorkmatesEatAtRestaurantUseCase.invoke(), users -&gt; {</b>
+<b class="nc">&nbsp;            List&lt;DetailsWorkmateViewState&gt; detailsWorkmateViewState = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;            List&lt;String&gt; workmatesGoToThisRestaurant = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;            LoggedUserEntity loggedUser = this.getLoggedUserUseCase.invoke();</b>
+<b class="nc">&nbsp;            String loggedInUserId = loggedUser != null ? loggedUser.getId() : null;</b>
+&nbsp;
+<b class="nc">&nbsp;            for (UserEatAtRestaurantEntity userEatAtRestaurantEntity : users) {</b>
+<b class="nc">&nbsp;                if (userEatAtRestaurantEntity != null &amp;&amp;</b>
+<b class="nc">&nbsp;                    userEatAtRestaurantEntity.getRestaurantId() != null &amp;&amp;</b>
+<b class="nc">&nbsp;                    userEatAtRestaurantEntity.getRestaurantId().equals(restaurantId)) {</b>
+&nbsp;
+<b class="nc">&nbsp;                    workmatesGoToThisRestaurant.add(userEatAtRestaurantEntity.getName());</b>
+&nbsp;
+<b class="nc">&nbsp;                    detailsWorkmateViewState.add(</b>
+&nbsp;                        new DetailsWorkmateViewState(
+<b class="nc">&nbsp;                            userEatAtRestaurantEntity.getId(),</b>
+<b class="nc">&nbsp;                            userEatAtRestaurantEntity.getPictureUrl(),</b>
+<b class="nc">&nbsp;                            getWorkmateNameIsJoining(userEatAtRestaurantEntity.getName())</b>
+&nbsp;                        )
+&nbsp;                    );
+&nbsp;
+<b class="nc">&nbsp;                    if (userEatAtRestaurantEntity.getId().equals(loggedInUserId)) {</b>
+<b class="nc">&nbsp;                        isRestaurantChosenLiveData.setValue(true);</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="nc">&nbsp;            }</b>
+&nbsp;
+<b class="nc">&nbsp;            workmatesGoToThisRestaurantLiveData.setValue(workmatesGoToThisRestaurant);</b>
+&nbsp;
+<b class="nc">&nbsp;            return detailsWorkmateViewState;</b>
+&nbsp;        });
+&nbsp;
+<b class="fc">&nbsp;        restaurantViewStateLiveData = Transformations.map(</b>
+<b class="fc">&nbsp;            getRestaurantDetailsUseCase.invoke(restaurantId),</b>
+&nbsp;            restaurant -&gt; {
+<b class="nc">&nbsp;                detailsRestaurantViewState = new DetailsRestaurantViewState(</b>
+<b class="nc">&nbsp;                    restaurant.getId(),</b>
+<b class="nc">&nbsp;                    getPictureUrl(restaurant.getPhotoUrl()),</b>
+<b class="nc">&nbsp;                    getFormattedName(restaurant.getName()),</b>
+<b class="nc">&nbsp;                    getRating(restaurant.getRating()),</b>
+<b class="nc">&nbsp;                    restaurant.getAddress(),</b>
+<b class="nc">&nbsp;                    restaurant.getPhoneNumber(),</b>
+<b class="nc">&nbsp;                    restaurant.getWebsite()</b>
+&nbsp;                );
+<b class="nc">&nbsp;                return detailsRestaurantViewState;</b>
+&nbsp;            }
 &nbsp;        );
 &nbsp;    }
 &nbsp;
-&nbsp;    public LiveData&lt;List&lt;NearbyRestaurantsEntity&gt;&gt; getFilteredRestaurantsLiveData() {
-<b class="fc">&nbsp;        return Transformations.switchMap(searchStringLiveData, searchString -&gt; {</b>
-<b class="fc">&nbsp;            if (searchString.length() &gt;= 2) {</b>
-<b class="fc">&nbsp;                return Transformations.switchMap(getNearbyRestaurantsUseCase.invoke(), restaurants -&gt; {</b>
+&nbsp;    public LiveData&lt;Boolean&gt; getIsRestaurantLiked() {
+<b class="nc">&nbsp;        return isRestaurantLiked;</b>
+&nbsp;    }
 &nbsp;
-<b class="fc">&nbsp;                    List&lt;NearbyRestaurantsEntity&gt; filteredRestaurants = new ArrayList&lt;&gt;();</b>
-<b class="fc">&nbsp;                    for (NearbyRestaurantsEntity restaurant : restaurants) {</b>
-<b class="fc">&nbsp;                        if (restaurant.getName().toLowerCase().contains(searchString.toLowerCase())) {</b>
-<b class="fc">&nbsp;                            filteredRestaurants.add(restaurant);</b>
-&nbsp;                        }
-<b class="fc">&nbsp;                    }</b>
-<b class="fc">&nbsp;                    return new MutableLiveData&lt;&gt;(filteredRestaurants);</b>
-&nbsp;                });
-&nbsp;            } else {
-<b class="nc">&nbsp;                return new MutableLiveData&lt;&gt;(new ArrayList&lt;&gt;());</b>
+&nbsp;    public void onChooseRestaurant(DetailsRestaurantViewState detail) {
+&nbsp;        // Toggle the chosen state
+<b class="fc">&nbsp;        if (isRestaurantChosenLiveData.getValue() != null) {</b>
+<b class="fc">&nbsp;            isRestaurantChosenLiveData.setValue(!isRestaurantChosenLiveData.getValue());</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Check if the restaurant is chosen
+<b class="fc">&nbsp;        if (isRestaurantChosenLiveData.getValue() != null &amp;&amp; isRestaurantChosenLiveData.getValue()) {</b>
+&nbsp;
+&nbsp;            // Restaurant is chosen - update detailsRestaurantViewState, restaurantId and restaurantName
+<b class="fc">&nbsp;            this.detailsRestaurantViewState = detail;</b>
+<b class="fc">&nbsp;            setRestaurantChosenToEatUseCase.invoke(</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getId(),</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getRestaurantName()</b>
+&nbsp;            );
+&nbsp;
+&nbsp;            // Schedule the notification
+<b class="fc">&nbsp;            scheduleRestaurantNotificationUseCase.invoke(</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getRestaurantName(),</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getRestaurantAddress(),</b>
+<b class="fc">&nbsp;                mapWorkmatesGoToThisRestaurantLiveData()</b>
+&nbsp;            );
+&nbsp;
+&nbsp;        } else {
+&nbsp;
+&nbsp;            // Restaurant is not chosen - set everything to null
+<b class="fc">&nbsp;            this.detailsRestaurantViewState = null;</b>
+<b class="fc">&nbsp;            setRestaurantChosenToEatUseCase.invoke(null, null);</b>
+&nbsp;
+&nbsp;            // Cancel the notification
+<b class="fc">&nbsp;            cancelRestaurantNotificationUseCase.invoke();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void onToggleLikeRestaurant() {
+&nbsp;        // Toggle the like state
+<b class="fc">&nbsp;        if (isRestaurantLiked.getValue() != null) {</b>
+<b class="fc">&nbsp;            isRestaurantLiked.setValue(!isRestaurantLiked.getValue());</b>
+&nbsp;        }
+&nbsp;        // Check if the restaurant is liked
+<b class="fc">&nbsp;        if (detailsRestaurantViewState != null) {</b>
+<b class="fc">&nbsp;            setLikedRestaurantUseCase.invoke(</b>
+<b class="fc">&nbsp;                isRestaurantLiked.getValue() != null &amp;&amp;</b>
+<b class="fc">&nbsp;                    isRestaurantLiked.getValue(),</b>
+<b class="fc">&nbsp;                detailsRestaurantViewState.getId()</b>
+&nbsp;            );
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;List&lt;DetailsWorkmateViewState&gt;&gt; getWorkmateListLiveData() {
+<b class="fc">&nbsp;        return workmatesViewStateLiveData;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;DetailsRestaurantViewState&gt; getDetailViewStateLiveData() {
+<b class="fc">&nbsp;        return restaurantViewStateLiveData;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void updateIsRestaurantLiked(boolean isLiked) {
+<b class="fc">&nbsp;        isRestaurantLiked.setValue(isLiked);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LiveData&lt;Boolean&gt; getIsRestaurantChosenLiveData() {
+<b class="fc">&nbsp;        return isRestaurantChosenLiveData;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Add &quot;is joining!&quot; after the workmate name
+&nbsp;    private String getWorkmateNameIsJoining(@NonNull String name) {
+<b class="nc">&nbsp;        return resources.getString(R.string.is_joining, name);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Convert rating from 5 to 3 stars
+&nbsp;    private float getRating(Float rating) {
+<b class="nc">&nbsp;        if (rating != null) {</b>
+<b class="nc">&nbsp;            return rating * 3F / 5F;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return 0F;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private String toTitleCase(String input) {
+<b class="nc">&nbsp;        StringBuilder titleCase = new StringBuilder();</b>
+<b class="nc">&nbsp;        boolean nextTitleCase = true;</b>
+&nbsp;
+<b class="nc">&nbsp;        for (char c : input.toCharArray()) {</b>
+<b class="nc">&nbsp;            if (Character.isSpaceChar(c)) {</b>
+<b class="nc">&nbsp;                nextTitleCase = true;</b>
+<b class="nc">&nbsp;            } else if (nextTitleCase) {</b>
+<b class="nc">&nbsp;                c = Character.toTitleCase(c);</b>
+<b class="nc">&nbsp;                nextTitleCase = false;</b>
 &nbsp;            }
-&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;            titleCase.append(c);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return titleCase.toString();</b>
 &nbsp;    }
 &nbsp;
-&nbsp;    public void updateSearchString(String newSearchString) {
-<b class="fc">&nbsp;        searchStringLiveData.setValue(newSearchString);</b>
+&nbsp;    private String getFormattedName(String name) {
+<b class="nc">&nbsp;        if (name != null) {</b>
+<b class="nc">&nbsp;            String lowercaseName = name.toLowerCase();</b>
+<b class="nc">&nbsp;            return toTitleCase(lowercaseName);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return &quot;&quot;;</b>
+&nbsp;        }
 &nbsp;    }
 &nbsp;
-&nbsp;    public LiveData&lt;MainViewState&gt; getAuthenticatedUserLiveData() {
-<b class="fc">&nbsp;        return mainViewStateLiveData;</b>
+&nbsp;    // Get a photo reference if it exists and convert it to a picture url
+&nbsp;    private String getPictureUrl(List&lt;String&gt; photos) {
+<b class="nc">&nbsp;        if (photos != null &amp;&amp; !photos.isEmpty()) {</b>
+<b class="nc">&nbsp;            String photoReference = photos.get(0);</b>
+<b class="nc">&nbsp;            return &quot;https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&amp;photoreference=&quot; +</b>
+&nbsp;                photoReference + &quot;&amp;key=&quot; + MAPS_API_KEY;
+&nbsp;        } else {
+<b class="nc">&nbsp;            return &quot;&quot;;</b>
+&nbsp;        }
 &nbsp;    }
 &nbsp;
-&nbsp;    public LiveData&lt;String&gt; getRestaurantIdForCurrentUserLiveData() {
-<b class="fc">&nbsp;        return getRestaurantIdForCurrentUserUseCase.invoke();</b>
+&nbsp;    // Join the workmates names (separated by a comma)
+&nbsp;    private String mapWorkmatesGoToThisRestaurantLiveData() {
+<b class="fc">&nbsp;        if (workmatesGoToThisRestaurantLiveData.getValue() != null) {</b>
+<b class="nc">&nbsp;            return String.join(&quot;, &quot;, workmatesGoToThisRestaurantLiveData.getValue());</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return &quot;&quot;;</b>
 &nbsp;    }
+&nbsp;
 &nbsp;}
+&nbsp;
+&nbsp;
 &nbsp;
 </code>
 </pre>
@@ -186,7 +369,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-07-04 09:57</div>
+    <div style="float:right;">generated on 2023-07-07 21:29</div>
 </div>
 </body>
 </html>
