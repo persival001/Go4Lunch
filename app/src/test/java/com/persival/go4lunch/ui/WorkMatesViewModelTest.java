@@ -18,8 +18,8 @@ import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
 import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
-import com.persival.go4lunch.ui.main.workmates.WorkmatesViewModel;
-import com.persival.go4lunch.ui.main.workmates.WorkmatesViewState;
+import com.persival.go4lunch.ui.workmates.WorkmatesViewModel;
+import com.persival.go4lunch.ui.workmates.WorkmatesViewState;
 import com.persival.go4lunch.utils.TestUtil;
 
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.settings;
+package com.persival.go4lunch.ui.settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentSettingsBinding;
 import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
-import com.persival.go4lunch.ui.main.maps.MapsFragment;
+import com.persival.go4lunch.ui.maps.MapsFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

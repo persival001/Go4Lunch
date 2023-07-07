@@ -1,5 +1,6 @@
 package com.persival.go4lunch.data.places;
 
+import com.persival.go4lunch.data.places.model.AutocompletePredictionResponse;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.data.places.model.PlaceDetailsResponse;
 
@@ -20,6 +21,13 @@ public interface GooglePlacesApi {
     @GET("maps/api/place/details/json")
     Call<PlaceDetailsResponse> getPlaceDetail(
         @Query("place_id") String placeId,
+        @Query("key") String apiKey
+    );
+
+    @GET("maps/api/place/autocomplete/json")
+    Call<AutocompletePredictionResponse> getAutocomplete(
+        @Query("input") String input,
+        @Query("radius") int radius,
         @Query("key") String apiKey
     );
 }

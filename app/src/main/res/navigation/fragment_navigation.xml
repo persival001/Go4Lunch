@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.persival.go4lunch.ui.main.maps.MapsFragment"
+        android:name="com.persival.go4lunch.ui.maps.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/restaurantsFragment"
-        android:name="com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment"
+        android:name="com.persival.go4lunch.ui.restaurants.RestaurantsFragment"
         android:label="fragment_restaurants"
         tools:layout="@layout/fragment_restaurants">
         <action
@@ -27,13 +27,13 @@
 
     <fragment
         android:id="@+id/workmatesFragment"
-        android:name="com.persival.go4lunch.ui.main.workmates.WorkmatesFragment"
+        android:name="com.persival.go4lunch.ui.workmates.WorkmatesFragment"
         android:label="fragment_user_list"
         tools:layout="@layout/fragment_user_list" />
 
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="com.persival.go4lunch.ui.main.details.DetailsFragment"
+        android:name="com.persival.go4lunch.ui.details.DetailsFragment"
         android:label="DetailsActivity">
         <action
             android:id="@+id/action_detailsActivity_to_restaurantsFragment"
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.persival.go4lunch.ui.main.settings.SettingsFragment"
+        android:name="com.persival.go4lunch.ui.settings.SettingsFragment"
         android:label="SettingsFragment">
         <action
             android:id="@+id/action_settingsFragment_to_mapsFragment"

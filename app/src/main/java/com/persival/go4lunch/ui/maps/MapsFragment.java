@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.maps;
+package com.persival.go4lunch.ui.maps;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -26,7 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
-import com.persival.go4lunch.ui.main.details.DetailsFragment;
+import com.persival.go4lunch.ui.details.DetailsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

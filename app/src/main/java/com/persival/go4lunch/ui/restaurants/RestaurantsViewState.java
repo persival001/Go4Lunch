@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.restaurants;
+package com.persival.go4lunch.ui.restaurants;
 
 import androidx.annotation.NonNull;
 

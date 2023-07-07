@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.maps;
+package com.persival.go4lunch.ui.maps;
 
 import android.annotation.SuppressLint;
 

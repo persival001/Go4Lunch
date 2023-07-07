@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.restaurants;
+package com.persival.go4lunch.ui.restaurants;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
 import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
-import com.persival.go4lunch.ui.main.details.DetailsFragment;
+import com.persival.go4lunch.ui.details.DetailsFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

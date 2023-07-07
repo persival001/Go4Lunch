@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.workmates;
+package com.persival.go4lunch.ui.workmates;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentUserListBinding;
-import com.persival.go4lunch.ui.main.details.DetailsFragment;
+import com.persival.go4lunch.ui.details.DetailsFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

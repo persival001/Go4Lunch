@@ -5,6 +5,7 @@ import com.persival.go4lunch.data.firestore.FirestoreRepository;
 import com.persival.go4lunch.data.location.LocationDataRepository;
 import com.persival.go4lunch.data.permissions.PermissionRepository;
 import com.persival.go4lunch.data.places.GooglePlacesRepository;
+import com.persival.go4lunch.domain.autocomplete.AutocompleteRepository;
 import com.persival.go4lunch.domain.location.LocationRepository;
 import com.persival.go4lunch.domain.permissions.GpsPermissionRepository;
 import com.persival.go4lunch.domain.restaurant.PlacesRepository;
@@ -41,4 +42,8 @@ public abstract class AppBindsModule {
     @Singleton
     @Binds
     public abstract PlacesRepository bindPlacesRepository(GooglePlacesRepository implementation);
+
+    @Singleton
+    @Binds
+    public abstract AutocompleteRepository bindAutocompleteRepository(GooglePlacesRepository implementation);
 }

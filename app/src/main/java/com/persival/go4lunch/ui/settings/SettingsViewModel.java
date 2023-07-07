@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.settings;
+package com.persival.go4lunch.ui.settings;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;

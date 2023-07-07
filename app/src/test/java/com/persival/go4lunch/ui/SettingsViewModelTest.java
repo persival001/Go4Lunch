@@ -14,8 +14,8 @@ import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.SetNewUserNameUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.DeleteAccountUseCase;
-import com.persival.go4lunch.ui.main.settings.SettingsViewModel;
-import com.persival.go4lunch.ui.main.settings.SettingsViewState;
+import com.persival.go4lunch.ui.settings.SettingsViewModel;
+import com.persival.go4lunch.ui.settings.SettingsViewState;
 
 import org.junit.Before;
 import org.junit.Rule;

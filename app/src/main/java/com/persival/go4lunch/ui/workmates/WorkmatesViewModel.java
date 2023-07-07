@@ -1,4 +1,4 @@
-package com.persival.go4lunch.ui.main.workmates;
+package com.persival.go4lunch.ui.workmates;
 
 import android.content.res.Resources;
 
