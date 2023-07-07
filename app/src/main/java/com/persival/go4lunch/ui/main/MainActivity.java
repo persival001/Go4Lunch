@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -34,13 +33,12 @@ import com.persival.go4lunch.databinding.ActivityMainBinding;
 import com.persival.go4lunch.databinding.NavigationDrawerHeaderBinding;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
-import com.persival.go4lunch.ui.main.details.DetailsFragment;
-import com.persival.go4lunch.ui.main.maps.MapsFragment;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsFragment;
-import com.persival.go4lunch.ui.main.settings.SettingsFragment;
-import com.persival.go4lunch.ui.main.workmates.WorkmatesFragment;
+import com.persival.go4lunch.ui.details.DetailsFragment;
+import com.persival.go4lunch.ui.maps.MapsFragment;
+import com.persival.go4lunch.ui.restaurants.RestaurantsFragment;
+import com.persival.go4lunch.ui.settings.SettingsFragment;
+import com.persival.go4lunch.ui.workmates.WorkmatesFragment;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -60,6 +58,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(binding.getRoot());
 
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+
+        MainAutocompleteAdapter autocompleteAdapter = new MainAutocompleteAdapter(new OnAutocompleteClickedListener() {
+            @Override
+            public void onAutocompleteClicked(MainViewStateAutocomplete mainViewStateAutocomplete) {
+                viewModel.onAutocompleteSelected(mainViewStateAutocomplete);
+            }
+        });
+        binding.mainRecyclerviewAutocomplete.setAdapter(autocompleteAdapter);
+
+//        // Create a list of items found with searchView
+//        ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
+//            this,
+//            android.R.layout.simple_dropdown_item_1line,
+//            new ArrayList<>()
+//        );
+
+//        binding.searchView.setAdapter(adapter);
+//        binding.searchView.setThreshold(1);
+
+        viewModel.getAutocompletesLiveData().observe(this, viewStates -> {
+            autocompleteAdapter.submitList(viewStates);
+        });
+
 
         // Set up the bottom navigation bar and handle item selection
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
@@ -111,22 +133,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             restaurantIdForCurrentUser -> restaurantId = restaurantIdForCurrentUser
         );
 
-        // Create a list of items found with searchView
-        ArrayAdapter<NearbyRestaurantsEntity> adapter = new ArrayAdapter<>(
-            this,
-            android.R.layout.simple_dropdown_item_1line,
-            new ArrayList<>()
-        );
-
-        binding.searchView.setAdapter(adapter);
-        binding.searchView.setThreshold(1);
-
-        viewModel.getFilteredRestaurantsLiveData().observe(MainActivity.this, restaurants -> {
-            adapter.clear();
-            adapter.addAll(restaurants);
-            adapter.notifyDataSetChanged();
-        });
-
         // Execute the search in the opened fragment
         binding.searchView.setOnItemClickListener((parent, view, position, id) -> {
             NearbyRestaurantsEntity selectedRestaurant = (NearbyRestaurantsEntity) parent.getItemAtPosition(position);
@@ -176,10 +182,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() >= 2) {
-                    searchString = s.toString();
-                    viewModel.updateSearchString(s.toString());
-                }
+                searchString = s.toString();
+                viewModel.updateSearchString(s.toString());
             }
 
             @Override

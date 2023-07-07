@@ -17,8 +17,8 @@ import com.persival.go4lunch.domain.permissions.IsGpsActivatedUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetParticipantsUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewModel;
-import com.persival.go4lunch.ui.main.restaurants.RestaurantsViewState;
+import com.persival.go4lunch.ui.restaurants.RestaurantsViewModel;
+import com.persival.go4lunch.ui.restaurants.RestaurantsViewState;
 
 import org.junit.Before;
 import org.junit.Rule;

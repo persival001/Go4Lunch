@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.persival.go4lunch.domain.autocomplete.AutocompleteEntity;
+import com.persival.go4lunch.domain.autocomplete.GetAutocompletesUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
@@ -18,6 +20,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import kotlin.jvm.functions.Function1;
 
 @HiltViewModel
 public class MainViewModel extends ViewModel {
@@ -28,16 +31,16 @@ public class MainViewModel extends ViewModel {
     @NonNull
     private final GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase;
     @NonNull
-    private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
+    private final GetAutocompletesUseCase getAutocompletesUseCase;
 
     @Inject
     public MainViewModel(
         @NonNull GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase,
         @NonNull GetUserNameChangedUseCase getUserNameChangedUseCase,
-        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
+        @NonNull GetAutocompletesUseCase getAutocompletesUseCase
     ) {
         this.getRestaurantIdForCurrentUserUseCase = getRestaurantIdForCurrentUserUseCase;
-        this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
+        this.getAutocompletesUseCase = getAutocompletesUseCase;
 
         mainViewStateLiveData = Transformations.map(getUserNameChangedUseCase.invoke(), this::mapToMainViewState);
 
@@ -55,18 +58,25 @@ public class MainViewModel extends ViewModel {
         );
     }
 
-    public LiveData<List<NearbyRestaurantsEntity>> getFilteredRestaurantsLiveData() {
+    public LiveData<List<MainViewStateAutocomplete>> getAutocompletesLiveData() {
         return Transformations.switchMap(searchStringLiveData, searchString -> {
             if (searchString.length() >= 2) {
-                return Transformations.switchMap(getNearbyRestaurantsUseCase.invoke(), restaurants -> {
+                return Transformations.map(getAutocompletesUseCase.invoke(searchString), new Function1<List<AutocompleteEntity>, List<MainViewStateAutocomplete>>() {
+                    @Override
+                    public List<MainViewStateAutocomplete> invoke(List<AutocompleteEntity> autocompleteEntities) {
+                        List<MainViewStateAutocomplete> autocompletes = new ArrayList<>();
 
-                    List<NearbyRestaurantsEntity> filteredRestaurants = new ArrayList<>();
-                    for (NearbyRestaurantsEntity restaurant : restaurants) {
-                        if (restaurant.getName().toLowerCase().contains(searchString.toLowerCase())) {
-                            filteredRestaurants.add(restaurant);
+                        for (AutocompleteEntity autocompleteEntity : autocompleteEntities) {
+                            autocompletes.add(
+                                new MainViewStateAutocomplete(
+                                    autocompleteEntity.getPlaceId(),
+                                    autocompleteEntity.getName()
+                                )
+                            );
                         }
+
+                        return autocompletes;
                     }
-                    return new MutableLiveData<>(filteredRestaurants);
                 });
             } else {
                 return new MutableLiveData<>(new ArrayList<>());
@@ -84,6 +94,10 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<String> getRestaurantIdForCurrentUserLiveData() {
         return getRestaurantIdForCurrentUserUseCase.invoke();
+    }
+
+    public void onAutocompleteSelected(MainViewStateAutocomplete mainViewStateAutocomplete) {
+        // TODO PERSIVAL
     }
 }
 

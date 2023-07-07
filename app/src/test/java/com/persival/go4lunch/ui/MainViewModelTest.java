@@ -119,7 +119,7 @@ public class MainViewModelTest {
 
         // When
         viewModel.updateSearchString("Restaurant");
-        List<NearbyRestaurantsEntity> result = TestUtil.getValueForTesting(viewModel.getFilteredRestaurantsLiveData());
+        List<NearbyRestaurantsEntity> result = TestUtil.getValueForTesting(viewModel.getAutocompletesLiveData());
 
         // Then
         assertEquals(2, result.size());
@@ -134,7 +134,7 @@ public class MainViewModelTest {
 
         // When
         viewModel.updateSearchString("Not Existing");
-        List<NearbyRestaurantsEntity> result = TestUtil.getValueForTesting(viewModel.getFilteredRestaurantsLiveData());
+        List<NearbyRestaurantsEntity> result = TestUtil.getValueForTesting(viewModel.getAutocompletesLiveData());
 
         // Then
         assertEquals(0, result.size());

@@ -3,12 +3,18 @@ package com.persival.go4lunch.data.places;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.collection.LruCache;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.persival.go4lunch.BuildConfig;
+import com.persival.go4lunch.data.places.model.AutocompletePredictionResponse;
 import com.persival.go4lunch.data.places.model.NearbyRestaurantsResponse;
 import com.persival.go4lunch.data.places.model.PlaceDetailsResponse;
+import com.persival.go4lunch.data.places.model.PredictionsItem;
+import com.persival.go4lunch.domain.autocomplete.AutocompleteEntity;
+import com.persival.go4lunch.domain.autocomplete.AutocompleteRepository;
 import com.persival.go4lunch.domain.restaurant.PlacesRepository;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.domain.restaurant.model.PlaceDetailsEntity;
@@ -24,7 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Singleton
-public class GooglePlacesRepository implements PlacesRepository {
+public class GooglePlacesRepository implements PlacesRepository, AutocompleteRepository {
 
     private final GooglePlacesApi googlePlacesApi;
     private final LruCache<String, PlaceDetailsResponse> placeDetailsCache = new LruCache<>(512);
@@ -55,7 +61,10 @@ public class GooglePlacesRepository implements PlacesRepository {
                     if (response.isSuccessful() && response.body() != null && response.body().getResults() != null) {
                         List<NearbyRestaurantsEntity> nearbyRestaurantsEntity = new ArrayList<>();
                         for (NearbyRestaurantsResponse.Place place : response.body().getResults()) {
-                            nearbyRestaurantsEntity.add(mapNearbyRestaurantResponseToEntity(place));
+                            NearbyRestaurantsEntity entity = mapNearbyRestaurantResponseToEntity(place);
+                            if (entity != null) {
+                                nearbyRestaurantsEntity.add(entity);
+                            }
                         }
                         placeRestaurantsCache.put(location, response.body().getResults());
                         restaurantsLiveData.setValue(nearbyRestaurantsEntity);
@@ -115,6 +124,53 @@ public class GooglePlacesRepository implements PlacesRepository {
         }
 
         return restaurantLiveData;
+    }
+
+    @Override
+    public LiveData<List<AutocompleteEntity>> getAutocompletesLiveData(
+        @NonNull String query,
+        int radius
+    ) {
+        MutableLiveData<List<AutocompleteEntity>> autocompletesMutableLiveData = new MutableLiveData<>();
+
+        googlePlacesApi.getAutocomplete(query, radius, BuildConfig.MAPS_API_KEY).enqueue(new Callback<AutocompletePredictionResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<AutocompletePredictionResponse> call, @NonNull Response<AutocompletePredictionResponse> response) {
+                List<AutocompleteEntity> entities = new ArrayList<>();
+
+                if (response.isSuccessful() && response.body() != null && response.body().getPredictions() != null) {
+                    for (PredictionsItem prediction : response.body().getPredictions()) {
+                        AutocompleteEntity entity = mapPredictionResponse(prediction);
+                        if (entity != null) {
+                            entities.add(entity);
+                        }
+                    }
+                }
+
+                autocompletesMutableLiveData.setValue(entities);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<AutocompletePredictionResponse> call, @NonNull Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+        return autocompletesMutableLiveData;
+    }
+
+    @Nullable
+    private AutocompleteEntity mapPredictionResponse(@Nullable PredictionsItem prediction) {
+        if (prediction == null
+            || prediction.getPlaceId() == null
+            || prediction.getDescription() == null) {
+            return null;
+        } else {
+            return new AutocompleteEntity(
+                prediction.getPlaceId(),
+                prediction.getDescription()
+            );
+        }
     }
 
     private NearbyRestaurantsEntity mapNearbyRestaurantResponseToEntity(NearbyRestaurantsResponse.Place place) {

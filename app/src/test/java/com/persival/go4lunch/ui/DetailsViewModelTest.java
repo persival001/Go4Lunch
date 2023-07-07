@@ -27,10 +27,10 @@ import com.persival.go4lunch.domain.user.GetLoggedUserUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.domain.workmate.GetWorkmatesEatAtRestaurantUseCase;
 import com.persival.go4lunch.domain.workmate.model.UserEatAtRestaurantEntity;
-import com.persival.go4lunch.ui.main.details.DetailsFragment;
-import com.persival.go4lunch.ui.main.details.DetailsRestaurantViewState;
-import com.persival.go4lunch.ui.main.details.DetailsViewModel;
-import com.persival.go4lunch.ui.main.details.DetailsWorkmateViewState;
+import com.persival.go4lunch.ui.details.DetailsFragment;
+import com.persival.go4lunch.ui.details.DetailsRestaurantViewState;
+import com.persival.go4lunch.ui.details.DetailsViewModel;
+import com.persival.go4lunch.ui.details.DetailsWorkmateViewState;
 
 import org.junit.Before;
 import org.junit.Rule;
