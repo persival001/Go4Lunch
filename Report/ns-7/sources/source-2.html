@@ -59,10 +59,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    95,5%
+    100%
   </span>
   <span class="absValue">
-    (21/22)
+    (22/22)
   </span>
 </td>
 </tr>
@@ -116,15 +116,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;        // Calculate the remaining time before the next notification
 <b class="fc">&nbsp;        Calendar now = Calendar.getInstance();</b>
 <b class="fc">&nbsp;        Calendar noon = Calendar.getInstance();</b>
-<b class="fc">&nbsp;        noon.set(Calendar.HOUR_OF_DAY, 20);</b>
-<b class="fc">&nbsp;        noon.set(Calendar.MINUTE, 10);</b>
+<b class="fc">&nbsp;        noon.set(Calendar.HOUR_OF_DAY, 12);</b>
+<b class="fc">&nbsp;        noon.set(Calendar.MINUTE, 0);</b>
 &nbsp;
 <b class="fc">&nbsp;        long delay = noon.getTimeInMillis() - now.getTimeInMillis();</b>
 &nbsp;
 &nbsp;        // If the current time is after noon, schedule for next day
 <b class="fc">&nbsp;        if (delay &lt; 0) {</b>
 &nbsp;            // Add 24 hours to the delay
-<b class="nc">&nbsp;            delay += 24 * 60 * 60 * 1000;</b>
+<b class="fc">&nbsp;            delay += 24 * 60 * 60 * 1000;</b>
 &nbsp;        }
 &nbsp;
 &nbsp;        // Create notification
@@ -165,7 +165,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-07-04 09:57</div>
+    <div style="float:right;">generated on 2023-07-07 21:29</div>
 </div>
 </body>
 </html>

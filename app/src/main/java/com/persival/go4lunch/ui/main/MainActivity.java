@@ -122,34 +122,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Execute the research in the opened fragment
         viewModel.getSelectedRestaurantLiveData().observe(this, item -> {
-            searchString = item.getName();
-            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+            if (item != null) {
+                searchString = item.getName();
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
 
-            if (currentFragment instanceof MapsFragment) {
-                ((MapsFragment) currentFragment).zoomToMarker(item);
+                if (currentFragment instanceof MapsFragment) {
+                    ((MapsFragment) currentFragment).zoomToMarker(item);
+                    setSearchViewGone();
+                }
 
-                setSearchViewGone();
-            }
+                if (currentFragment instanceof RestaurantsFragment && !searchString.isEmpty()) {
+                    RestaurantsFragment restaurantsFragment = RestaurantsFragment.newInstance();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("searchString", searchString);
+                    restaurantsFragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, restaurantsFragment)
+                        .addToBackStack(null)
+                        .commit();
 
-            if (currentFragment instanceof RestaurantsFragment) {
-                RestaurantsFragment restaurantsFragment = RestaurantsFragment.newInstance();
-                Bundle bundle = new Bundle();
-                bundle.putString("searchString", searchString);
-                restaurantsFragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, restaurantsFragment)
-                    .addToBackStack(null)
-                    .commit();
-
-                setSearchViewGone();
+                    setSearchViewGone();
+                }
+            } else {
+                Toast.makeText(this, getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
             }
         });
+
 
         // Close the search view when the user clicks on the done button
         binding.searchView.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                binding.searchView.setVisibility(View.GONE);
+                setSearchViewGone();
                 return true;
             }
             return false;
