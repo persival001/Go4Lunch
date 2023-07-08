@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.domain.autocomplete.GetAutocompletesUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
@@ -29,23 +28,17 @@ public class MainViewModel extends ViewModel {
     private final GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase;
     @NonNull
     private final GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
-    @NonNull
-    private final GetAutocompletesUseCase getAutocompletesUseCase;
-    private final MutableLiveData<MainViewStateAutocomplete> selectedAutocompleteItem = new MutableLiveData<>();
 
     @Inject
     public MainViewModel(
         @NonNull GetRestaurantIdForCurrentUserUseCase getRestaurantIdForCurrentUserUseCase,
         @NonNull GetUserNameChangedUseCase getUserNameChangedUseCase,
-        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase,
-        @NonNull GetAutocompletesUseCase getAutocompletesUseCase
+        @NonNull GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase
     ) {
         this.getRestaurantIdForCurrentUserUseCase = getRestaurantIdForCurrentUserUseCase;
         this.getNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase;
-        this.getAutocompletesUseCase = getAutocompletesUseCase;
 
         mainViewStateLiveData = Transformations.map(getUserNameChangedUseCase.invoke(), this::mapToMainViewState);
-
     }
 
     private MainViewState mapToMainViewState(LoggedUserEntity loggedUserEntity) {
@@ -86,10 +79,6 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<String> getRestaurantIdForCurrentUserLiveData() {
         return getRestaurantIdForCurrentUserUseCase.invoke();
-    }
-
-    public void onAutocompleteSelected(MainViewStateAutocomplete mainViewStateAutocomplete) {
-        selectedAutocompleteItem.setValue(mainViewStateAutocomplete);
     }
 
 }

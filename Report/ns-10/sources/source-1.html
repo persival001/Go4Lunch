@@ -59,10 +59,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    85,9%
+    85,4%
   </span>
   <span class="absValue">
-    (73/85)
+    (76/89)
   </span>
 </td>
 </tr>
@@ -134,21 +134,31 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;            )
 &nbsp;        );
 &nbsp;
+<b class="fc">&nbsp;        LiveData&lt;List&lt;RestaurantsViewState&gt;&gt; sortedUnsortedRestaurantsLiveData = Transformations.map(</b>
+&nbsp;            unsortedRestaurantsLiveData,
+&nbsp;            this::sortRestaurantViewStates
+&nbsp;        );
+&nbsp;
 <b class="fc">&nbsp;        restaurantsLiveData = Transformations.switchMap(</b>
 &nbsp;            searchStringLiveData,
 <b class="fc">&nbsp;            searchString -&gt; Transformations.map(</b>
-&nbsp;                unsortedRestaurantsLiveData,
+&nbsp;                sortedUnsortedRestaurantsLiveData,
 &nbsp;                restaurantList -&gt; {
 <b class="fc">&nbsp;                    List&lt;RestaurantsViewState&gt; filteredList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;                    List&lt;RestaurantsViewState&gt; notMatchedList = new ArrayList&lt;&gt;();</b>
 <b class="fc">&nbsp;                    for (RestaurantsViewState restaurant : restaurantList) {</b>
 <b class="fc">&nbsp;                        if (restaurant.getName().toLowerCase().contains(searchString.toLowerCase())) {</b>
 <b class="fc">&nbsp;                            filteredList.add(restaurant);</b>
+&nbsp;                        } else {
+<b class="nc">&nbsp;                            notMatchedList.add(restaurant);</b>
 &nbsp;                        }
 <b class="fc">&nbsp;                    }</b>
-<b class="fc">&nbsp;                    return sortRestaurantViewStates(filteredList);</b>
+<b class="fc">&nbsp;                    filteredList.addAll(notMatchedList);</b>
+<b class="fc">&nbsp;                    return filteredList;</b>
 &nbsp;                }
 &nbsp;            )
 &nbsp;        );
+&nbsp;
 &nbsp;
 &nbsp;    }
 &nbsp;
@@ -310,7 +320,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-07-07 21:29</div>
+    <div style="float:right;">generated on 2023-07-08 22:39</div>
 </div>
 </body>
 </html>

@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
-import com.persival.go4lunch.domain.autocomplete.GetAutocompletesUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
 import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
@@ -39,8 +38,6 @@ public class MainViewModelTest {
     private GetUserNameChangedUseCase getUserNameChangedUseCase;
     @Mock
     private GetNearbyRestaurantsUseCase getNearbyRestaurantsUseCase;
-    @Mock
-    private GetAutocompletesUseCase getAutocompletesUseCase;
     private MainViewModel viewModel;
 
     @Before
@@ -58,8 +55,7 @@ public class MainViewModelTest {
         viewModel = new MainViewModel(
             getRestaurantIdForCurrentUserUseCase,
             getUserNameChangedUseCase,
-            getNearbyRestaurantsUseCase,
-            getAutocompletesUseCase
+            getNearbyRestaurantsUseCase
         );
     }
 
@@ -81,7 +77,7 @@ public class MainViewModelTest {
     public void testGetAuthenticatedUserLiveDataFailure() {
         // Given
         when(getUserNameChangedUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
-        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase, getAutocompletesUseCase);
+        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase);
 
         // When
         MainViewState result = TestUtil.getValueForTesting(viewModel.getAuthenticatedUserLiveData());
@@ -107,7 +103,7 @@ public class MainViewModelTest {
     public void testGetRestaurantIdForCurrentUserLiveDataFailure() {
         // Given
         when(getRestaurantIdForCurrentUserUseCase.invoke()).thenReturn(new MutableLiveData<>(null));
-        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase, getAutocompletesUseCase);
+        viewModel = new MainViewModel(getRestaurantIdForCurrentUserUseCase, getUserNameChangedUseCase, getNearbyRestaurantsUseCase);
 
         // When
         String result = TestUtil.getValueForTesting(viewModel.getRestaurantIdForCurrentUserLiveData());
