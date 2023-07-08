@@ -152,9 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchString = s.toString();
                 viewModel.updateSearchString(s.toString());
-                /*if (searchString.length() >= 2) {
-                    viewModel.updateSearchString(s.toString());
-                }*/
             }
 
             @Override
@@ -212,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchItem.setVisible(!(currentFragment instanceof WorkmatesFragment));
         return super.onPrepareOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

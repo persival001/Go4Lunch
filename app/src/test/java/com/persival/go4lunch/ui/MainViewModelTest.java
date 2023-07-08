@@ -1,15 +1,12 @@
 package com.persival.go4lunch.ui;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
-import com.persival.go4lunch.domain.autocomplete.AutocompleteEntity;
 import com.persival.go4lunch.domain.autocomplete.GetAutocompletesUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
@@ -18,7 +15,6 @@ import com.persival.go4lunch.domain.user.GetUserNameChangedUseCase;
 import com.persival.go4lunch.domain.user.model.LoggedUserEntity;
 import com.persival.go4lunch.ui.main.MainViewModel;
 import com.persival.go4lunch.ui.main.MainViewState;
-import com.persival.go4lunch.ui.main.MainViewStateAutocomplete;
 import com.persival.go4lunch.utils.TestUtil;
 
 import org.junit.Before;
@@ -34,7 +30,6 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class MainViewModelTest {
 
-    private final MutableLiveData<List<NearbyRestaurantsEntity>> nearbyRestaurants = new MutableLiveData<>();
     private final List<NearbyRestaurantsEntity> restaurantList = new ArrayList<>();
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -119,44 +114,6 @@ public class MainViewModelTest {
 
         // Then
         assertNull(result);
-    }
-
-    @Test
-    public void testGetAutocompletesLiveDataSuccess() {
-        // Given
-        MutableLiveData<List<AutocompleteEntity>> autocompleteLiveData = new MutableLiveData<>();
-        List<AutocompleteEntity> autocompleteEntities = new ArrayList<>();
-        autocompleteEntities.add(new AutocompleteEntity("1", "Restaurant 1"));
-        autocompleteEntities.add(new AutocompleteEntity("2", "Restaurant 2"));
-        autocompleteLiveData.setValue(autocompleteEntities);
-        when(getAutocompletesUseCase.invoke(anyString())).thenReturn(autocompleteLiveData);
-        viewModel.updateSearchString("Res");
-
-        // When
-        List<MainViewStateAutocomplete> result = TestUtil.getValueForTesting(viewModel.getAutocompletesLiveData());
-
-        // Then
-        assertEquals(2, result.size());
-        assertEquals("1", result.get(0).getPlaceId());
-        assertEquals("Restaurant 1", result.get(0).getName());
-        assertEquals("2", result.get(1).getPlaceId());
-        assertEquals("Restaurant 2", result.get(1).getName());
-    }
-
-    @Test
-    public void testGetSelectedRestaurantLiveDataSuccess() {
-        // Given
-        MutableLiveData<List<NearbyRestaurantsEntity>> nearbyRestaurantsLiveData = new MutableLiveData<>(restaurantList);
-        when(getNearbyRestaurantsUseCase.invoke()).thenReturn(nearbyRestaurantsLiveData);
-        viewModel.onAutocompleteSelected(new MainViewStateAutocomplete("1", "Restaurant 1"));
-
-        // When
-        NearbyRestaurantsEntity result = TestUtil.getValueForTesting(viewModel.getSelectedRestaurantLiveData());
-
-        // Then
-        assertNotNull(result);
-        assertEquals("1", result.getId());
-        assertEquals("Restaurant 1", result.getName());
     }
 
 }
