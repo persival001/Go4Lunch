@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.ActivityMainBinding;
 import com.persival.go4lunch.databinding.NavigationDrawerHeaderBinding;
+import com.persival.go4lunch.domain.restaurant.model.NearbyRestaurantsEntity;
 import com.persival.go4lunch.ui.authentication.AuthenticationActivity;
 import com.persival.go4lunch.ui.details.DetailsFragment;
 import com.persival.go4lunch.ui.maps.MapsFragment;
@@ -58,18 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        // Set up autocomplete
-        MainAutocompleteAdapter autocompleteAdapter = new MainAutocompleteAdapter(
-            mainViewStateAutocomplete -> viewModel.onAutocompleteSelected(mainViewStateAutocomplete)
-        );
-
-        binding.mainRecyclerviewAutocomplete.setAdapter(autocompleteAdapter);
-
-        viewModel.getAutocompletesLiveData().observe(this, viewStates -> {
-            autocompleteAdapter.submitList(viewStates);
-        });
-
-
         // Set up the bottom navigation bar and handle item selection
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = getSelectedFragment(item.getItemId());
@@ -77,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new Handler().postDelayed(this::invalidateOptionsMenu, 100);
             return true;
         });
-
 
         // Set the toolbar and disable its title
         setSupportActionBar(binding.toolbar);
@@ -121,14 +110,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
 
         // Execute the research in the opened fragment
-        viewModel.getSelectedRestaurantLiveData().observe(this, item -> {
+        viewModel.getMatchedRestaurants().observe(this, item -> {
             if (item != null) {
-                searchString = item.getName();
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
 
                 if (currentFragment instanceof MapsFragment) {
-                    ((MapsFragment) currentFragment).zoomToMarker(item);
-                    setSearchViewGone();
+                    ((MapsFragment) currentFragment).displayRestaurantsMarkers(item);
                 }
 
                 if (currentFragment instanceof RestaurantsFragment && !searchString.isEmpty()) {
@@ -140,14 +127,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .replace(R.id.fragmentContainerView, restaurantsFragment)
                         .addToBackStack(null)
                         .commit();
-
-                    setSearchViewGone();
                 }
-            } else {
-                Toast.makeText(this, getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
             }
         });
-
 
         // Close the search view when the user clicks on the done button
         binding.searchView.setOnEditorActionListener((v, actionId, event) -> {
@@ -159,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return false;
         });
 
-        // Start searching when the user types at least 2 characters
+        // Start searching when the user types 2 characters
         binding.searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -170,12 +152,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchString = s.toString();
                 viewModel.updateSearchString(s.toString());
+                /*if (searchString.length() >= 2) {
+                    viewModel.updateSearchString(s.toString());
+                }*/
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 // Not needed
             }
+        });
+
+        // Observe changes on the live data returned by getMatchedRestaurants() and update the adapter.
+        viewModel.getMatchedRestaurants().observe(this, restaurants -> {
+            ArrayAdapter<NearbyRestaurantsEntity> adapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, restaurants);
+            binding.searchView.setAdapter(adapter);
         });
 
         // Close drawer when back button is pressed
@@ -268,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
-            binding.mainRecyclerviewAutocomplete.setVisibility(View.VISIBLE);
             binding.textView.setVisibility(View.GONE);
             binding.searchView.setVisibility(View.VISIBLE);
             binding.searchView.requestFocus();
@@ -291,7 +282,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.searchView.setText("");
         binding.textView.setVisibility(View.VISIBLE);
         binding.searchView.setVisibility(View.GONE);
-        binding.mainRecyclerviewAutocomplete.setVisibility(View.GONE);
     }
 
 }
