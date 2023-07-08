@@ -189,6 +189,11 @@ public class MapsFragment extends SupportMapFragment {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
             }
         }
+
+        if (selectedRestaurants == null || selectedRestaurants.isEmpty() && googleMap != null) {
+            // Clean all markers
+            googleMap.clear();
+        }
     }
 
     @Override
