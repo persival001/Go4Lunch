@@ -58,21 +58,31 @@ public class RestaurantsViewModel extends ViewModel {
             )
         );
 
+        LiveData<List<RestaurantsViewState>> sortedUnsortedRestaurantsLiveData = Transformations.map(
+            unsortedRestaurantsLiveData,
+            this::sortRestaurantViewStates
+        );
+
         restaurantsLiveData = Transformations.switchMap(
             searchStringLiveData,
             searchString -> Transformations.map(
-                unsortedRestaurantsLiveData,
+                sortedUnsortedRestaurantsLiveData,
                 restaurantList -> {
                     List<RestaurantsViewState> filteredList = new ArrayList<>();
+                    List<RestaurantsViewState> notMatchedList = new ArrayList<>();
                     for (RestaurantsViewState restaurant : restaurantList) {
                         if (restaurant.getName().toLowerCase().contains(searchString.toLowerCase())) {
                             filteredList.add(restaurant);
+                        } else {
+                            notMatchedList.add(restaurant);
                         }
                     }
-                    return sortRestaurantViewStates(filteredList);
+                    filteredList.addAll(notMatchedList);
+                    return filteredList;
                 }
             )
         );
+
 
     }
 

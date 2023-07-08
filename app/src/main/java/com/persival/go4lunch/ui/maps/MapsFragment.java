@@ -174,16 +174,20 @@ public class MapsFragment extends SupportMapFragment {
         });
     }
 
-    public void zoomToMarker(NearbyRestaurantsEntity selectedRestaurant) {
-        if (selectedRestaurant != null && googleMap != null) {
-            LatLng latLng = new LatLng(selectedRestaurant.getLatitude(), selectedRestaurant.getLongitude());
+    public void displayRestaurantsMarkers(List<NearbyRestaurantsEntity> selectedRestaurants) {
+        if (selectedRestaurants != null && googleMap != null && !selectedRestaurants.isEmpty()) {
+            // Clean all markers
+            googleMap.clear();
 
-            lastCameraPosition = googleMap.getCameraPosition().target;
-            lastZoomLevel = googleMap.getCameraPosition().zoom;
-
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
-        } else {
-            Toast.makeText(requireContext(), getString(R.string.no_restaurant_found), Toast.LENGTH_SHORT).show();
+            // For each restaurant, add a marker to the map
+            for (NearbyRestaurantsEntity restaurant : selectedRestaurants) {
+                LatLng latLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+                googleMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(restaurant.getName())
+                    .snippet(restaurant.getAddress())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+            }
         }
     }
 

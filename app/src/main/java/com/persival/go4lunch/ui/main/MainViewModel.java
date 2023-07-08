@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.persival.go4lunch.domain.autocomplete.AutocompleteEntity;
 import com.persival.go4lunch.domain.autocomplete.GetAutocompletesUseCase;
 import com.persival.go4lunch.domain.restaurant.GetNearbyRestaurantsUseCase;
 import com.persival.go4lunch.domain.restaurant.GetRestaurantIdForCurrentUserUseCase;
@@ -61,45 +60,21 @@ public class MainViewModel extends ViewModel {
         );
     }
 
-    public LiveData<List<MainViewStateAutocomplete>> getAutocompletesLiveData() {
+    public LiveData<List<NearbyRestaurantsEntity>> getMatchedRestaurants() {
         return Transformations.switchMap(searchStringLiveData, searchString -> {
-            if (searchString.length() >= 2) {
-                return Transformations.map(getAutocompletesUseCase.invoke(searchString), autocompleteEntities -> {
-                    List<MainViewStateAutocomplete> autocompletes = new ArrayList<>();
+            LiveData<List<NearbyRestaurantsEntity>> nearbyRestaurantsLiveData = getNearbyRestaurantsUseCase.invoke();
 
-                    for (AutocompleteEntity autocompleteEntity : autocompleteEntities) {
-                        autocompletes.add(
-                            new MainViewStateAutocomplete(
-                                autocompleteEntity.getPlaceId(),
-                                autocompleteEntity.getName()
-                            )
-                        );
+            return Transformations.map(nearbyRestaurantsLiveData, nearbyRestaurants -> {
+                List<NearbyRestaurantsEntity> matchedRestaurants = new ArrayList<>();
+                for (NearbyRestaurantsEntity nearbyRestaurant : nearbyRestaurants) {
+                    if (nearbyRestaurant.getName().toLowerCase().contains(searchString.toLowerCase())) {
+                        matchedRestaurants.add(nearbyRestaurant);
                     }
-
-                    return autocompletes;
-                });
-            } else {
-                return new MutableLiveData<>(new ArrayList<>());
-            }
+                }
+                return matchedRestaurants;
+            });
         });
     }
-
-    public LiveData<NearbyRestaurantsEntity> getSelectedRestaurantLiveData() {
-        return Transformations.switchMap(selectedAutocompleteItem, selectedAutocomplete -> {
-            if (selectedAutocomplete != null) {
-                return Transformations.switchMap(getNearbyRestaurantsUseCase.invoke(), restaurants -> {
-                    for (NearbyRestaurantsEntity restaurant : restaurants) {
-                        if (restaurant.getId().equals(selectedAutocomplete.getPlaceId())) {
-                            return new MutableLiveData<>(restaurant);
-                        }
-                    }
-                    return new MutableLiveData<>(null);
-                });
-            }
-            return new MutableLiveData<>(null);
-        });
-    }
-
 
     public void updateSearchString(String newSearchString) {
         searchStringLiveData.setValue(newSearchString);

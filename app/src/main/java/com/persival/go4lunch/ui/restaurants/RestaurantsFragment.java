@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.persival.go4lunch.R;
 import com.persival.go4lunch.databinding.FragmentRestaurantsBinding;
-import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 import com.persival.go4lunch.ui.details.DetailsFragment;
+import com.persival.go4lunch.ui.gps_dialog.GpsDialogFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

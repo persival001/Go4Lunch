@@ -58,17 +58,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/main_recyclerview_autocomplete"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#FFF"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            tools:listitem="@layout/main_item_autocomplete" />
-
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
